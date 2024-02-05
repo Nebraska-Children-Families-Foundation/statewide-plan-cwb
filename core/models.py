@@ -4,26 +4,26 @@ from django.db import models
 
 # Enums
 class ActivityStatusChoice(models.TextChoices):
-    NOT_STARTED = 'Not Started'
-    IN_PROGRESS = 'In Progress'
-    COMPLETED = 'Completed'
-    ONGOING = 'Ongoing'
+    NOT_STARTED = 'Not Started', 'Not Started'
+    IN_PROGRESS = 'In Progress', 'In Progress'
+    COMPLETED = 'Completed', 'Completed'
+    ONGOING = 'Ongoing', 'Ongoing'
 
 
 class Quarters(models.TextChoices):
-    Q1 = 'Q1'
-    Q2 = 'Q2'
-    Q3 = 'Q3'
-    Q4 = 'Q4'
+    Q1 = 'Q1', 'Q1'
+    Q2 = 'Q2', 'Q2'
+    Q3 = 'Q3', 'Q3'
+    Q4 = 'Q4', 'Q4'
 
 
 class Years(models.TextChoices):
-    Y2022 = '2022'
-    Y2023 = '2023'
-    Y2024 = '2024'
-    Y2025 = '2025'
-    Y2026 = '2026'
-    Y2027 = '2027'
+    Y2022 = '2022', '2022'
+    Y2023 = '2023', '2023'
+    Y2024 = '2024', '2024'
+    Y2025 = '2025', '2025'
+    Y2026 = '2026', '2026'
+    Y2027 = '2027', '2027'
 
 
 # cwb_choice models
@@ -77,9 +77,9 @@ class CommunityActivity(models.Model):
     activity_name = models.CharField(max_length=255)
     activity_details = models.TextField(max_length=500)
     activity_lead = models.CharField(max_length=100)
-    activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice)
-    completedby_year = models.CharField(max_length=4, choices=Years)
-    completedby_quarter = models.CharField(max_length=2, choices=Quarters)
+    activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
+    completedby_year = models.CharField(max_length=4, choices=Years.choices)
+    completedby_quarter = models.CharField(max_length=2, choices=Quarters.choices)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
@@ -93,9 +93,9 @@ class StrategyActivity(models.Model):
     activity_details = models.TextField(max_length=500)
     activity_lead = models.CharField(max_length=100)
     activity_priority = models.BooleanField()
-    activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice)
-    completedby_year = models.CharField(max_length=4, choices=Years)
-    completedby_quarter = models.CharField(max_length=2, choices=Quarters)
+    activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
+    completedby_year = models.CharField(max_length=4, choices=Years.choices)
+    completedby_quarter = models.CharField(max_length=2, choices=Quarters.choices)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
