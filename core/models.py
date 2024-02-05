@@ -72,6 +72,35 @@ class DhhsPriority(models.Model):
 
 
 # cwb_core models
+
+class Goal(models.Model):
+    goal_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    goal_number = models.IntegerField()
+    goal_name = models.CharField(max_length=255)
+
+
+class Objective(models.Model):
+    objective_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    objective_number = models.IntegerField()
+    objective_name = models.CharField(max_length=255)
+    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+
+
+class Strategy(models.Model):
+    strategy_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    strategy_number = models.CharField(max_length=9)
+    strategy_name = models.CharField(max_length=255)
+    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_objective = ChainedForeignKey(
+        Objective,
+        chained_field="related_goal",
+        chained_model_field="goal",
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+    )
+
+
 class CommunityActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     activity_number = models.CharField(max_length=10)
@@ -100,34 +129,6 @@ class StrategyActivity(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
-
-
-class Goal(models.Model):
-    goal_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    goal_number = models.IntegerField()
-    goal_name = models.CharField(max_length=255)
-
-
-class Objective(models.Model):
-    objective_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    objective_number = models.IntegerField()
-    objective_name = models.CharField(max_length=255)
-    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
-
-
-class Strategy(models.Model):
-    strategy_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    strategy_number = models.CharField(max_length=9)
-    strategy_name = models.CharField(max_length=255)
-    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
-    related_objective = ChainedForeignKey(
-        Objective,
-        chained_field="related_goal",
-        chained_model_field="goal",
-        show_all=False,
-        auto_choose=True,
-        sort=True,
-    )
 
 
 # cwb_junction model
