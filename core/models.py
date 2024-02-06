@@ -93,8 +93,8 @@ class Strategy(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_objective = ChainedForeignKey(
         Objective,
-        chained_field="related_goal",
-        chained_model_field="goal",
+        chained_field="related_goal", # The field in this model to chain from.
+        chained_model_field="related_goal", # The field in Objective model that relates to Goal.
         show_all=False,
         auto_choose=True,
         sort=True,

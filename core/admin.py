@@ -25,7 +25,7 @@ class CommunityCollaborativeAdmin(admin.ModelAdmin):
 class StrategyAdmin(admin.ModelAdmin):
     list_display = ('strategy_name', 'get_goal_number', 'get_goal_name', 'get_objective_number', 'get_objective_name')
     search_fields = ('strategy_name',)
-    list_filter = ('strategy_name', 'get_goal_number', 'get_objective_number',)
+    list_filter = ('related_goal', 'related_objective',)
 
     def get_goal_number(self, obj):
         return obj.related_goal.goal_number
@@ -42,6 +42,7 @@ class StrategyAdmin(admin.ModelAdmin):
     def get_objective_name(self, obj):
         return obj.related_objective.objective_name
     get_objective_name.short_description = 'Objective Name'
+
 
 
 class ObjectiveAdmin(admin.ModelAdmin):
