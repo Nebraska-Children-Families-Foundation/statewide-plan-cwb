@@ -58,8 +58,9 @@ class ObjectiveAdmin(admin.ModelAdmin):
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_display = ('goal_name',)
+    list_display = ('goal_number', 'goal_name',)
     search_fields = ('goal_name',)
+    ordering = ('goal_number',)
 
 
 class ActivityStatusAdmin(admin.ModelAdmin):
