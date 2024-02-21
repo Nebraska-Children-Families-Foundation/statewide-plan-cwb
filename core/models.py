@@ -45,7 +45,7 @@ class ActivityStatus(models.Model):
 class NcffTeam(models.Model):
     ncff_team_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ncff_team_name = models.CharField(max_length=50)
-    ncff_team_short_name = models.CharField(max_length=25)
+    ncff_team_short_name = models.CharField(max_length=25, blank=True, null=True)
 
     def __str__(self):
         return self.ncff_team_short_name
@@ -60,7 +60,7 @@ class NcffTeam(models.Model):
 class CommunityCollaborative(models.Model):
     community_collab_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     community_collab_name = models.CharField(max_length=100)
-    community_collab_short_name = models.CharField(max_length=25)
+    community_collab_short_name = models.CharField(max_length=25, unique=True, blank=True, null=True)
 
     def __str__(self):
         return self.community_collab_name
