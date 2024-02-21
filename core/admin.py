@@ -18,14 +18,14 @@ class CommunityActivityAdmin(admin.ModelAdmin):
 
 
 class CommunityCollaborativeAdmin(admin.ModelAdmin):
-    list_display = ('CommunityCollaborativeName',)
-    search_fields = ('community_collab_name',)
+    list_display = ('community_collab_name',)
+    search_fields = ('community_collab_name', 'community_collab_short_name',)
 
 
 class StrategyAdmin(admin.ModelAdmin):
     list_display = ('strategy_name', 'get_goal_number', 'get_goal_name', 'get_objective_number', 'get_objective_name')
     search_fields = ('strategy_name',)
-    list_filter = ('related_goal', 'related_objective',)
+    list_filter = ('related_goal', 'related_objective', 'strategy_number',)
 
     def get_goal_number(self, obj):
         return obj.related_goal.goal_number
@@ -106,3 +106,4 @@ admin.site.register(Objective, ObjectiveAdmin)
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(NcffTeam, NcffTeamAdmin)
+admin.site.register(CommunityCollaborative, CommunityCollaborativeAdmin)
