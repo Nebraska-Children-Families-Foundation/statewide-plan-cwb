@@ -47,6 +47,7 @@ class NcffTeam(models.Model):
 class CommunityCollaborative(models.Model):
     community_collab_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     community_collab_name = models.CharField(max_length=100)
+    community_collab_short_name = models.CharField(max_length=25)
 
     def __str__(self):
         return self.community_collab_name
@@ -133,7 +134,12 @@ class CommunityActivity(models.Model):
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
-    #  TODO Relate to a Community
+
+    def __str__(self):
+        return (f"[{self.related_collaborative.community_collab_short_name}] - Goal {self.related_goal}, "
+                f"Objective {self.related_objective}, Strategy {self.related_strategy}")
+
+
 
 class StrategyActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
