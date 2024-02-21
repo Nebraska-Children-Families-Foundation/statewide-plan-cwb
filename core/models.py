@@ -198,7 +198,8 @@ class CommunityActivity(models.Model):
         verbose_name_plural = 'Community Activity'
         verbose_name = 'Community Activities'
         db_table = 'community_activity'
-        ordering = ['related_collaborative', 'related_goal', 'related_objective', 'related_strategy', 'activity_status', 'completedby_year',]
+        ordering = ['related_collaborative', 'related_goal', 'related_objective', 'related_strategy',
+                    'activity_status', 'completedby_year',]
 
 
 

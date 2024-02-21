@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
-    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, StrategyPriority
+    CommunityActivity, StrategyActivity, Strategy, Objective, Goal
 )
 
 
@@ -44,7 +44,6 @@ class StrategyAdmin(admin.ModelAdmin):
     get_objective_name.short_description = 'Objective Name'
 
 
-
 class ObjectiveAdmin(admin.ModelAdmin):
     list_display = ('objective_name', 'related_goal')
     search_fields = ('objective_name',)
@@ -78,15 +77,27 @@ class ChangeIndicatorAdmin(admin.ModelAdmin):
     list_display = ('indicator', 'related_goal')
     search_fields = ('indicator',)
 
+    def get_goal_number(self, obj):
+        return obj.related_goal.goal_number
+    get_goal_number.short_description = 'Goal Number'
+
 
 class PerformanceMeasureAdmin(admin.ModelAdmin):
     list_display = ('measure', 'related_goal')
     search_fields = ('measure',)
 
+    def get_goal_number(self, obj):
+        return obj.related_goal.goal_number
+    get_goal_number.short_description = 'Goal Number'
+
 
 class DhhsPriorityAdmin(admin.ModelAdmin):
     list_display = ('priority_description', 'related_goal')
     search_fields = ('priority_description',)
+
+    def get_goal_number(self, obj):
+        return obj.related_goal.goal_number
+    get_goal_number.short_description = 'Goal Number'
 
 
 class StrategyActivityAdmin(admin.ModelAdmin):
@@ -107,3 +118,7 @@ admin.site.register(Goal, GoalAdmin)
 admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(NcffTeam, NcffTeamAdmin)
 admin.site.register(CommunityCollaborative, CommunityCollaborativeAdmin)
+admin.site.register(PerformanceMeasure, PerformanceMeasureAdmin)
+admin.site.register(ChangeIndicator, ChangeIndicatorAdmin)
+admin.site.register(StrategyActivity, StrategyActivityAdmin)
+admin.site.register(DhhsPriority, DhhsPriorityAdmin)
