@@ -58,17 +58,26 @@ class ChangeIndicator(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     indicator = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.indicator
+
 
 class PerformanceMeasure(models.Model):
     measure_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     measure = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.measure
+
 
 class DhhsPriority(models.Model):
     dhhs_priority_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     priority_description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.priority_description
 
 
 # cwb_core models
@@ -78,12 +87,18 @@ class Goal(models.Model):
     goal_number = models.IntegerField()
     goal_name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return str(self.goal_number)
+
 
 class Objective(models.Model):
     objective_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     objective_number = models.IntegerField()
     objective_name = models.CharField(max_length=255)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Goal {self.related_goal.goal_number}, Objective {self.objective_number}"
 
 
 class Strategy(models.Model):
@@ -93,12 +108,16 @@ class Strategy(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_objective = ChainedForeignKey(
         Objective,
-        chained_field="related_goal", # The field in this model to chain from.
-        chained_model_field="related_goal", # The field in Objective model that relates to Goal.
+        chained_field="related_goal",  # The field in this model to chain from.
+        chained_model_field="related_goal",  # The field in Objective model that relates to Goal.
         show_all=False,
         auto_choose=True,
         sort=True,
     )
+
+    def __str__(self):
+        return (f"Goal {self.related_goal.goal_number}, Obj {self.related_objective.objective_number}, "
+                f"Strategy {self.strategy_number}")
 
 
 class CommunityActivity(models.Model):
@@ -114,7 +133,7 @@ class CommunityActivity(models.Model):
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
-
+    #  TODO Relate to a Community
 
 class StrategyActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
