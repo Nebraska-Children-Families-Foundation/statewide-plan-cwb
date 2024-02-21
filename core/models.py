@@ -39,9 +39,10 @@ class ActivityStatus(models.Model):
 class NcffTeam(models.Model):
     ncff_team_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ncff_team_name = models.CharField(max_length=50)
+    ncff_team_short_name = models.CharField(max_length=25)
 
     def __str__(self):
-        return self.ncff_team_name
+        return self.ncff_team_short_name
 
 
 class CommunityCollaborative(models.Model):
