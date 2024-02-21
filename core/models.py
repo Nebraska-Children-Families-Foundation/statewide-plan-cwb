@@ -155,6 +155,10 @@ class StrategyActivity(models.Model):
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return (f"Goal {self.related_goal.goal_number}, Obj. {self.related_objective.objective_number}, "
+                f"Strategy {self.related_strategy.strategy_number}")
+
 
 # cwb_junction model
 class StrategyPriority(models.Model):
