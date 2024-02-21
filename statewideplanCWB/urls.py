@@ -22,3 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),
 ]
+
+admin.site.site_header = 'Statewide Plan Admin Panel'
+admin.site.site_title = 'Statewide Plan Admin Panel'
