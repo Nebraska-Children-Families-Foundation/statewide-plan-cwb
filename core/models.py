@@ -35,6 +35,12 @@ class ActivityStatus(models.Model):
     def __str__(self):
         return self.activity_status
 
+    class Meta:
+        verbose_name = 'Activity Status'
+        verbose_name_plural = 'Activity Statuses'
+        db_table = 'activity_statuses'
+        ordering = ('activity_status',)
+
 
 class NcffTeam(models.Model):
     ncff_team_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -44,6 +50,12 @@ class NcffTeam(models.Model):
     def __str__(self):
         return self.ncff_team_short_name
 
+    class Meta:
+        verbose_name = 'NCFF Initiative / Team / Priority Area'
+        verbose_name_plural = 'NCFF Initiatives / Teams / Priority Areas'
+        db_table = 'ncff_team'
+        ordering = ('ncff_team_name',)
+
 
 class CommunityCollaborative(models.Model):
     community_collab_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -52,6 +64,12 @@ class CommunityCollaborative(models.Model):
 
     def __str__(self):
         return self.community_collab_name
+
+    class Meta:
+        verbose_name = 'Community Collaborative'
+        verbose_name_plural = 'Community Collaboratives'
+        db_table = 'community_collab'
+        ordering = ('community_collab_name',)
 
 
 # cwb_supp models
@@ -63,6 +81,12 @@ class ChangeIndicator(models.Model):
     def __str__(self):
         return self.indicator
 
+    class Meta:
+        verbose_name = 'Indicator of Change'
+        verbose_name_plural = 'Indicators of Change'
+        db_table = 'change_indicator'
+        ordering = ('indicator',)
+
 
 class PerformanceMeasure(models.Model):
     measure_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -72,6 +96,12 @@ class PerformanceMeasure(models.Model):
     def __str__(self):
         return self.measure
 
+    class Meta:
+        verbose_name = 'Performance Measure'
+        verbose_name_plural = 'Performance Measures'
+        db_table = 'performance_measure'
+        ordering = ('measure',)
+
 
 class DhhsPriority(models.Model):
     dhhs_priority_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -80,6 +110,12 @@ class DhhsPriority(models.Model):
 
     def __str__(self):
         return self.priority_description
+
+    class Meta:
+        verbose_name = 'DHHS Priority'
+        verbose_name_plural = 'DHHS Priorities'
+        db_table = 'dhhs_priority'
+        ordering = ('related_goal',)
 
 
 # cwb_core models
@@ -92,6 +128,12 @@ class Goal(models.Model):
     def __str__(self):
         return str(self.goal_number)
 
+    class Meta:
+        verbose_name = 'Goal'
+        verbose_name_plural = 'Goals'
+        db_table = 'goal'
+        ordering = ('goal_number',)
+
 
 class Objective(models.Model):
     objective_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -101,6 +143,12 @@ class Objective(models.Model):
 
     def __str__(self):
         return f"Goal {self.related_goal.goal_number}, Objective {self.objective_number}"
+
+    class Meta:
+        verbose_name = 'Objective'
+        verbose_name_plural = 'Objectives'
+        db_table = 'objective'
+        ordering = ('related_goal', 'objective_number',)
 
 
 class Strategy(models.Model):
@@ -121,6 +169,12 @@ class Strategy(models.Model):
         return (f"Goal {self.related_goal.goal_number}, Obj {self.related_objective.objective_number}, "
                 f"Strategy {self.strategy_number}")
 
+    class Meta:
+        verbose_name = 'Strategy'
+        verbose_name_plural = 'Strategies'
+        db_table = 'strategy'
+        ordering = ('related_goal', 'related_objective', 'strategy_number',)
+
 
 class CommunityActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -139,6 +193,12 @@ class CommunityActivity(models.Model):
     def __str__(self):
         return (f"[{self.related_collaborative.community_collab_short_name}] - Goal {self.related_goal}, "
                 f"Objective {self.related_objective}, Strategy {self.related_strategy}")
+
+    class Meta:
+        verbose_name_plural = 'Community Activity'
+        verbose_name = 'Community Activities'
+        db_table = 'community_activity'
+        ordering = ['related_collaborative', 'related_goal', 'related_objective', 'related_strategy', 'activity_status', 'completedby_year',]
 
 
 
@@ -160,6 +220,12 @@ class StrategyActivity(models.Model):
         return (f"Goal {self.related_goal.goal_number}, Obj. {self.related_objective.objective_number}, "
                 f"Strategy {self.related_strategy.strategy_number}")
 
+    class Meta:
+        verbose_name = "Strategy Activity"
+        verbose_name_plural = "Strategy Activities"
+        db_table = 'strategy_activity'
+        ordering = ['related_goal', 'related_objective', 'related_strategy', 'activity_number', 'completedby_year',]
+
 
 # cwb_junction model
 class StrategyPriority(models.Model):
@@ -168,3 +234,7 @@ class StrategyPriority(models.Model):
 
     class Meta:
         unique_together = ('strategy', 'community_collab')
+        verbose_name = 'Community Collab Priority'
+        verbose_name_plural = 'Community Collab Priorities'
+        db_table = 'collab_strategy_priority'
+        ordering = ['community_collab', 'strategy',]
