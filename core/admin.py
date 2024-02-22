@@ -70,8 +70,13 @@ class ActivityStatusAdmin(admin.ModelAdmin):
 
 
 class NcffTeamAdmin(admin.ModelAdmin):
-    list_display = ('ncff_team_name',)
+    list_display = ('ncff_team_name', 'strategy_count')
     search_fields = ('ncff_team_name',)
+
+    def strategy_count(self, obj):
+        return Strategy.objects.filter(strategy_id=obj).count()
+
+    strategy_count.short_description = '# of Strategies Assigned'
 
 
 class SystemPartnerAdmin(admin.ModelAdmin):
