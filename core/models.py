@@ -171,7 +171,6 @@ class Strategy(models.Model):
     strategy_number = models.CharField(max_length=9)
     strategy_name = models.CharField(max_length=255)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
-    related_team =
     related_objective = ChainedForeignKey(
         Objective,
         chained_field="related_goal",  # The field in this model to chain from.
