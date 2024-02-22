@@ -247,8 +247,15 @@ class StrategyActivity(models.Model):
 
 # cwb_junction model
 class StrategyPriority(models.Model):
-    strategy = models.ForeignKey(Strategy, on_delete=models.CASCADE)
-    community_collab = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
+    strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
+    community_collaborative = models.ForeignKey('CommunityCollaborative', on_delete=models.CASCADE)
+    is_priority = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('strategy', 'community_collaborative')
+
+    def __str__(self):
+        return f"{self.community_collaborative} - {self.strategy} - Priority: {self.is_priority}"
 
     class Meta:
         unique_together = ('strategy', 'community_collab')
