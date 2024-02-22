@@ -50,6 +50,15 @@ class StrategyAdmin(admin.ModelAdmin):
 
     readonly_fields = ('strategy_number',)
 
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if isinstance(instance, StrategyPriority) and not instance.pk:
+                # This is a new StrategyPriority instance being added
+                instance.is_priority = True
+            instance.save()
+        formset.save_m2m()
+
     def get_priority_collaboratives(self, obj):
         return ", ".join([cc.community_collab_name for cc in
                           obj.community_collaboratives.filter(strategypriority__is_priority=True)])
