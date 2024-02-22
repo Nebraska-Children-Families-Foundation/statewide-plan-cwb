@@ -12,6 +12,8 @@ class CommunityActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
     search_fields = ('activity_name', 'activity_status')
 
+    readonly_fields = ('activity_number',)
+
     def get_community_collab(self, obj):
         return obj.related_collaborative.community_collab_name
     get_community_collab.short_description = 'Community Collaborative'
@@ -44,6 +46,8 @@ class StrategyAdmin(admin.ModelAdmin):
     search_fields = ('strategy_name', 'get_priority_collaboratives')
     list_filter = ('related_goal', 'related_objective', 'strategy_number',)
     inlines = [StrategyPriorityInline]
+
+    readonly_fields = ('strategy_number',)
 
     def get_priority_collaboratives(self, obj):
         return ", ".join([cc.community_collab_name for cc in
@@ -142,6 +146,8 @@ class DhhsPriorityAdmin(admin.ModelAdmin):
 class StrategyActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
     search_fields = ('activity_name', 'activity_status')
+
+    readonly_fields = ('activity_number',)
 
 
 class StrategyPriorityAdmin(admin.ModelAdmin):
