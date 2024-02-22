@@ -45,8 +45,9 @@ class StrategyAdmin(admin.ModelAdmin):
 
 
 class ObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('objective_name', 'related_goal')
+    list_display = ('related_goal', 'objective_number', 'objective_name',)
     search_fields = ('objective_name',)
+    list_filter = ('related_goal', 'objective_number',)
 
     def get_related_goal_number(self, obj):
         return obj.related_goal.goal_number
@@ -71,6 +72,12 @@ class ActivityStatusAdmin(admin.ModelAdmin):
 class NcffTeamAdmin(admin.ModelAdmin):
     list_display = ('ncff_team_name',)
     search_fields = ('ncff_team_name',)
+
+
+class SystemPartnerAdmin(admin.ModelAdmin):
+    list_display = ('system_partner_name', 'system_partner_short_name',)
+    search_fields = ('system_partner_name', 'system_partner_short_name',)
+    ordering = ('system_partner_name',)
 
 
 class ChangeIndicatorAdmin(admin.ModelAdmin):

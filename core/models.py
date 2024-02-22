@@ -57,6 +57,21 @@ class NcffTeam(models.Model):
         ordering = ('ncff_team_name',)
 
 
+class SystemPartner(models.Model):
+    system_partner_id = models.UUIDField(primary_key=True, default=uuid, editable=False)
+    system_partner_name = models.CharField(max_length=75)
+    system_partner_short_name = models.CharField(max_length=25, blank=True, null=True)
+
+    def __str__(self):
+        return self.system_partner_short_name
+
+    class Meta:
+        verbose_name = 'System Partner to Align & Support'
+        verbose_name_plural = 'System Partners to Align & Support'
+        db_table = 'system_partners'
+        ordering = ('system_partner_name',)
+
+
 class CommunityCollaborative(models.Model):
     community_collab_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     community_collab_name = models.CharField(max_length=100)
@@ -200,7 +215,6 @@ class CommunityActivity(models.Model):
         db_table = 'community_activity'
         ordering = ['related_collaborative', 'related_goal', 'related_objective', 'related_strategy',
                     'activity_status', 'completedby_year',]
-
 
 
 class StrategyActivity(models.Model):
