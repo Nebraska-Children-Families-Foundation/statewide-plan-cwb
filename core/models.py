@@ -220,7 +220,7 @@ class CommunityActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
-    activity_details = models.TextField(max_length=500)
+    activity_details = models.TextField(max_length=1200)
     activity_lead = models.CharField(max_length=100)
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices, blank=True)
@@ -237,7 +237,9 @@ class CommunityActivity(models.Model):
             last_activity = CommunityActivity.objects.order_by('activity_number').last()
 
             if last_activity:
-                last_number = int(last_activity.activity_number.split('-')[1])
+                # Splitting the string to extract the numeric part
+                number_part = last_activity.activity_number.split('-')[2]
+                last_number = int(number_part)  # Converting the extracted part to an integer
                 new_number = last_number + 1
             else:
                 new_number = 1000  # Start from 1000
