@@ -184,17 +184,16 @@ class Strategy(models.Model):
     # Functionality that increments the strategy number is the STRG-1XXX format.
     def save(self, *args, **kwargs):
         if not self.strategy_number:
-            prefix = "STRG-1"
-            max_number = Strategy.objects.aggregate(max_number=Max('strategy_number'))
-            max_number = max_number['max_number']
+            prefix = "STRG-"
+            last_strategy = Strategy.objects.order_by('strategy_number').last()
 
-            if max_number:
-                number = int(max_number.split('-')[1]) + 1
+            if last_strategy:
+                last_number = int(last_strategy.strategy_number.split('-')[1])
+                new_number = last_number + 1
             else:
-                number = 1
+                new_number = 1000  # Start from 1000
 
-            self.strategy_number = f"{prefix}{number:03}"  # Pads the number with zeros
-
+            self.strategy_number = f"{prefix}{new_number}"
         super().save(*args, **kwargs)
 
     ncff_teams = models.ManyToManyField('NcffTeam', blank=True)
@@ -234,17 +233,16 @@ class CommunityActivity(models.Model):
     # Functionality that increments the strategy number is the C-ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
-            prefix = "C-ACT-1"
-            max_number = Strategy.objects.aggregate(max_number=Max('activity_number'))
-            max_number = max_number['max_number']
+            prefix = "A-ACT-"
+            last_strategy = Strategy.objects.order_by('activity_number').last()
 
-            if max_number:
-                number = int(max_number.split('-')[1]) + 1
+            if last_strategy:
+                last_number = int(last_strategy.activity_number.split('-')[1])
+                new_number = last_number + 1
             else:
-                number = 1
+                new_number = 1000  # Start from 1000
 
-            self.strategy_number = f"{prefix}{number:03}"  # Pads the number with zeros
-
+            self.activity_number = f"{prefix}{new_number}"
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -276,17 +274,16 @@ class StrategyActivity(models.Model):
     # Functionality that increments the strategy number is the ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
-            prefix = "ACT-1"
-            max_number = Strategy.objects.aggregate(max_number=Max('activity_number'))
-            max_number = max_number['max_number']
+            prefix = "ACT-"
+            last_strategy = Strategy.objects.order_by('activity_number').last()
 
-            if max_number:
-                number = int(max_number.split('-')[1]) + 1
+            if last_strategy:
+                last_number = int(last_strategy.activity_number.split('-')[1])
+                new_number = last_number + 1
             else:
-                number = 1
+                new_number = 1000  # Start from 1000
 
-            self.strategy_number = f"{prefix}{number:03}"  # Pads the number with zeros
-
+            self.activity_number = f"{prefix}{new_number}"
         super().save(*args, **kwargs)
 
     def __str__(self):
