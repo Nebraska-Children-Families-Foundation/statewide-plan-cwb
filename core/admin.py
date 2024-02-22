@@ -41,10 +41,11 @@ class StrategyPriorityInline(admin.TabularInline):
 
 
 class StrategyAdmin(admin.ModelAdmin):
-    list_display = ('strategy_name', 'get_goal_number', 'get_goal_name', 'get_objective_number', 'get_objective_name',
-                    'get_priority_collaboratives',)
+    list_display = ('strategy_number', 'strategy_name', 'get_goal_number', 'get_goal_name', 'get_objective_number',
+                    'get_objective_name', 'get_priority_collaboratives')
     search_fields = ('strategy_name', 'get_priority_collaboratives')
     list_filter = ('related_goal', 'related_objective', 'strategy_number',)
+    ordering = ('strategy_number', 'related_goal', 'related_objective')
     inlines = [StrategyPriorityInline]
 
     readonly_fields = ('strategy_number',)
