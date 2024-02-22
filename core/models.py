@@ -183,6 +183,12 @@ class Strategy(models.Model):
     ncff_teams = models.ManyToManyField('NcffTeam', blank=True)
     system_partners = models.ManyToManyField('SystemPartner', blank=True)
 
+    community_collaboratives = models.ManyToManyField(
+        'CommunityCollaborative',
+        through='StrategyPriority',
+        blank=True
+    )
+
     def __str__(self):
         return (f"Goal {self.related_goal.goal_number}, Obj {self.related_objective.objective_number}, "
                 f"Strategy {self.strategy_number}")
