@@ -18,8 +18,13 @@ class CommunityActivityAdmin(admin.ModelAdmin):
 
 
 class CommunityCollaborativeAdmin(admin.ModelAdmin):
-    list_display = ('community_collab_name',)
+    list_display = ('community_collab_name', 'priority_strategy_count')
     search_fields = ('community_collab_name', 'community_collab_short_name',)
+
+    def priority_strategy_count(self, obj):
+        return StrategyPriority.objects.filter(community_collaborative=obj).count()
+
+    priority_strategy_count.short_description = 'Priority Strategies Count'
 
 
 class StrategyPriorityInline(admin.TabularInline):
