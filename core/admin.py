@@ -73,16 +73,19 @@ class NcffTeamAdmin(admin.ModelAdmin):
     list_display = ('ncff_team_name', 'strategy_count')
     search_fields = ('ncff_team_name',)
 
-    def strategy_count(self, obj):
-        return Strategy.objects.filter(strategy_id=obj).count()
-
+    def strategy_count(self, obj):  # Counts number of Strategies assigned to the team.
+        return obj.strategy_set.count()
     strategy_count.short_description = '# of Strategies Assigned'
 
 
 class SystemPartnerAdmin(admin.ModelAdmin):
-    list_display = ('system_partner_name', 'system_partner_short_name',)
+    list_display = ('system_partner_name', 'system_partner_short_name', 'strategy_count',)
     search_fields = ('system_partner_name', 'system_partner_short_name',)
     ordering = ('system_partner_name',)
+
+    def strategy_count(self, obj):  # Counts number of Strategies assigned to the partner.
+        return obj.strategy_set.count()
+    strategy_count.short_description = '# of Strategies Assigned'
 
 
 class ChangeIndicatorAdmin(admin.ModelAdmin):
