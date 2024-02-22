@@ -233,11 +233,11 @@ class CommunityActivity(models.Model):
     # Functionality that increments the strategy number is the C-ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
-            prefix = "A-ACT-"
-            last_strategy = Strategy.objects.order_by('activity_number').last()
+            prefix = "C-ACT-"
+            last_activity = CommunityActivity.objects.order_by('activity_number').last()
 
-            if last_strategy:
-                last_number = int(last_strategy.activity_number.split('-')[1])
+            if last_activity:
+                last_number = int(last_activity.activity_number.split('-')[1])
                 new_number = last_number + 1
             else:
                 new_number = 1000  # Start from 1000
@@ -275,10 +275,10 @@ class StrategyActivity(models.Model):
     def save(self, *args, **kwargs):
         if not self.activity_number:
             prefix = "ACT-"
-            last_strategy = Strategy.objects.order_by('activity_number').last()
+            last_activity = StrategyActivity.objects.order_by('activity_number').last()
 
-            if last_strategy:
-                last_number = int(last_strategy.activity_number.split('-')[1])
+            if last_activity:
+                last_number = int(last_activity.activity_number.split('-')[1])
                 new_number = last_number + 1
             else:
                 new_number = 1000  # Start from 1000
