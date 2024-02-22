@@ -9,7 +9,7 @@ from .models import (
 # Admin models
 
 class CommunityActivityAdmin(admin.ModelAdmin):
-    list_display = ('activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
+    list_display = ('activity_number', 'activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
     search_fields = ('activity_name', 'activity_status')
 
     readonly_fields = ('activity_number',)
@@ -154,7 +154,7 @@ class DhhsPriorityAdmin(admin.ModelAdmin):
 
 
 class StrategyActivityAdmin(admin.ModelAdmin):
-    list_display = ('activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
+    list_display = ('activity_number', 'activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
     search_fields = ('activity_name', 'activity_status')
 
     readonly_fields = ('activity_number',)
