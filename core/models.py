@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
+from django.db.models import Max
 
 
 # Enums
@@ -168,7 +169,7 @@ class Objective(models.Model):
 
 class Strategy(models.Model):
     strategy_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    strategy_number = models.CharField(max_length=9)
+    strategy_number = models.CharField(max_length=9)  # TODO Add auto increment
     strategy_name = models.CharField(max_length=255)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_objective = ChainedForeignKey(
@@ -179,6 +180,22 @@ class Strategy(models.Model):
         auto_choose=True,
         sort=True,
     )
+
+    # Functionality that increments the strategy number is the STRG-1XXX format.
+    def save(self, *args, **kwargs):
+        if not self.strategy_number:
+            prefix = "STRG-1"
+            max_number = Strategy.objects.aggregate(max_number=Max('strategy_number'))
+            max_number = max_number['max_number']
+
+            if max_number:
+                number = int(max_number.split('-')[1]) + 1
+            else:
+                number = 1
+
+            self.strategy_number = f"{prefix}{number:03}"  # Pads the number with zeros
+
+        super().save(*args, **kwargs)
 
     ncff_teams = models.ManyToManyField('NcffTeam', blank=True)
     system_partners = models.ManyToManyField('SystemPartner', blank=True)
@@ -214,6 +231,22 @@ class CommunityActivity(models.Model):
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
 
+    # Functionality that increments the strategy number is the C-ACT-1XXX format.
+    def save(self, *args, **kwargs):
+        if not self.activity_number:
+            prefix = "C-ACT-1"
+            max_number = Strategy.objects.aggregate(max_number=Max('activity_number'))
+            max_number = max_number['max_number']
+
+            if max_number:
+                number = int(max_number.split('-')[1]) + 1
+            else:
+                number = 1
+
+            self.strategy_number = f"{prefix}{number:03}"  # Pads the number with zeros
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return (f"[{self.related_collaborative.community_collab_short_name}] - Goal {self.related_goal}, "
                 f"Objective {self.related_objective}, Strategy {self.related_strategy}")
@@ -239,6 +272,22 @@ class StrategyActivity(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
+
+    # Functionality that increments the strategy number is the ACT-1XXX format.
+    def save(self, *args, **kwargs):
+        if not self.activity_number:
+            prefix = "ACT-1"
+            max_number = Strategy.objects.aggregate(max_number=Max('activity_number'))
+            max_number = max_number['max_number']
+
+            if max_number:
+                number = int(max_number.split('-')[1]) + 1
+            else:
+                number = 1
+
+            self.strategy_number = f"{prefix}{number:03}"  # Pads the number with zeros
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return (f"Goal {self.related_goal.goal_number}, Obj. {self.related_objective.objective_number}, "
