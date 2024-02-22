@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
-    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner
+    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, StrategyPriority
 )
 
 
@@ -22,11 +22,23 @@ class CommunityCollaborativeAdmin(admin.ModelAdmin):
     search_fields = ('community_collab_name', 'community_collab_short_name',)
 
 
+class StrategyPriorityInline(admin.TabularInline):
+    # Specify the model that this inline admin will manage.
+    model = StrategyPriority
+
+    # Set the number of extra forms to display in the inline admin.
+    # This allows for adding new StrategyPriority instances directly from the Strategy admin page.
+    extra = 1
+
+    # You can add more options here to customize the admin interface
+
+
 class StrategyAdmin(admin.ModelAdmin):
     list_display = ('strategy_name', 'get_goal_number', 'get_goal_name', 'get_objective_number', 'get_objective_name',
                     'get_priority_collaboratives',)
     search_fields = ('strategy_name', 'get_priority_collaboratives')
     list_filter = ('related_goal', 'related_objective', 'strategy_number',)
+    inlines = [StrategyPriorityInline]
 
     def get_priority_collaboratives(self, obj):
         return ", ".join([cc.community_collab_name for cc in
