@@ -22,13 +22,18 @@ class CommunityActivityAdmin(admin.ModelAdmin):
 
 
 class CommunityCollaborativeAdmin(admin.ModelAdmin):
-    list_display = ('community_collab_name', 'priority_strategy_count')
+    list_display = ('community_collab_name', 'priority_strategy_count', 'community_activity_count')
     search_fields = ('community_collab_name', 'community_collab_short_name',)
 
     def priority_strategy_count(self, obj):
         return StrategyPriority.objects.filter(community_collaborative=obj).count()
 
     priority_strategy_count.short_description = 'Priority Strategies Count'
+
+    def community_activity_count(self, obj):
+        return CommunityActivity.objects.filter(related_collaborative=obj).count()
+
+    community_activity_count.short_description = 'Activity Count'
 
 
 class StrategyPriorityInline(admin.TabularInline):
