@@ -58,7 +58,7 @@ class NcffTeam(models.Model):
 
 
 class SystemPartner(models.Model):
-    system_partner_id = models.UUIDField(primary_key=True, default=uuid, editable=False)
+    system_partner_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     system_partner_name = models.CharField(max_length=75)
     system_partner_short_name = models.CharField(max_length=25, blank=True, null=True)
 
