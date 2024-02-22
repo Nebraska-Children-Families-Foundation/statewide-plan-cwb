@@ -169,7 +169,7 @@ class Objective(models.Model):
 
 class Strategy(models.Model):
     strategy_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    strategy_number = models.CharField(max_length=9)  # TODO Add auto increment
+    strategy_number = models.CharField(max_length=9, help_text="Automatically generated. No need to set manually.")
     strategy_name = models.CharField(max_length=255)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_objective = ChainedForeignKey(
@@ -219,7 +219,7 @@ class Strategy(models.Model):
 
 class CommunityActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    activity_number = models.CharField(max_length=10)
+    activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
     activity_details = models.TextField(max_length=500)
     activity_lead = models.CharField(max_length=100)
@@ -261,7 +261,7 @@ class CommunityActivity(models.Model):
 
 class StrategyActivity(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    activity_number = models.CharField(max_length=10)
+    activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
     activity_details = models.TextField(max_length=500)
     activity_lead = models.CharField(max_length=100)
