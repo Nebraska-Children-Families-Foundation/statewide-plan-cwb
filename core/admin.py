@@ -9,8 +9,10 @@ from .models import (
 # Admin models
 
 class CommunityActivityAdmin(admin.ModelAdmin):
-    list_display = ('activity_number', 'activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
+    list_display = ('activity_number', 'activity_name', 'activity_status', 'completedby_year', 'completedby_quarter',
+                    'related_collaborative')
     search_fields = ('activity_name', 'activity_status')
+    list_filter = ('related_collaborative', 'activity_status')
 
     readonly_fields = ('activity_number',)
 
