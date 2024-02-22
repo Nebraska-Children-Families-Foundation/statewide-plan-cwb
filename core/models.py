@@ -171,6 +171,7 @@ class Strategy(models.Model):
     strategy_number = models.CharField(max_length=9)
     strategy_name = models.CharField(max_length=255)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_team =
     related_objective = ChainedForeignKey(
         Objective,
         chained_field="related_goal",  # The field in this model to chain from.
@@ -179,6 +180,9 @@ class Strategy(models.Model):
         auto_choose=True,
         sort=True,
     )
+
+    ncff_teams = models.ManyToManyField('NcffTeam', blank=True)
+    system_partners = models.ManyToManyField('SystemPartner', blank=True)
 
     def __str__(self):
         return (f"Goal {self.related_goal.goal_number}, Obj {self.related_objective.objective_number}, "
