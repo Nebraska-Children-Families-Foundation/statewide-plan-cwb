@@ -27,6 +27,12 @@ class StrategyAdmin(admin.ModelAdmin):
     search_fields = ('strategy_name',)
     list_filter = ('related_goal', 'related_objective', 'strategy_number',)
 
+    def get_priority_collaboratives(self, obj):
+        return ", ".join([cc.community_collab_name for cc in
+                          obj.community_collaboratives.filter(strategypriority__is_priority=True)])
+
+    get_priority_collaboratives.short_description = 'Priority Collaboratives'
+
     def get_goal_number(self, obj):
         return obj.related_goal.goal_number
     get_goal_number.short_description = 'Goal Number'

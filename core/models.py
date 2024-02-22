@@ -264,8 +264,8 @@ class StrategyPriority(models.Model):
         return f"{self.community_collaborative} - {self.strategy} - Priority: {self.is_priority}"
 
     class Meta:
-        unique_together = ('strategy', 'community_collab')
+        unique_together = ('strategy', 'community_collaborative')
         verbose_name = 'Community Collab Priority'
         verbose_name_plural = 'Community Collab Priorities'
         db_table = 'collab_strategy_priority'
-        ordering = ['community_collab', 'strategy',]
+        ordering = ['community_collaborative', 'strategy',]
