@@ -305,9 +305,6 @@ class StrategyPriority(models.Model):
     community_collaborative = models.ForeignKey('CommunityCollaborative', on_delete=models.CASCADE)
     is_priority = models.BooleanField(default=False)
 
-    class Meta:
-        unique_together = ('strategy', 'community_collaborative')
-
     def __str__(self):
         return f"{self.community_collaborative} - {self.strategy} - Priority: {self.is_priority}"
 
