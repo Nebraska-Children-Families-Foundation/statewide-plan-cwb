@@ -15,29 +15,30 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <h2 class="text-center">Statewide Plan for Community Well-Being</h2>
+      <img src="{% static 'images/bringupnebraska_logo.png' %}" alt="Bring Up Nebraska Logo" class="mx-auto d-block img-fluid mb-3" width="200">
+      <h2 class="text-center" style="padding-bottom: 20px">Statewide Plan for Community<br />Well-Being</h2>
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link" href="#">About the Plan</a>
+          <a class="nav-link" href="#"><i class="bi bi-file-earmark-text-fill" style="padding-right: 5px"></i> About the Plan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Goals</a>
+          <a class="nav-link" href="#"><i class="bi bi-flag-fill" style="padding-right: 5px"></i> Goals</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Objectives & Strategies</a>
+          <a class="nav-link" href="#"><i class="bi bi-lightbulb-fill" style="padding-right: 5px"></i> Objectives & Strategies</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Community Collaboratives</a>
+          <a class="nav-link" href="#"><i class="bi bi-people-fill" style="padding-right: 5px"></i> Community Collaboratives</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Partners</a>
+          <a class="nav-link" href="#"><i class="bi bi-briefcase-fill" style="padding-right: 5px"></i> Partners</a>
         </li>
       </ul>
         <ul class="nav flex-column mt-auto">
         {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">
-              <i class="bi bi-box-arrow-right"></i> Logout
+              <i class="bi bi-box-arrow-right" style="padding-right: 5px"></i> Logout
             </a>
           </li>
         {% else %}
