@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Define the main content area */
 .main-content {
-        margin-left: 250px; /* same as sidebar width */
+        margin-left: 300px; /* same as sidebar width */
         padding: 20px;
       }
 
