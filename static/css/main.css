@@ -13,20 +13,42 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Cabin', sans-serif;
 }
 
+/* Style for the navigation items in the sidebar */
+.sidebar .nav-item {
+    margin-bottom: 10px; /* Spacing between items */
+}
+
+.sidebar .nav-link {
+    border: 1px solid #ddd; /* Border for button-like appearance */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside the link */
+    display: block; /* Make the link fill the container */
+    color: #333; /* Text color */
+    background-color: #f8f9fa; /* Background color */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link:focus {
+    color: #fff; /* Text color on hover/focus */
+    background-color: #007bff; /* Background color on hover/focus */
+    text-decoration: none; /* No underline on hover/focus */
+}
+
+
 /* Create the sidebar */
 .sidebar {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           min-height: 100vh;
-          width: 250px;
+          width: 300px;
           position: fixed;
           z-index: 100;
           top: 0;
           left: 0;
           background-color: #f8f9fa;
           overflow-x: hidden;
-          padding-top: 20px;
+          padding: 20px;
         }
 
 /* Define the main content area */
