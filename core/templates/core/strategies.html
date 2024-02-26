@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Strategies for Objective: {{ objective.objective_name }}</h2>
+
+<!-- Strategies Table -->
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Strategy Number</th>
+            <th scope="col">Strategy Name</th>
+            <th scope="col">Community Activities</th>
+            <th scope="col">Partner Activities</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for strategy in strategies %}
+        <tr>
+            <td>{{ strategy.strategy_number }}</td>
+            <td>{{ strategy.strategy_name }}</td>
+            <td><a href="{% url 'community_activities' strategy.strategy_id %}">View Activities</a></td>
+            <td><a href="{% url 'partner_activities' strategy.strategy_id %}">View Activities</a></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No strategies available for this objective.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Goal Information -->
+<div class="mt-4">
+    <h4>Related Goal</h4>
+    <p>Goal Number: {{ objective.related_goal.goal_number }}</p>
+    <p>Goal Name: {{ objective.related_goal.goal_name }}</p>
+</div>
+{% endblock %}
