@@ -1,29 +1,6 @@
 {% extends "base.html" %} {% block title %} Home Page {% endblock %}
 
 {% block content %}
-{% for goal in goals %}
-    <h2 style="padding-bottom: 15px; margin-top: 40px">Goal: {{ goal.goal_name }}</h2>
 
-    {% for objective in goal.objective_set.all %}
-        <h3 style="padding-bottom: 15px; padding-left: 10px">Objective: {{ objective.objective_name }}</h3>
-
-        <table style="margin-bottom: 25px; margin-left: 20px">
-            <thead>
-                <tr>
-                    <th>Strategy Number</th>
-                    <th>Strategy Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for strategy in objective.strategy_set.all %}
-                    <tr>
-                        <td>{{ strategy.strategy_number }}</td>
-                        <td>{{ strategy.strategy_name }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
-{% endfor %}
 
 {% endblock %}
