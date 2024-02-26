@@ -1,3 +1,19 @@
+/* Apply Merriweather to all body text */
+body {
+    font-family: 'Merriweather', serif;
+}
+
+/* Apply Cabin to headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cabin', sans-serif;
+}
+
+/* Apply Cabin to navigation links */
+.nav-link {
+    font-family: 'Cabin', sans-serif;
+}
+
+/* Create the sidebar */
 .sidebar {
           display: flex;
           flex-direction: column;
@@ -13,6 +29,7 @@
           padding-top: 20px;
         }
 
+/* Define the main content area */
 .main-content {
         margin-left: 250px; /* same as sidebar width */
         padding: 20px;
