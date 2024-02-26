@@ -33,7 +33,8 @@ def strategies_objectives(request):
 
 
 def goals(request):
-    return render(request, 'core/goals.html')
+    goals = Goal.objects.prefetch_related('changeindicator_set', 'performancemeasure_set', 'objective_set').all()
+    return render(request, 'core/goals.html', {'goals': goals})
 
 
 def activities(request):
