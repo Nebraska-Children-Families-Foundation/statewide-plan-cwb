@@ -14,4 +14,8 @@ urlpatterns = [
     path('community-collaboratives/', views.community_collaboratives, name='community_collaboratives'),
     path('activities', views.activities, name='activities'),
     path('strategies/<uuid:objective_id>/', views.strategies, name='strategies'),
+    path('strategy-list/', views.strategy_list, name='strategy_list'),
+    path('ajax/load-objectives/', views.load_objectives, name='ajax_load_objectives'),
+    path('community-activities/<uuid:strategy_id>/', views.community_activities, name='community_activities'),
+    path('partner-activities/<uuid:strategy_id>/', views.partner_activities, name='partner_activities')
 ]

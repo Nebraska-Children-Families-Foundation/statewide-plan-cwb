@@ -181,7 +181,7 @@ class Strategy(models.Model):
         sort=True,
     )
 
-    # Functionality that increments the strategy number is the STRG-1XXX format.
+    # Functionality that increments the strategy number is the STRG-XXXX format.
     def save(self, *args, **kwargs):
         if not self.strategy_number:
             prefix = "STRG-"
