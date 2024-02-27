@@ -129,3 +129,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication
 AUTH_USER_MODEL = 'users.AppUser'
+
+# Email Sending
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'in-v3.mailjet.com'  # MailJet SMTP server
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('MAILJET_API_KEY')
+EMAIL_HOST_PASSWORD = config('MAILJET_API_SECRET')
+DEFAULT_FROM_EMAIL = config('MAILJET_FROM_EMAIL')
