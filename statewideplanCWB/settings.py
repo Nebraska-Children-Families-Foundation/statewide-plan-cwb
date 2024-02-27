@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'smart_selects',
+    'widget_tweaks',
     'core',
     'users',
 ]
@@ -121,6 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -130,11 +134,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Authentication
 AUTH_USER_MODEL = 'users.AppUser'
 
-# Email Sending
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'in-v3.mailjet.com'  # MailJet SMTP server
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = config('MAILJET_API_KEY')
-EMAIL_HOST_PASSWORD = config('MAILJET_API_SECRET')
-DEFAULT_FROM_EMAIL = config('MAILJET_FROM_EMAIL')
+# Login Redirection
+LOGIN_REDIRECT_URL = '/core/home/'

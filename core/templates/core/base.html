@@ -1,0 +1,93 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Statewide Plan for Community Well-Being{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
+    {% include 'includes/font_links.html' %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  </head>
+  <body>
+
+    <!-- Navbar for Desktop Only -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-none d-lg-block custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Your Brand</a>
+            <div class="d-flex justify-content-end w-100">
+                {% if user.is_authenticated %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'activities' %}">View Activities</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_community_activity' %}">Create Community Activity</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_partner_activity' %}">Create Partner Activity</a>
+                        </li>
+                    </ul>
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'login' %}"><i class="bi bi-pencil-fill" style="padding-right: 5px"></i> Manage Activities</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <img src="{% static 'images/bringupnebraska_logo.png' %}" alt="Bring Up Nebraska Logo" class="mx-auto d-block img-fluid mb-3" width="200">
+      <h2 class="text-center" style="padding-bottom: 20px">Statewide Plan for Community<br />Well-Being</h2>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}"><i class="bi bi-file-earmark-text-fill" style="padding-right: 5px"></i> About the Plan</a>
+        </li>
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'communication_plan' %}"><i class="bi bi-megaphone-fill" style="padding-right: 5px"></i> Communication Plan</a>
+            </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'goals' %}"><i class="bi bi-flag-fill" style="padding-right: 5px"></i> Goals</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'strategies_objectives' %}"><i class="bi bi-lightbulb-fill" style="padding-right: 5px"></i> Objectives & Strategies</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'strategy_list' %}"><i class="bi bi-star-fill" style="padding-right: 5px"></i> Strategy List</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'community_collaboratives' %}"><i class="bi bi-people-fill" style="padding-right: 5px"></i> Community Collaboratives</a>
+        </li>
+      </ul>
+        <ul class="nav flex-column mt-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">
+              <i class="bi bi-box-arrow-right" style="padding-right: 5px"></i> Logout
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+              <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+          </li>
+        {% endif %}
+        </ul>
+    </div>
+
+    <!-- Page Content -->
+    <div class="main-content">
+      {% block content %}
+      <!-- Your page content goes here -->
+      {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  </body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" class="form-signin">
+                        {% csrf_token %}
+                        <h2 class="form-signin-heading">Sign in to Manage Activities</h2>
+                        <p>Community Collaboratives and state partners can sign in to manage their activities related to the plan.</p>
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {% render_field field class="form-control" %}
+                            </div>
+                        {% endfor %}
+                        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

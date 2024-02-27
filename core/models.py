@@ -181,7 +181,7 @@ class Strategy(models.Model):
         sort=True,
     )
 
-    # Functionality that increments the strategy number is the STRG-1XXX format.
+    # Functionality that increments the strategy number is the STRG-XXXX format.
     def save(self, *args, **kwargs):
         if not self.strategy_number:
             prefix = "STRG-"
@@ -304,9 +304,6 @@ class StrategyPriority(models.Model):
     strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     community_collaborative = models.ForeignKey('CommunityCollaborative', on_delete=models.CASCADE)
     is_priority = models.BooleanField(default=False)
-
-    class Meta:
-        unique_together = ('strategy', 'community_collaborative')
 
     def __str__(self):
         return f"{self.community_collaborative} - {self.strategy} - Priority: {self.is_priority}"

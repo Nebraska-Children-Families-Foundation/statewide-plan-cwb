@@ -1,0 +1,133 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <h1>Strategies List</h1>
+    <!-- Top row with dropdowns -->
+    <div class="row mb-3" style="margin-top: 20px">
+        <h2>Select Filters</h2>
+    </div>
+    <div class="row mb-3">
+        <!-- Goal Number -->
+        <div class="col">
+            <select id="id_goal" name="goal" class="form-select">
+                <option value="">Select a Goal</option>
+                {% for goal in goals %}
+                <option value="{{ goal.goal_id }}">{{ goal.goal_number }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Objective Number -->
+        <div class="col">
+            <select id="id_objective" name="objective" class="form-select">
+                <option value="">Select an Objective</option>
+            </select>
+        </div>
+
+        <!-- NCFF Teams Dropdown -->
+        <div class="col">
+            <select class="form-select" multiple aria-label="NCFF Teams multi select">
+                {% for team in ncff_teams %}
+                <option value="{{ teams.ncff_team_id }}">{{ team.ncff_team_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- System Partners Dropdown -->
+        <div class="col">
+            <select class="form-select" multiple aria-label="System Partners multi select">
+                {% for partner in system_partners %}
+                <option value="{{ partner.system_partner_id }}">{{ partner.system_partner_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Community Collaboratives Dropdown -->
+    <div class="row">
+        <div class="col-6 offset-6">
+            <select class="form-select" id="communityCollaborativeSelect" name="community_collaboratives">
+                <option value="">Select a Community Collaborative</option>
+                {% for collaborative in community_collaboratives %}
+                <option value="{{ collaborative.community_collab_id }}">{{ collaborative.community_collab_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Strategies Accordion -->
+    <div class="row mb-3" style="margin-top: 20px">
+        <h2>Strategies of the Statewide Plan</h2>
+    </div>
+    <div class="accordion" id="strategiesAccordion" style="margin-top: 30px">
+        {% for strategy in strategies %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ strategy.strategy_id }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ strategy.strategy_id }}" aria-expanded="false" aria-controls="collapse{{ strategy.strategy_id }}">
+                    {{ strategy.strategy_number }}: {{ strategy.strategy_name }} (Goal: {{ strategy.related_goal.goal_number }}, Objective: {{ strategy.related_objective.objective_number }})
+                </button>
+            </h2>
+            <div id="collapse{{ strategy.strategy_id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ strategy.id }}" data-bs-parent="#strategiesAccordion">
+                <div class="accordion-body">
+                    <!-- Strategy Details -->
+                    <div class="row mb-2" style="padding-bottom: 20px">
+                        <div class="col">
+                            <div style="margin-bottom: 5px"><strong>Goal:</strong> {{ strategy.related_goal.goal_name }}</div><br>
+                            <strong>Objective:</strong> {{ strategy.related_objective.objective_name }}
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="padding-bottom: 20px">
+                        <div class="col">
+                            <strong>NCFF Teams:</strong><br>
+                            {% for team in strategy.ncff_teams.all %}
+                                <li>{{ team.ncff_team_name }}</li>
+                            {% endfor %}
+                        </div>
+                        <div class="col">
+                            <strong>System Partners:</strong><br>
+                            {% for partner in strategy.system_partners.all %}
+                                <li>{{ partner.system_partner_name }}</li>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="padding-bottom: 20px">
+                        <div class="col">
+                            <strong>Marked as Priority:</strong><br>
+                            {% for priority_collaborative in strategy.priority_collaboratives %}
+                                <span class="badge bg-secondary">{{ priority_collaborative.community_collaborative.community_collab_name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-primary">Community Activities</a>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-primary">Partner Activities</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+<script type="text/javascript">
+document.getElementById('id_goal').addEventListener('change', function() {
+    var goalId = this.value;
+    var url = "{% url 'ajax_load_objectives' %}?goal_id=" + goalId;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            var objectiveSelect = document.getElementById('id_objective');
+            objectiveSelect.innerHTML = '<option value="">Select an Objective</option>';
+            data.forEach(function(objective) {
+                var option = new Option(objective.name, objective.id);
+                objectiveSelect.appendChild(option);
+            });
+        });
+});
+</script>
+
