@@ -21,6 +21,7 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),
+    path('users/', include('users.urls'))
 ]
 
 admin.site.site_header = 'Statewide Plan Admin Panel'
