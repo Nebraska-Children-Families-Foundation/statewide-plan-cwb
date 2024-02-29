@@ -1,0 +1,16 @@
+venv/
+.idea/
+media/
+tests/
+**/__pycache__/
+
+Dockerfile
+
+.DS_Store
+
+db.sqlite3
+README.md
+*.md
+*.env
+*.pyc
+*.log
