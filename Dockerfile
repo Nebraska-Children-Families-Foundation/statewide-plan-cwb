@@ -18,4 +18,4 @@ COPY . /app/
 # Set the command to run your application
 ENV DJANGO_ENV=production
 RUN python manage.py collectstatic --noinput
-CMD ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "statewideplan.wsgi:application", "--bind", "0.0.0.0:8000"]
