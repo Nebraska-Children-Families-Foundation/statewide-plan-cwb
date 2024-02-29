@@ -19,4 +19,4 @@ COPY . /app/
 ENV DJANGO_ENV=production
 RUN python manage.py migrate --no-input
 RUN python manage.py collectstatic --noinput
-CMD ["gunicorn", "statewideplan.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "statewideplanCWB.wsgi:application", "--bind", "0.0.0.0:8000"]
