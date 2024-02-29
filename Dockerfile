@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9
+FROM python:3.9-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
 && rm -rf /var/lib/apt/lists/*
 
+RUN pip install psycopg2
 RUN pip install --upgrade pip;
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
