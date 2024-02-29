@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'statewideplanCWB.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-ENVIRONMENT = config('ENVIRONMENT')
+ENVIRONMENT = config('DJANGO_ENV')
 
 if ENVIRONMENT == 'production':
     DATABASES = {

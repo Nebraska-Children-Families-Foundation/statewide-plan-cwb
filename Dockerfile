@@ -9,6 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 WORKDIR /app
 
 # Install dependencies
+RUN pip install --upgrade pip
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -19,4 +20,7 @@ COPY . /app/
 ENV DJANGO_ENV=production
 RUN python manage.py migrate --no-input
 RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
 CMD ["gunicorn", "statewideplanCWB.wsgi:application", "--bind", "0.0.0.0:8000"]
