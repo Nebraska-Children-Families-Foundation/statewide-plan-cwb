@@ -16,11 +16,20 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /app/
 COPY . /app/
 
-# Set the command to run your application
-ENV DJANGO_ENV=production
-RUN python manage.py migrate --no-input
-RUN python manage.py collectstatic --noinput
+# Copy the entrypoint script into the container at /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
+# Grant permissions to execute the entrypoint script
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint script to be executed
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Set environment variable for Django
+ENV DJANGO_ENV=production
+
+# Expose port 8000
 EXPOSE 8000
 
+# Set the command to run your application
 CMD ["gunicorn", "statewideplanCWB.wsgi:application", "--bind", "0.0.0.0:8000"]
