@@ -26,7 +26,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev', 'statewideplan.bringupnebraska.org']
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_DOMAIN = '.hyperionhub.dev'  # TODO Set up a 'test' in the env file to handle test server.
 
 
 # Application definition
