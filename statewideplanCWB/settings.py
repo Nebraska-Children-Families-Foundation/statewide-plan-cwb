@@ -29,6 +29,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev', 'statewideplan.bringupnebraska.org']
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_DOMAIN = '.hyperionhub.dev'  # TODO Set up a 'test' in the env file to handle test server.
+CSRF_TRUSTED_ORIGINS = ['https://statewide-plan.hyperionhub.dev', 'https://statewideplan.bringupnebraska.org']
+
 
 
 # Application definition
