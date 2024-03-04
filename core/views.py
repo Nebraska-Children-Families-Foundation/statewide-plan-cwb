@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import (Goal, Objective, Strategy, CommunityActivity, StrategyActivity, CommunityCollaborative, NcffTeam,
                      SystemPartner, StrategyPriority)
+from .forms import CommunityActivityForm
 from django.http import JsonResponse
 
 
@@ -82,6 +83,16 @@ def strategy_list(request):
         'community_collaboratives': community_collaboratives,
     }
     return render(request, 'core/strategy-list.html', context)
+
+def create_community_activity(request):
+    if request.method == 'POST':
+        form = CommunityActivityForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('some-view-name')
+    else:
+        form = CommunityActivityForm()
+    return render(request, 'core/create-community-activity.html', {'form': form})
 
 
 # For the dynamic chaining for dropdowns of Goals and Objectives

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import create_community_activity
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -17,5 +18,5 @@ urlpatterns = [
     path('strategy-list/', views.strategy_list, name='strategy_list'),
     path('ajax/load-objectives/', views.load_objectives, name='ajax_load_objectives'),
     path('community-activities/<uuid:strategy_id>/', views.community_activities, name='community_activities'),
-    path('partner-activities/<uuid:strategy_id>/', views.partner_activities, name='partner_activities')
+    path('partner-activities/<uuid:strategy_id>/', views.partner_activities, name='partner_activities'),
 ]
