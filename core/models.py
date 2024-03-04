@@ -49,7 +49,7 @@ class NcffTeam(models.Model):
     ncff_team_short_name = models.CharField(max_length=25, blank=True, null=True)
 
     def __str__(self):
-        return self.ncff_team_short_name
+        return self.ncff_team_short_name or self.ncff_team_name
 
     class Meta:
         verbose_name = 'NCFF Initiative / Team / Priority Area'
@@ -64,7 +64,7 @@ class SystemPartner(models.Model):
     system_partner_short_name = models.CharField(max_length=25, blank=True, null=True)
 
     def __str__(self):
-        return self.system_partner_short_name
+        return self.system_partner_short_name or self.system_partner_name
 
     class Meta:
         verbose_name = 'System Partner to Align & Support'
@@ -79,7 +79,7 @@ class CommunityCollaborative(models.Model):
     community_collab_short_name = models.CharField(max_length=25, unique=True, blank=True, null=True)
 
     def __str__(self):
-        return self.community_collab_name
+        return self.community_collab_name or self.community_collab_name
 
     class Meta:
         verbose_name = 'Community Collaborative'
@@ -248,6 +248,7 @@ class CommunityActivity(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        collab_name = self.related_collaborative.community_collab_short_name or self.related_collaborative.community_collab_name
         return (f"[{self.related_collaborative.community_collab_short_name}] - Goal {self.related_goal}, "
                 f"Objective {self.related_objective}, Strategy {self.related_strategy}")
 
@@ -306,7 +307,10 @@ class StrategyPriority(models.Model):
     is_priority = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.community_collaborative} - {self.strategy} - Priority: {self.is_priority}"
+        collaborative_str = str(
+            self.community_collaborative) if self.community_collaborative else "Unknown Collaborative"
+        strategy_str = str(self.strategy) if self.strategy else "Unknown Strategy"
+        return f"{collaborative_str} - {strategy_str} - Priority: {self.is_priority}"
 
     class Meta:
         unique_together = ('strategy', 'community_collaborative')
