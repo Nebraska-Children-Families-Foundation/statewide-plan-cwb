@@ -26,7 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG_ENV = config('DJANGO_ENV', default='production')
+
+if DEBUG_ENV == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev', 'statewideplan.bringupnebraska.org', "127.0.0.1"]
 CSRF_COOKIE_SECURE = True
