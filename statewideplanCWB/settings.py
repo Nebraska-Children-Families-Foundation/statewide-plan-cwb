@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev', 'statewideplan.bringupnebraska.org']
+ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev', 'statewideplan.bringupnebraska.org', "127.0.0.1"]
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_DOMAIN = '.hyperionhub.dev'  # TODO Set up a 'test' in the env file to handle test server.
 CSRF_TRUSTED_ORIGINS = ['https://statewide-plan.hyperionhub.dev', 'https://statewideplan.bringupnebraska.org']
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'statewideplanCWB.urls'
@@ -141,9 +145,9 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+STATICFILES_DIRS = BASE_DIR / 'static'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

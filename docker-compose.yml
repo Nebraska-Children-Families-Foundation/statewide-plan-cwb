@@ -2,18 +2,12 @@ version: '3'
 
 services:
   django_gunicorn:
-    volumes:
-      - static_volume:/app/staticfiles
-    env_file:
-      - .env
-    build:
-      context: .
+    build: .
+    env_file: .env
     ports:
       - "8054:8000"
   nginx:
     build: ./nginx
-    volumes:
-      - static_volume:/app/staticfiles
     ports:
       - "1335:80"
     depends_on:
