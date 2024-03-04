@@ -248,7 +248,8 @@ class CommunityActivity(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        collab_name = self.related_collaborative.community_collab_short_name or self.related_collaborative.community_collab_name
+        collab_name = (self.related_collaborative.community_collab_short_name or
+                       self.related_collaborative.community_collab_name)
         return (f"[{self.related_collaborative.community_collab_short_name}] - Goal {self.related_goal}, "
                 f"Objective {self.related_objective}, Strategy {self.related_strategy}")
 
