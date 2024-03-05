@@ -16,7 +16,7 @@
     <div class="accordion-item" data-collab="{{ activity.related_collaborative.community_collab_short_name }}">
         <h2 class="accordion-header" id="heading{{ activity.activity_id }}">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ activity.activity_id }}" aria-expanded="false" aria-controls="collapse{{ activity.activity_id }}">
-                {{ activity.activity_name }} - {{ activity.related_collaborative.community_collab_name }}
+                <strong>{{ activity.activity_number }}:</strong>&nbsp; {{ activity.activity_name }} &nbsp;&nbsp;<span class="badge bg-success">{{ activity.related_collaborative.community_collab_name }}</span>
             </button>
         </h2>
         <div id="collapse{{ activity.activity_id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ activity.activity_id }}" data-bs-parent="#activitiesAccordion">

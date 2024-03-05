@@ -64,7 +64,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="heading{{ strategy.strategy_id }}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ strategy.strategy_id }}" aria-expanded="false" aria-controls="collapse{{ strategy.strategy_id }}">
-                    {{ strategy.strategy_number }}: {{ strategy.strategy_name }} (Goal: {{ strategy.related_goal.goal_number }}, Objective: {{ strategy.related_objective.objective_number }})
+                    <strong>{{ strategy.strategy_number }}:</strong>&nbsp; {{ strategy.strategy_name }} (Goal: {{ strategy.related_goal.goal_number }}, Objective: {{ strategy.related_objective.objective_number }})
                 </button>
             </h2>
             <div id="collapse{{ strategy.strategy_id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ strategy.id }}" data-bs-parent="#strategiesAccordion">
@@ -94,7 +94,7 @@
                         <div class="col">
                             <strong>Marked as Priority:</strong><br>
                             {% for priority_collaborative in strategy.priority_collaboratives %}
-                                <span class="badge bg-secondary">{{ priority_collaborative.community_collaborative.community_collab_name }}</span>
+                                <span class="badge bg-success">{{ priority_collaborative.community_collaborative.community_collab_name }}</span>
                             {% endfor %}
                         </div>
                     </div>
