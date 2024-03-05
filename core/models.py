@@ -142,7 +142,7 @@ class Goal(models.Model):
     goal_name = models.CharField(max_length=255)
 
     def __str__(self):
-        return str(self.goal_number)
+        return str(self.goal_number) or str(self.goal_name)
 
     class Meta:
         verbose_name = 'Goal'
@@ -158,7 +158,8 @@ class Objective(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Goal {self.related_goal.goal_number}, Objective {self.objective_number}"
+        return (f"Goal {self.related_goal.goal_number}, Objective {self.objective_number}" or
+                f"Objective {self.objective_number}: {self.objective_name}")
 
     class Meta:
         verbose_name = 'Objective'
@@ -225,10 +226,22 @@ class CommunityActivity(models.Model):
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices, blank=True)
     completedby_quarter = models.CharField(max_length=2, choices=Quarters.choices, blank=True)
-    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
-    related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
-    related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
+    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_objective = ChainedForeignKey(
+        'Objective',
+        chained_field="related_goal",
+        chained_model_field="goal",
+        show_all=False,
+        auto_choose=True,
+        sort=True)
+    related_strategy = ChainedForeignKey(
+        'Strategy',
+        chained_field="related_objective",
+        chained_model_field="objective",
+        show_all=False,
+        auto_choose=True,
+        sort=True)
 
     # Functionality that increments the strategy number is the C-ACT-1XXX format.
     def save(self, *args, **kwargs):

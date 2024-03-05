@@ -1,63 +1,69 @@
-{% extends "core/base.html" %} {% block title %} Create a Community Activity {% endblock %}
+{% extends "core/base.html" %}
+{% block title %} Create a Community Activity {% endblock %}
 {% load static %}
 {% load widget_tweaks %}
 
+{% block content %}
 <div class="container mt-5">
-    <h2>Create Community Activity</h2>
+    <h2>Create a Community Activity</h2>
     <form method="post">
         {% csrf_token %}
 
+        <!-- Regular label structure for each field -->
         <div class="mb-3">
-            {% render_field form.activity_id class="form-control" %}
+            <label for="{{ form.related_collaborative.id_for_label }}" class="form-label">Community Collaborative</label>
+            {% render_field form.related_collaborative class="form-control" %}
         </div>
 
         <div class="mb-3">
-            {% render_field form.activity_number class="form-control" %}
-        </div>
-
-        <div class="mb-3">
+            <label for="{{ form.activity_name.id_for_label }}" class="form-label">{{ form.activity_name.label }}</label>
             {% render_field form.activity_name class="form-control" %}
         </div>
 
         <div class="mb-3">
+            <label for="{{ form.activity_details.id_for_label }}" class="form-label">{{ form.activity_details.label }}</label>
             {% render_field form.activity_details class="form-control" %}
         </div>
 
         <div class="mb-3">
+            <label for="{{ form.activity_lead.id_for_label }}" class="form-label">{{ form.activity_lead.label }}</label>
             {% render_field form.activity_lead class="form-control" %}
         </div>
 
         <!-- Row for activity_status, completedby_year, and completedby_quarter -->
         <div class="row">
             <div class="col-md-4 mb-3">
-                {% render_field form.activity_status class+="form-control" %}
+                <label for="{{ form.activity_status.id_for_label }}" class="form-label">{{ form.activity_status.label }}:</label>
+                {% render_field form.activity_status class="form-control" %}
             </div>
             <div class="col-md-4 mb-3">
-                {% render_field form.completedby_year class+="form-control" %}
+                <label for="{{ form.completedby_year.id_for_label }}" class="form-label">Year to be completed by:</label>
+                {% render_field form.completedby_year class="form-control" %}
             </div>
             <div class="col-md-4 mb-3">
-                {% render_field form.completedby_quarter class+="form-control" %}
+                <label for="{{ form.completedby_quarter.id_for_label }}" class="form-label">Quarter to be completed by:</label>
+                {% render_field form.completedby_quarter class="form-control" %}
             </div>
         </div>
 
         <!-- Add other fields as needed -->
-
         <div class="mb-3">
+            <label for="{{ form.related_goal.id_for_label }}" class="form-label">{{ form.related_goal.label }}</label>
             {% render_field form.related_goal class="form-control" %}
         </div>
 
         <div class="mb-3">
-            {% render_field form.related_collaborative class="form-control" %}
-        </div>
-
-        <div class="mb-3">
+            <label for="{{ form.related_strategy.id_for_label }}" class="form-label">{{ form.related_strategy.label }}</label>
             {% render_field form.related_strategy class="form-control" %}
         </div>
 
         <div class="mb-3">
+            <label for="{{ form.related_objective.id_for_label }}" class="form-label">{{ form.related_objective.label }}</label>
             {% render_field form.related_objective class="form-control" %}
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
+{% endblock %}
