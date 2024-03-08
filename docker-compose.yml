@@ -3,15 +3,40 @@ version: '3'
 services:
   django_gunicorn:
     build: .
+    restart: always
     env_file: .env
     ports:
       - "8054:8000"
+
   nginx:
     build: ./nginx
+    restart: always
     ports:
       - "1335:80"
+      - "13443:443"
     depends_on:
       - django_gunicorn
+    volumes:
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt
+      - proxy-dhparams
+    env_file:
+      - .env
+
+  certbot:
+    build: ./certbot
+    command:
+      - echo "Skipping..."
+    env_file: .env
+    volumes:
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt/
+    depends_on:
+      - nginx
+
 
 volumes:
+  certbot-web:
+  certbot-certs:
   static_volume:
+  proxy-dhparams:
