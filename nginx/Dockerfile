@@ -4,8 +4,8 @@ FROM nginx:alpine
 RUN mkdir -p /etc/nginx/templates
 
 # Copy the template files into the templates directory
-COPY nginx/default.conf.tpl /etc/nginx/templates/
-COPY nginx/default-ssl.conf.tpl /etc/nginx/templates/
+COPY default.conf.tpl /etc/nginx/templates/
+COPY default-ssl.conf.tpl /etc/nginx/templates/
 
 # Copy other Nginx configuration files
 COPY nginx/options-ssl-nginx.conf /etc/nginx/conf.d/
