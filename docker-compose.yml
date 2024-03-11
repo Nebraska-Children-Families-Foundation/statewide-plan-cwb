@@ -28,8 +28,7 @@ services:
 
   certbot:
     build: ./certbot
-    command:
-      - echo "Skipping..."
+    command: /bin/sh -c "echo 'Skipping...'"
     env_file: .env
     volumes:
       - certbot-web:/vol/www
