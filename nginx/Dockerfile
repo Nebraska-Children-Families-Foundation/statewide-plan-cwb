@@ -8,7 +8,7 @@ COPY default.conf.tpl /etc/nginx/templates/
 COPY default-ssl.conf.tpl /etc/nginx/templates/
 
 # Copy other Nginx configuration files
-COPY nginx/options-ssl-nginx.conf /etc/nginx/conf.d/
+COPY options-ssl-nginx.conf /etc/nginx/conf.d/
 
 # Copy the run script
 COPY run.sh /run.sh
