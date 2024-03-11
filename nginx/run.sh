@@ -5,7 +5,7 @@ set -e
 echo "Checking for dhparams.pem"
 if [ ! -f "/vol/proxy/ssl-dhparams.pem" ]; then
   echo "dhparams does not exist - creating it"
-  openssl dhparams -out /vol/proxy/ssl-dhparams.pem 2048
+  openssl dhparam -out /vol/proxy/ssl-dhparams.pem 2048
 fi
 
 # Avoid replacing these with envsubst
