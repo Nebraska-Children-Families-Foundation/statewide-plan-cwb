@@ -11,7 +11,7 @@ COPY nginx/default-ssl.conf.tpl /etc/nginx/templates/
 COPY nginx/options-ssl-nginx.conf /etc/nginx/conf.d/
 
 # Copy the run script
-COPY ./run.sh /run.sh
+COPY run.sh /run.sh
 
 ENV APP_HOST=app
 ENV APP_PORT=9000
