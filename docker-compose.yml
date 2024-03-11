@@ -34,6 +34,8 @@ services:
       - certbot-certs:/etc/letsencrypt/
     depends_on:
       - nginx
+    env_file:
+      - .env
 
 
 volumes:
