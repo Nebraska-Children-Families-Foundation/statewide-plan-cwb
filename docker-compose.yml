@@ -28,8 +28,7 @@ services:
 
   certbot:
     build: ./certbot
-    command: /bin/sh -c "echo 'Skipping...'"
-    env_file: .env
+    command: /opt/certify-init.sh
     volumes:
       - certbot-web:/vol/www
       - certbot-certs:/etc/letsencrypt/
