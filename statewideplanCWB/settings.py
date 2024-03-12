@@ -33,10 +33,10 @@ if DEBUG_ENV == 'development':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev', 'statewideplan.bringupnebraska.org', "127.0.0.1"]
+ALLOWED_HOSTS = ['statewideplan.bringupnebraska.org']
 CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_DOMAIN = '.hyperionhub.dev'  # TODO Set up a 'test' in the env file to handle test server.
-CSRF_TRUSTED_ORIGINS = ['https://statewide-plan.hyperionhub.dev', 'https://statewideplan.bringupnebraska.org']
+CSRF_COOKIE_DOMAIN = 'statewideplan.bringupnebraska.org'  # TODO Set up a 'test' in the env file to handle test server.
+CSRF_TRUSTED_ORIGINS = ['https://statewideplan.bringupnebraska.org']
 
 
 
