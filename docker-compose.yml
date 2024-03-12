@@ -5,41 +5,40 @@ services:
     build: .
     restart: always
     env_file: .env
-    ports:
-      - "8054:8000"
+    environment:
+      - VIRTUAL_HOST=statewideplan.bringupnebraska.org
+      - LETSENCRYPT_HOST=statewideplan.bringupnebraska.org
+      - LETSENCRYPT_EMAIL=znelson@nebraskachildren.org
     volumes:
       - static_volume:/app/staticfiles
 
-  nginx:
-    build: ./nginx
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
     restart: always
     ports:
-      - "1335:80"
-      - "13443:443"
-    depends_on:
-      - django_gunicorn
+      - "80:80"
+      - "443:443"
     volumes:
-      - certbot-web:/vol/www
-      - certbot-certs:/etc/letsencrypt
-      - proxy-dhparams:/vol/proxy
-      - static_volume:/vol/static
-    env_file:
-      - .env
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certbot-certs:/etc/nginx/certs:rw
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-html:/usr/share/nginx/html
+      - proxy-dhparams:/etc/nginx/dhparam
 
-  certbot:
-    build: ./certbot
-    command: /opt/certify-init.sh
+  acme-companion:
+    image: nginxproxy/acme-companion
+    restart: always
     volumes:
-      - certbot-web:/vol/www
-      - certbot-certs:/etc/letsencrypt/
-    depends_on:
-      - nginx
-    env_file:
-      - .env
-
+      - certbot-certs:/etc/nginx/certs:rw
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
 
 volumes:
-  certbot-web:
   certbot-certs:
-  static_volume:
+  proxy-vhost:
+  proxy-html:
   proxy-dhparams:
+  static_volume:
