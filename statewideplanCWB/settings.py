@@ -26,19 +26,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG_ENV = config('DJANGO_ENV', default='production')
+ENVIRONMENT = config('DJANGO_ENV')
 
-if DEBUG_ENV == 'development':
+# Development settings
+if ENVIRONMENT == 'development':
     DEBUG = True
-else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    CSRF_COOKIE_SECURE = False  # HTTPS may not be used in development
+
+# Production settings
+elif ENVIRONMENT == 'production':
     DEBUG = False
+    ALLOWED_HOSTS = ['statewideplan.bringupnebraska.org']
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_DOMAIN = '.bringupnebraska.org'
+    CSRF_TRUSTED_ORIGINS = ['https://statewideplan.bringupnebraska.org']
 
-ALLOWED_HOSTS = ['statewideplan.bringupnebraska.org']
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_DOMAIN = 'statewideplan.bringupnebraska.org'  # TODO Set up a 'test' in the env file to handle test server.
-CSRF_TRUSTED_ORIGINS = ['https://statewideplan.bringupnebraska.org']
-
-
+# Test server settings
+elif ENVIRONMENT == 'test':
+    DEBUG = False
+    ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev']
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_DOMAIN = '.hyperionhub.dev'
+    CSRF_TRUSTED_ORIGINS = ['https://statewide-plan.hyperionhub.dev']
 
 # Application definition
 
