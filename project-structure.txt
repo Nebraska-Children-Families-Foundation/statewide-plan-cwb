@@ -1,0 +1,90 @@
+statewide-plan-cwb
+├─ statewideplanCWB
+│  ├─ __init__.py
+│  ├─ asgi.py
+│  ├─ settings.py
+│  ├─ urls.py
+│  └─ wsgi.py
+├─ static
+│  └─ main.css
+├─ images
+├─ staticfiles
+│  ├─ admin
+│  │  ├─ css
+│  │  ├─ img
+│  │  └─ js
+│  ├─ css
+│  ├─ images
+│  ├─ smart-selects
+│  └─ staticfiles.json
+├─ templates
+│  └─ includes
+│     └─ font_links.html
+├─ users
+│  ├─ migrations
+│  ├─ templates
+│  │  └─ users
+│  │     ├─ base.html
+│  │   	 └─ login.html
+│  ├─ __init__.py
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ forms.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  └─ views.py
+├─ core
+│  ├─ fixtures
+│  ├─ migrations
+│  ├─ templates
+│  │  ├─ base.html
+│  │  ├─ about.html
+│  │  ├─ communication-plan.html
+│  │  ├─ community-activities.html
+│  │  ├─ community-collaboratives.html
+│  │  ├─ create-community-activity.html
+│  │  ├─ create-partner-activty.html
+│  │  ├─ goals.html
+│  │  ├─ home.html
+│  │  ├─ partner-activities.html
+│  │  ├─ strategies.html
+│  │  ├─ strategies-objectives.html
+│  │  └─ strategy-list.html
+│  ├─ __init__.py
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ forms.py
+│  ├─ models.py
+│  ├─ standardization
+│  │  ├─ __init__.py
+│  │  └─ models.py
+│  ├─ measurement
+│  │  ├─ __init__.py
+│  │  └─ models.py
+│  ├─ alignment
+│  │  ├─ __init__.py
+│  │  └─ models.py
+│  ├─ plan_actors
+│  │  ├─ __init__.py
+│  │  └─ models.py
+│  ├─ plan_work
+│  │  ├─ __init__.py
+│  │  └─ models.py
+│  ├─ relationships
+│  │  ├─ __init__.py
+│  │  └─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  └─ views.py
+├─ .dockerignore
+├─ .env
+├─ .env.example
+├─ .gitignore
+├─ docker-compose.yml
+├─ Dockerfile
+├─ entrypoint.sh
+├─ manage.py
+├─ db.sqlite3
+├─ project-structure.txt
+└─ requirements.txt

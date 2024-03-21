@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 
 
-class StrategyPriority(models.Model):
+class CollaborativeStrategyPriority(models.Model):
     strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     community_collaborative = models.ForeignKey('CommunityCollaborative', on_delete=models.CASCADE)
     is_priority = models.BooleanField(default=False)

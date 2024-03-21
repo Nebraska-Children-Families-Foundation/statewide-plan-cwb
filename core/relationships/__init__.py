@@ -1,1 +1,1 @@
-from .models import StrategyPriority
+from .models import CollaborativeStrategyPriority

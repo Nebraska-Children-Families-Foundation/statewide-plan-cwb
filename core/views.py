@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import (Goal, Objective, Strategy, CommunityActivity, StrategyActivity, CommunityCollaborative, NcffTeam,
-                     SystemPartner, StrategyPriority)
+                     SystemPartner, CollaborativeStrategyPriority)
 from .forms import CommunityActivityForm, PartnerActivityForm
 from django.http import JsonResponse
 
@@ -67,7 +67,7 @@ def strategy_list(request):
     # Prepare additional data for each strategy
     for strategy in strategies:
         # Fetching Community Collaboratives that marked the strategy as a priority
-        strategy.priority_collaboratives = StrategyPriority.objects.filter(
+        strategy.priority_collaboratives = CollaborativeStrategyPriority.objects.filter(
             strategy=strategy, is_priority=True
         ).select_related('community_collaborative')
 

@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
-    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, StrategyPriority
+    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority
 )
 
 
@@ -26,7 +26,7 @@ class CommunityCollaborativeAdmin(admin.ModelAdmin):
     search_fields = ('community_collab_name', 'community_collab_short_name',)
 
     def priority_strategy_count(self, obj):
-        return StrategyPriority.objects.filter(community_collaborative=obj).count()
+        return CollaborativeStrategyPriority.objects.filter(community_collaborative=obj).count()
 
     priority_strategy_count.short_description = 'Priority Strategies Count'
 
@@ -38,7 +38,7 @@ class CommunityCollaborativeAdmin(admin.ModelAdmin):
 
 class StrategyPriorityInline(admin.TabularInline):
     # Specify the model that this inline admin will manage.
-    model = StrategyPriority
+    model = CollaborativeStrategyPriority
 
     # Set the number of extra forms to display in the inline admin.
     # This allows for adding new StrategyPriority instances directly from the Strategy admin page.
@@ -60,7 +60,7 @@ class StrategyAdmin(admin.ModelAdmin):
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
         for instance in instances:
-            if isinstance(instance, StrategyPriority) and not instance.pk:
+            if isinstance(instance, CollaborativeStrategyPriority) and not instance.pk:
                 # This is a new StrategyPriority instance being added
                 instance.is_priority = True
             instance.save()

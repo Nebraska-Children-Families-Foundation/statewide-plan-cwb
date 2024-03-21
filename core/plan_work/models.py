@@ -71,7 +71,7 @@ class Strategy(models.Model):
 
     community_collaboratives = models.ManyToManyField(
         'CommunityCollaborative',
-        through='StrategyPriority',
+        through='core.relationships.models.CollaborativeStrategyPriority',
         blank=True
     )
 
