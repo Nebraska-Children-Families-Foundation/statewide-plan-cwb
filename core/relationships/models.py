@@ -18,4 +18,22 @@ class CollaborativeStrategyPriority(models.Model):
         verbose_name = 'Community Collab Priority'
         verbose_name_plural = 'Community Collab Priorities'
         db_table = 'collab_strategy_priority'
-        ordering = ['community_collaborative', 'strategy',]
+        ordering = ['community_collaborative', 'strategy', ]
+
+
+class NcffTeamStrategyPriority(models.Model):
+    strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
+    ncff_team = models.ForeignKey('NcffTeam', on_delete=models.CASCADE)
+    is_priority = models.BooleanField(default=False)
+
+    def __str__(self):
+        team_str = str(self.ncff_team.ncff_team_name) if self.ncff_team else "Unknown Team"
+        strategy_str = str(self.strategy.strategy_name) if self.strategy else "Unknown Strategy"
+        return f"{team_str} - {strategy_str} - Priority: {self.is_priority}"
+
+    class Meta:
+        unique_together = ('strategy', 'ncff_team')
+        verbose_name = 'NCFF Team Priority'
+        verbose_name_plural = 'NCFF Team Priorities'
+        db_table = 'ncff_strategy_priority'
+        ordering = ['ncff_team', 'strategy', ]
