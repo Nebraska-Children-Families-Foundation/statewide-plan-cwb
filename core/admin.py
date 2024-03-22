@@ -181,13 +181,13 @@ class PerformanceMeasureAdmin(admin.ModelAdmin):
     get_goal_number.short_description = 'Goal Number'
 
 
-class DhhsPriorityAdmin(admin.ModelAdmin):
-    list_display = ('priority_description', 'related_goal')
-    search_fields = ('priority_description',)
-
-    def get_goal_number(self, obj):
-        return obj.related_goal.goal_number
-    get_goal_number.short_description = 'Goal Number'
+# class DhhsPriorityAdmin(admin.ModelAdmin):
+#     list_display = ('priority_description', 'related_goal')
+#     search_fields = ('priority_description',)
+#
+#     def get_goal_number(self, obj):
+#         return obj.related_goal.goal_number
+#     get_goal_number.short_description = 'Goal Number'
 
 
 class StrategyActivityAdmin(admin.ModelAdmin):
@@ -212,7 +212,7 @@ admin.site.register(NcffTeam, NcffTeamAdmin)
 admin.site.register(PerformanceMeasure, PerformanceMeasureAdmin)
 admin.site.register(ChangeIndicator, ChangeIndicatorAdmin)
 admin.site.register(StrategyActivity, StrategyActivityAdmin)
-admin.site.register(DhhsPriority, DhhsPriorityAdmin)
+# admin.site.register(DhhsPriority, DhhsPriorityAdmin)
 admin.site.register(SystemPartner, SystemPartnerAdmin)
 admin.site.register(NcffTeamStrategyPriority)
 admin.site.register(PartnerStrategyPriority)
