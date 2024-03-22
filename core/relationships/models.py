@@ -37,3 +37,21 @@ class NcffTeamStrategyPriority(models.Model):
         verbose_name_plural = 'NCFF Team Priorities'
         db_table = 'ncff_strategy_priority'
         ordering = ['ncff_team', 'strategy', ]
+
+
+class PartnerStrategyPriority(models.Model):
+    strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
+    system_partner = models.ForeignKey('SystemPartner', on_delete=models.CASCADE)
+    is_priority = models.BooleanField(default=False)
+
+    def __str__(self):
+        partner_str = str(self.system_partner.system_partner_name) if self.system_partner else "Unknown Partner"
+        strategy_str = str(self.strategy.strategy_name) if self.strategy else "Unknown Strategy"
+        return f"{partner_str} - {strategy_str} - Priority: {self.is_priority}"
+
+    class Meta:
+        unique_together = ('strategy', 'system_partner')
+        verbose_name = 'Partner Strategy Priority'
+        verbose_name_plural = 'Partner Strategy Priorities'
+        db_table = 'partner_strategy_priority'
+        ordering = ['system_partner', 'strategy',]
