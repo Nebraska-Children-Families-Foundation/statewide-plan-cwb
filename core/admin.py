@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
-    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority
+    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority,
+    NcffTeamStrategyPriority, PartnerStrategyPriority
 )
 
 
@@ -36,7 +37,7 @@ class CommunityCollaborativeAdmin(admin.ModelAdmin):
     community_activity_count.short_description = 'Activity Count'
 
 
-class StrategyPriorityInline(admin.TabularInline):
+class CollaborativeStrategyPriorityInline(admin.TabularInline):
     # Specify the model that this inline admin will manage.
     model = CollaborativeStrategyPriority
 
@@ -44,16 +45,34 @@ class StrategyPriorityInline(admin.TabularInline):
     # This allows for adding new StrategyPriority instances directly from the Strategy admin page.
     extra = 1
 
-    # You can add more options here to customize the admin interface
+    # Set the names
+    verbose_name = 'Collaborative Priority'
+    verbose_name_plural = 'Collaborative Priorities'
+
+
+class NcffTeamStrategyPriorityInline(admin.TabularInline):
+    model = NcffTeamStrategyPriority
+    extra = 1
+    verbose_name = "NCFF Team Priority"
+    verbose_name_plural = "NCFF Team Priorities"
+
+
+class PartnerStrategyPriorityInline(admin.TabularInline):
+    model = PartnerStrategyPriority
+    extra = 1
+    verbose_name = "State Partner Priority"
+    verbose_name_plural = "State Partner Priorities"
+
 
 
 class StrategyAdmin(admin.ModelAdmin):
-    list_display = ('strategy_number', 'strategy_name', 'get_goal_number', 'get_goal_name', 'get_objective_number',
-                    'get_objective_name', 'get_priority_collaboratives')
+    list_display = ('strategy_number', 'strategy_name', 'get_goal_number', 'get_objective_number',
+                    'get_priority_collaboratives', 'get_ncff_team_priorities',
+                    'get_state_partner_priorities')
     search_fields = ('strategy_name', 'get_priority_collaboratives')
     list_filter = ('related_goal', 'related_objective', 'strategy_number',)
     ordering = ('strategy_number', 'related_goal', 'related_objective')
-    inlines = [StrategyPriorityInline]
+    inlines = [CollaborativeStrategyPriorityInline, PartnerStrategyPriorityInline, NcffTeamStrategyPriorityInline]
 
     readonly_fields = ('strategy_number',)
 
@@ -67,10 +86,21 @@ class StrategyAdmin(admin.ModelAdmin):
         formset.save_m2m()
 
     def get_priority_collaboratives(self, obj):
-        return ", ".join([cc.community_collab_name for cc in
-                          obj.community_collaboratives.filter(strategypriority__is_priority=True)])
+        return ", ".join([csp.community_collaborative.community_collab_name for csp in
+                          obj.collaborativestrategypriority_set.filter(is_priority=True)])
 
-    get_priority_collaboratives.short_description = 'Priority Collaboratives'
+    get_priority_collaboratives.short_description = 'Collab Designated Priority'
+
+    def get_ncff_team_priorities(self, obj):
+        return ", ".join([team.ncff_team_name for team in obj.ncffteamstrategypriority_set.filter(is_priority=True)])
+
+    get_ncff_team_priorities.short_description = 'NCFF Team Priorities'
+
+    def get_state_partner_priorities(self, obj):
+        return ", ".join(
+            [partner.system_partner_name for partner in obj.partnerstrategypriority_set.filter(is_priority=True)])
+
+    get_state_partner_priorities.short_description = 'State Partner Priorities'
 
     def get_goal_number(self, obj):
         return obj.related_goal.goal_number
@@ -179,9 +209,10 @@ admin.site.register(Objective, ObjectiveAdmin)
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(NcffTeam, NcffTeamAdmin)
-admin.site.register(CommunityCollaborative, CommunityCollaborativeAdmin)
 admin.site.register(PerformanceMeasure, PerformanceMeasureAdmin)
 admin.site.register(ChangeIndicator, ChangeIndicatorAdmin)
 admin.site.register(StrategyActivity, StrategyActivityAdmin)
 admin.site.register(DhhsPriority, DhhsPriorityAdmin)
 admin.site.register(SystemPartner, SystemPartnerAdmin)
+admin.site.register(NcffTeamStrategyPriority)
+admin.site.register(PartnerStrategyPriority)
