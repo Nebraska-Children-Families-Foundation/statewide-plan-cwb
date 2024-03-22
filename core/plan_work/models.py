@@ -3,6 +3,7 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
 from core.standardization import ActivityStatusChoice, Quarters, Years
 from core.plan_actors import CommunityCollaborative
+from core.relationships import CollaborativeStrategyPriority
 
 
 class Goal(models.Model):
@@ -71,7 +72,7 @@ class Strategy(models.Model):
 
     community_collaboratives = models.ManyToManyField(
         'CommunityCollaborative',
-        through='core.relationships.models.CollaborativeStrategyPriority',
+        through='core.CollaborativeStrategyPriority',
         blank=True
     )
 
