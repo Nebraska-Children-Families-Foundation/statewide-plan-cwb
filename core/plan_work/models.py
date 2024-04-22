@@ -220,8 +220,7 @@ class SystemPartnerCommitment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return (f"System Partner: {self.related_systempartner.system_partner_short_name or 
-                                   self.related_systempartner.system_partner_name}, "
+        return (f"System Partner: {self.related_systempartner.system_partner_short_name or self.related_systempartner.system_partner_name}, "
                 f"Goal {self.related_goal.goal_number}, Obj. {self.related_objective.objective_number}, "
                 f"Strategy {self.related_strategy.strategy_number}, Commitment #{self.commitment_number}")
 
