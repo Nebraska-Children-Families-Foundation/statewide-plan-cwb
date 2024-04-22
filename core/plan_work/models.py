@@ -3,6 +3,7 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
 from core.standardization import ActivityStatusChoice, Quarters, Years
 from core.plan_actors import CommunityCollaborative
+from core.plan_actors import SystemPartner
 from core.relationships import CollaborativeStrategyPriority
 
 
@@ -186,3 +187,47 @@ class NCActionStep(models.Model):
         verbose_name_plural = "NC Action Steps"
         db_table = 'nc_actionstep'
         ordering = ['related_goal', 'related_objective', 'related_strategy', 'activity_number', 'completedby_year',]
+
+
+class SystemPartnerCommitment(models.Model):
+    commitment_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    commitment_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
+    commitment_name = models.CharField(max_length=255)
+    commitment_details = models.TextField(max_length=1500)
+    commitment_lead = models.CharField(max_length=100,
+                                       help_text="Indicate who will lead the commitment (person, organization, "
+                                                 "or team).",
+                                       blank=True, default="")
+    commitment_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
+    completedby_year = models.CharField(max_length=4, choices=Years.choices)
+    completedby_quarter = models.CharField(max_length=3, choices=Quarters.choices)
+    related_systempartner = models.ForeignKey(SystemPartner, on_delete=models.CASCADE)
+    related_goal = models.ForeignKey('core.Goal', on_delete=models.CASCADE)
+    related_strategy = models.ForeignKey('core.Strategy', on_delete=models.CASCADE)
+    related_objective = models.ForeignKey('core.Objective', on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.commitment_number:
+            prefix = "COMMIT-"
+            last_commitment = SystemPartnerCommitment.objects.order_by('commitment_number').last()
+            if last_commitment:
+                last_number = int(last_commitment.commitment_number.split('-')[1])
+                new_number = last_number + 1
+            else:
+                new_number = 1000  # Start from 1000
+
+            self.commitment_number = f"{prefix}{new_number}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return (f"System Partner: {self.related_systempartner.system_partner_short_name or 
+                                   self.related_systempartner.system_partner_name}, "
+                f"Goal {self.related_goal.goal_number}, Obj. {self.related_objective.objective_number}, "
+                f"Strategy {self.related_strategy.strategy_number}, Commitment #{self.commitment_number}")
+
+    class Meta:
+        verbose_name = "System Partner Commitment"
+        verbose_name_plural = "System Partner Commitments"
+        db_table = 'system_partner_commitments'
+        ordering = ['related_systempartner', 'related_goal', 'related_objective', 'related_strategy',
+                    'commitment_number', 'completedby_year']
