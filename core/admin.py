@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
-    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority,
+    CommunityActionStep, NCActionStep, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority,
     NcffTeamStrategyPriority, PartnerStrategyPriority
 )
 
@@ -32,7 +32,7 @@ class CommunityCollaborativeAdmin(admin.ModelAdmin):
     priority_strategy_count.short_description = 'Priority Strategies Count'
 
     def community_activity_count(self, obj):
-        return CommunityActivity.objects.filter(related_collaborative=obj).count()
+        return CommunityActionStep.objects.filter(related_collaborative=obj).count()
 
     community_activity_count.short_description = 'Activity Count'
 
@@ -203,7 +203,7 @@ class StrategyPriorityAdmin(admin.ModelAdmin):
 
 
 # Register your models here
-admin.site.register(CommunityActivity, CommunityActivityAdmin)
+admin.site.register(CommunityActionStep, CommunityActivityAdmin)
 admin.site.register(Strategy, StrategyAdmin)
 admin.site.register(Objective, ObjectiveAdmin)
 admin.site.register(Goal, GoalAdmin)
@@ -211,7 +211,7 @@ admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(NcffTeam, NcffTeamAdmin)
 admin.site.register(PerformanceMeasure, PerformanceMeasureAdmin)
 admin.site.register(ChangeIndicator, ChangeIndicatorAdmin)
-admin.site.register(StrategyActivity, StrategyActivityAdmin)
+admin.site.register(NCActionStep, StrategyActivityAdmin)
 # admin.site.register(DhhsPriority, DhhsPriorityAdmin)
 admin.site.register(SystemPartner, SystemPartnerAdmin)
 admin.site.register(NcffTeamStrategyPriority)

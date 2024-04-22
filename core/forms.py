@@ -1,12 +1,12 @@
 from django import forms
 from django.forms import ModelForm
-from .models import CommunityActivity, StrategyActivity, Goal, Objective, Strategy
+from .models import CommunityActionStep, NCActionStep, Goal, Objective, Strategy
 from django.db.models import F
 
 
 class CommunityActivityForm(forms.ModelForm):
     class Meta:
-        model = CommunityActivity
+        model = CommunityActionStep
         fields = '__all__'
         widgets = {
             'activity_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -63,7 +63,7 @@ class CommunityActivityForm(forms.ModelForm):
 
 class PartnerActivityForm(forms.ModelForm):
     class Meta:
-        model = StrategyActivity
+        model = NCActionStep
         fields = '__all__'
         widgets = {
             'activity_name': forms.TextInput(attrs={'class': 'form-control'}),

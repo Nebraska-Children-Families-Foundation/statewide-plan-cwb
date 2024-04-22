@@ -87,7 +87,7 @@ class Strategy(models.Model):
         ordering = ('related_goal', 'related_objective', 'strategy_number',)
 
 
-class CommunityActivity(models.Model):
+class CommunityActionStep(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
@@ -119,7 +119,7 @@ class CommunityActivity(models.Model):
     def save(self, *args, **kwargs):
         if not self.activity_number:
             prefix = "C-ACT-"
-            last_activity = CommunityActivity.objects.order_by('activity_number').last()
+            last_activity = CommunityActionStep.objects.order_by('activity_number').last()
 
             if last_activity:
                 # Splitting the string to extract the numeric part
@@ -139,14 +139,14 @@ class CommunityActivity(models.Model):
                 f"Objective {self.related_objective}, Strategy {self.related_strategy}")
 
     class Meta:
-        verbose_name_plural = 'Community Activity'
-        verbose_name = 'Community Activities'
-        db_table = 'community_activity'
+        verbose_name_plural = 'Community Action Step'
+        verbose_name = 'Community Action Steps'
+        db_table = 'community_actionstep'
         ordering = ['related_collaborative', 'related_goal', 'related_objective', 'related_strategy',
                     'activity_status', 'completedby_year',]
 
 
-class StrategyActivity(models.Model):
+class NCActionStep(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
@@ -165,8 +165,8 @@ class StrategyActivity(models.Model):
     # Functionality that increments the strategy number is the ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
-            prefix = "ACT-"
-            last_activity = StrategyActivity.objects.order_by('activity_number').last()
+            prefix = "NC_ACT-"
+            last_activity = NCActionStep.objects.order_by('activity_number').last()
 
             if last_activity:
                 last_number = int(last_activity.activity_number.split('-')[1])
@@ -182,7 +182,7 @@ class StrategyActivity(models.Model):
                 f"Strategy {self.related_strategy.strategy_number}")
 
     class Meta:
-        verbose_name = "Strategy Activity"
-        verbose_name_plural = "Strategy Activities"
-        db_table = 'strategy_activity'
+        verbose_name = "NC Action Step"
+        verbose_name_plural = "NC Action Steps"
+        db_table = 'nc_actionstep'
         ordering = ['related_goal', 'related_objective', 'related_strategy', 'activity_number', 'completedby_year',]
