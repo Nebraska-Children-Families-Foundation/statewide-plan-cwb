@@ -3,7 +3,7 @@ from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
     CommunityActionStep, NCActionStep, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority,
-    NcffTeamStrategyPriority, PartnerStrategyPriority
+    NcffTeamStrategyPriority, PartnerStrategyPriority, SystemPartnerCommitment
 )
 
 
@@ -190,6 +190,27 @@ class PerformanceMeasureAdmin(admin.ModelAdmin):
 #     get_goal_number.short_description = 'Goal Number'
 
 
+class SystemPartnerCommitmentAdmin(admin.ModelAdmin):
+    list_display = ('commitment_number', 'commitment_name', 'commitment_status', 'completedby_year', 'completedby_quarter',
+                    'related_systempartner', 'get_related_goal_number', 'get_related_objective_number', 'get_related_strategy_number')
+    search_fields = ('commitment_name', 'commitment_details', 'commitment_lead')
+    list_filter = ('commitment_status', 'related_systempartner', 'related_goal', 'related_objective', 'related_strategy')
+
+    readonly_fields = ('commitment_number',)
+
+    def get_related_goal_number(self, obj):
+        return obj.related_goal.goal_number
+    get_related_goal_number.short_description = 'Goal Number'
+
+    def get_related_objective_number(self, obj):
+        return obj.related_objective.objective_number
+    get_related_objective_number.short_description = 'Objective Number'
+
+    def get_related_strategy_number(self, obj):
+        return obj.related_strategy.strategy_number
+    get_related_strategy_number.short_description = 'Strategy Number'
+
+
 class StrategyActivityAdmin(admin.ModelAdmin):
     list_display = ('activity_number', 'activity_name', 'activity_status', 'completedby_year', 'completedby_quarter')
     search_fields = ('activity_name', 'activity_status')
@@ -213,6 +234,7 @@ admin.site.register(PerformanceMeasure, PerformanceMeasureAdmin)
 admin.site.register(ChangeIndicator, ChangeIndicatorAdmin)
 admin.site.register(NCActionStep, StrategyActivityAdmin)
 # admin.site.register(DhhsPriority, DhhsPriorityAdmin)
+admin.site.register(SystemPartnerCommitment, SystemPartnerCommitmentAdmin)
 admin.site.register(SystemPartner, SystemPartnerAdmin)
 admin.site.register(NcffTeamStrategyPriority)
 admin.site.register(PartnerStrategyPriority)
