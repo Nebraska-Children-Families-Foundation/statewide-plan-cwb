@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import (Goal, Objective, Strategy, CommunityActivity, StrategyActivity, CommunityCollaborative, NcffTeam,
+from .models import (Goal, Objective, Strategy, CommunityActivity, NCActionStep, CommunityCollaborative, NcffTeam,
                      SystemPartner, CollaborativeStrategyPriority)
 from .forms import CommunityActivityForm, PartnerActivityForm
 from django.http import JsonResponse
@@ -27,7 +27,7 @@ def community_activities(request, strategy_id):
 
 
 def partner_activities(request, strategy_id=None):
-    activities = StrategyActivity.objects.filter(related_strategy=strategy_id)
+    activities = NCActionStep.objects.filter(related_strategy=strategy_id)
     return render(request, 'core/partner-activities.html', {'activities': activities})
 
 
@@ -72,7 +72,7 @@ def strategy_list(request):
         ).select_related('community_collaborative')
 
         # Count of Partner and Community Activities
-        strategy.partner_activities_count = StrategyActivity.objects.filter(related_strategy=strategy).count()
+        strategy.partner_activities_count = NCActionStep.objects.filter(related_strategy=strategy).count()
         strategy.community_activities_count = CommunityActivity.objects.filter(related_strategy=strategy).count()
 
     context = {

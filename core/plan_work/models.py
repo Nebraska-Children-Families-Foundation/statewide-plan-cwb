@@ -146,7 +146,7 @@ class CommunityActivity(models.Model):
                     'activity_status', 'completedby_year',]
 
 
-class StrategyActivity(models.Model):
+class NCActionStep(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
@@ -166,7 +166,7 @@ class StrategyActivity(models.Model):
     def save(self, *args, **kwargs):
         if not self.activity_number:
             prefix = "ACT-"
-            last_activity = StrategyActivity.objects.order_by('activity_number').last()
+            last_activity = NCActionStep.objects.order_by('activity_number').last()
 
             if last_activity:
                 last_number = int(last_activity.activity_number.split('-')[1])

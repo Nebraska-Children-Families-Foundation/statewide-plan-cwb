@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     ActivityStatus, NcffTeam, CommunityCollaborative,
     ChangeIndicator, PerformanceMeasure, DhhsPriority,
-    CommunityActivity, StrategyActivity, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority,
+    CommunityActivity, NCActionStep, Strategy, Objective, Goal, SystemPartner, CollaborativeStrategyPriority,
     NcffTeamStrategyPriority, PartnerStrategyPriority
 )
 
@@ -211,7 +211,7 @@ admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(NcffTeam, NcffTeamAdmin)
 admin.site.register(PerformanceMeasure, PerformanceMeasureAdmin)
 admin.site.register(ChangeIndicator, ChangeIndicatorAdmin)
-admin.site.register(StrategyActivity, StrategyActivityAdmin)
+admin.site.register(NCActionStep, StrategyActivityAdmin)
 # admin.site.register(DhhsPriority, DhhsPriorityAdmin)
 admin.site.register(SystemPartner, SystemPartnerAdmin)
 admin.site.register(NcffTeamStrategyPriority)
