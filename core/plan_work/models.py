@@ -165,7 +165,7 @@ class NCActionStep(models.Model):
     # Functionality that increments the strategy number is the ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
-            prefix = "ACT-"
+            prefix = "NC_ACT-"
             last_activity = NCActionStep.objects.order_by('activity_number').last()
 
             if last_activity:
@@ -182,7 +182,7 @@ class NCActionStep(models.Model):
                 f"Strategy {self.related_strategy.strategy_number}")
 
     class Meta:
-        verbose_name = "Strategy Activity"
-        verbose_name_plural = "Strategy Activities"
-        db_table = 'strategy_activity'
+        verbose_name = "NC Action Step"
+        verbose_name_plural = "NC Action Steps"
+        db_table = 'nc_actionstep'
         ordering = ['related_goal', 'related_objective', 'related_strategy', 'activity_number', 'completedby_year',]
