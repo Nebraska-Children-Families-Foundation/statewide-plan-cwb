@@ -52,7 +52,13 @@ statewide-plan-cwb
 │  │  ├─ strategies-objectives.html
 │  │  └─ strategy-list.html
 │  ├─ __init__.py
-│  ├─ admin.py
+│  ├─ admin
+│  │  ├─ __init__.py
+│  │  ├─ actionsteps_admin.py
+│  │  ├─ planactors_admin.py
+│  │  ├─ planwork_admin.py
+│  │  ├─ standardization_admin.py
+│  │  ├─ alignment_admin.py
 │  ├─ apps.py
 │  ├─ forms.py
 │  ├─ models.py
