@@ -100,7 +100,12 @@ class CommunityActionStep(models.Model):
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices, blank=True)
     completedby_quarter = models.CharField(max_length=3, choices=Quarters.choices, blank=True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_action_steps')
+    community_creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='created_community_action_steps',  # unique related_name
+        null=True
+    )
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_objective = ChainedForeignKey(
@@ -161,6 +166,12 @@ class NCActionStep(models.Model):
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices)
     completedby_quarter = models.CharField(max_length=3, choices=Quarters.choices)
+    nc_staff_creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='created_nc_action_steps',  # unique related_name
+        null=True
+    )
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
     related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
@@ -203,6 +214,12 @@ class SystemPartnerCommitment(models.Model):
     commitment_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices)
     completedby_quarter = models.CharField(max_length=3, choices=Quarters.choices)
+    system_partner_creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='created_system_partner_commitments',  # unique related_name
+        null=True
+    )
     related_systempartner = models.ForeignKey(SystemPartner, on_delete=models.CASCADE)
     related_goal = models.ForeignKey('core.Goal', on_delete=models.CASCADE)
     related_strategy = models.ForeignKey('core.Strategy', on_delete=models.CASCADE)

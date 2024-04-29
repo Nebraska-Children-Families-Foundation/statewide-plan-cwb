@@ -22,6 +22,10 @@ class SystemPartner(models.Model):
     system_partner_name = models.CharField(max_length=75)
     system_partner_short_name = models.CharField(max_length=25, blank=True, null=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.field = None
+
     def __str__(self):
         return self.system_partner_short_name or self.system_partner_name
 
@@ -36,6 +40,10 @@ class CommunityCollaborative(models.Model):
     community_collab_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     community_collab_name = models.CharField(max_length=100)
     community_collab_short_name = models.CharField(max_length=25, unique=True, blank=True, null=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.field = None
 
     def __str__(self):
         return self.community_collab_name or self.community_collab_name

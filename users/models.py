@@ -45,10 +45,18 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff member'), default=False)
 
-    community_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.SET_NULL, null=True,
-                                                blank=True, related_name='members')
-    system_partner = models.ForeignKey(SystemPartner, on_delete=models.SET_NULL, null=True, blank=True,
-                                       related_name='members')
+    community_collaborative = models.ForeignKey(
+        CommunityCollaborative,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='users'
+    )
+    system_partner = models.ForeignKey(
+        SystemPartner,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='users'
+    )
 
     objects = CustomUserManager()
 
