@@ -3,6 +3,8 @@ from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionSte
                      SystemPartner, CollaborativeStrategyPriority)
 from .forms import CommunityActivityForm, PartnerActivityForm
 from django.http import JsonResponse
+from django.http import HttpResponseForbidden
+from django.views.generic import UpdateView
 
 
 def home(request):
@@ -112,3 +114,24 @@ def load_objectives(request):
     goal_id = request.GET.get('goal_id')
     objectives = Objective.objects.filter(goal_id=goal_id).order_by('name')
     return JsonResponse(list(objectives.values('id', 'name')), safe=False)
+
+
+class CommunityActionStepUpdateView(UpdateView):
+    model = CommunityActionStep
+    fields = ['activity_name', 'activity_details', 'activity_status', 'completedby_year', 'completedby_quarter']
+    template_name = 'your_template.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if not self.has_edit_permission(request.user, obj):
+            return HttpResponseForbidden("You do not have permission to edit this action step.")
+        return super().dispatch(request, *args, **kwargs)
+
+    def has_edit_permission(self, user, action_step):
+        # Check if the user is the creator
+        if action_step.creator == user:
+            return True
+        # Check if the user is part of the same collaborative
+        if user.community_collaborative == action_step.related_collaborative:
+            return True
+        return False

@@ -4,6 +4,7 @@ from smart_selects.db_fields import ChainedForeignKey
 from core.standardization import ActivityStatusChoice, Quarters, Years
 from core.plan_actors import CommunityCollaborative
 from core.plan_actors import SystemPartner
+from django.conf import settings
 from core.relationships import CollaborativeStrategyPriority
 
 
@@ -99,6 +100,7 @@ class CommunityActionStep(models.Model):
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices, blank=True)
     completedby_quarter = models.CharField(max_length=3, choices=Quarters.choices, blank=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_action_steps')
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
     related_objective = ChainedForeignKey(
