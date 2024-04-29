@@ -35,6 +35,11 @@ class CustomUserManager(BaseUserManager):
 
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
+    class MemberTypes(models.TextChoices):
+        COMMUNITY_COLLABORATIVE = 'CC', _('Community Collaborative Member')
+        SYSTEM_PARTNER = 'SP', _('System Partner Member')
+        NCFF_TEAM = 'NT', _('NCFF Team Member')
+
     email = models.EmailField(_('email address'), unique=True)
     username = models.CharField(_('username'), max_length=30, unique=True)
     first_name = models.CharField(_('first name'), max_length=150, blank=True, null=True)
@@ -56,6 +61,12 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='users'
+    )
+    member_type = models.CharField(
+        max_length=2,
+        choices=MemberTypes.choices,
+        default=MemberTypes.COMMUNITY_COLLABORATIVE,
+        help_text=_('Type of member')
     )
 
     objects = CustomUserManager()

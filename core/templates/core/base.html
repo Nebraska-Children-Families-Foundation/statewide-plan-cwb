@@ -69,6 +69,13 @@
         {% endif %}
       </ul>
         <ul class="nav flex-column mt-auto">
+        {% if user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/" title="Admin Interface Login">
+                    <i class="bi bi-gear-fill" style="padding-right: 5px"></i> Access Admin Interface
+                </a>
+            </li>
+        {% endif %}
         {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">

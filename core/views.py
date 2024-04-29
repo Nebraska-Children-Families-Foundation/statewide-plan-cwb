@@ -5,7 +5,7 @@ from .forms import CommunityActivityForm, PartnerActivityForm, SystemPartnerComm
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from .permissions import has_edit_permission, has_commitment_edit_permission
-from django.views.generic import UpdateView
+from .plan_work.models import SystemPartnerCommitment
 
 
 def home(request):
