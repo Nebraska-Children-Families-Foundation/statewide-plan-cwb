@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionStep, CommunityCollaborative, NcffTeam,
                      SystemPartner, CollaborativeStrategyPriority)
 from .forms import CommunityActivityForm, PartnerActivityForm
@@ -100,7 +100,7 @@ def create_community_activity(request):
 
 def create_partner_activity(request):
     if request.method == 'POST':
-        form = PartnerActivityForm(request.Post)
+        form = PartnerActivityForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('core/create-partner-activity.html')
@@ -116,22 +116,13 @@ def load_objectives(request):
     return JsonResponse(list(objectives.values('id', 'name')), safe=False)
 
 
-class CommunityActionStepUpdateView(UpdateView):
-    model = CommunityActionStep
-    fields = ['activity_name', 'activity_details', 'activity_status', 'completedby_year', 'completedby_quarter']
-    template_name = 'your_template.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if not self.has_edit_permission(request.user, obj):
-            return HttpResponseForbidden("You do not have permission to edit this action step.")
-        return super().dispatch(request, *args, **kwargs)
-
-    def has_edit_permission(self, user, action_step):
-        # Check if the user is the creator
-        if action_step.creator == user:
-            return True
-        # Check if the user is part of the same collaborative
-        if user.community_collaborative == action_step.related_collaborative:
-            return True
-        return False
+def update_community_activity(request, pk):
+    activity = get_object_or_404(CommunityActionStep, pk=pk)
+    if request.method == 'POST':
+        form = CommunityActivityForm(request.POST, instance=activity)
+        if form.is_valid():
+            form.save()
+            return redirect('some-view-name')
+    else:
+        form = CommunityActivityForm(instance=activity)
+    return render(request, 'core/update-community-activity.html', {'form': form})

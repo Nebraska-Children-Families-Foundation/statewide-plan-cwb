@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% block title %} Create a Community Activity {% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+        <label for="{{ form.activity_name.id_for_label }}">Activity Name:</label>
+        {{ form.activity_name }}
+        {{ form.activity_name.errors }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.activity_details.id_for_label }}">Activity Details:</label>
+        {{ form.activity_details }}
+        {{ form.activity_details.errors }}
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            <label for="{{ form.activity_status.id_for_label }}">Activity Status:</label>
+            {{ form.activity_status }}
+            {{ form.activity_status.errors }}
+        </div>
+        <div class="col-md-4">
+            <label for="{{ form.completedby_year.id_for_label }}">Complete By Year:</label>
+            {{ form.completedby_year }}
+            {{ form.completedby_year.errors }}
+        </div>
+        <div class="col-md-4">
+            <label for="{{ form.completedby_quarter.id_for_label }}">Complete By Quarter:</label>
+            {{ form.completedby_quarter }}
+            {{ form.completedby_quarter.errors }}
+        </div>
+    </div>
+    <!-- Similar for other fields -->
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+{% endblock %}
