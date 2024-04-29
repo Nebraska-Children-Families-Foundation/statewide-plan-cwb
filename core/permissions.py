@@ -6,3 +6,8 @@ def has_edit_permission(user, action_step):
     if user.community_collaborative == action_step.related_collaborative:
         return True
     return False
+
+
+def has_commitment_edit_permission(user, commitment):
+    # Check if the user belongs to the System Partner associated with the commitment
+    return user.system_partner == commitment.related_systempartner

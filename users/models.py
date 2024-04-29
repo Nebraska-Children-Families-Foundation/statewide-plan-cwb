@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from core.plan_actors import CommunityCollaborative
+from core.plan_actors import CommunityCollaborative, SystemPartner
 
 
 class CustomUserManager(BaseUserManager):
@@ -47,6 +47,8 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     community_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.SET_NULL, null=True,
                                                 blank=True, related_name='members')
+    system_partner = models.ForeignKey(SystemPartner, on_delete=models.SET_NULL, null=True, blank=True,
+                                       related_name='members')
 
     objects = CustomUserManager()
 

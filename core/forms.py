@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import CommunityActionStep, NCActionStep, Goal, Objective, Strategy
+from .models import CommunityActionStep, NCActionStep, Goal, Objective, Strategy, SystemPartnerCommitment
 from django.db.models import F
 
 
@@ -81,3 +81,9 @@ class PartnerActivityForm(forms.ModelForm):
         self.fields['activity_status'].widget.attrs.update({'class': 'form-control col-md-4'}),
         self.fields['completedby_year'].widget.attrs.update({'class': 'form-control col-md-4'}),
         self.fields['completedby_quarter'].widget.attrs.update({'class': 'form-control col-md-4'})
+
+
+class SystemPartnerCommitmentForm(forms.ModelForm):
+    class Meta:
+        model = SystemPartnerCommitment
+        fields = '__all__'  # Customize as needed
