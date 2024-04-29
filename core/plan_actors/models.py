@@ -8,7 +8,9 @@ class NcffTeam(models.Model):
     ncff_team_short_name = models.CharField(max_length=25, blank=True, null=True)
 
     def __str__(self):
-        return self.ncff_team_short_name or self.ncff_team_name
+        # Use the short name if available; otherwise, use the full name.
+        # Ensure that the result is always a string and provides a fallback default.
+        return str(self.ncff_team_short_name or self.ncff_team_name or "Unnamed Team")
 
     class Meta:
         verbose_name = 'NCFF Initiative / Team / Priority Area'
@@ -23,11 +25,13 @@ class SystemPartner(models.Model):
     system_partner_short_name = models.CharField(max_length=25, blank=True, null=True)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.field = None
 
     def __str__(self):
-        return self.system_partner_short_name or self.system_partner_name
+        # Use the short name if available; otherwise, use the full name.
+        # Ensure that the result is always a string and provides a fallback default.
+        return self.system_partner_short_name or self.system_partner_name or "Unnamed Partner"
 
     class Meta:
         verbose_name = 'System Partner to Align & Support'
@@ -38,15 +42,17 @@ class SystemPartner(models.Model):
 
 class CommunityCollaborative(models.Model):
     community_collab_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    community_collab_short_name = models.CharField(max_length=25, blank=True, null=True)
     community_collab_name = models.CharField(max_length=100)
-    community_collab_short_name = models.CharField(max_length=25, unique=True, blank=True, null=True)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.field = None
 
     def __str__(self):
-        return self.community_collab_name or self.community_collab_name
+        # Use the short name if available; otherwise, use the full name.
+        # Ensure that the result is always a string and provides a fallback default.
+        return self.community_collab_short_name or self.community_collab_name or "Unnamed Collaborative"
 
     class Meta:
         verbose_name = 'Community Collaborative'
