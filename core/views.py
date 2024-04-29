@@ -4,6 +4,7 @@ from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionSte
 from .forms import CommunityActivityForm, PartnerActivityForm
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
+from .permissions import has_edit_permission
 from django.views.generic import UpdateView
 
 
@@ -118,11 +119,16 @@ def load_objectives(request):
 
 def update_community_activity(request, pk):
     activity = get_object_or_404(CommunityActionStep, pk=pk)
+    if not has_edit_permission(request.user, activity):
+        return HttpResponseForbidden("You do not have permission to edit this action step.")
+
     if request.method == 'POST':
         form = CommunityActivityForm(request.POST, instance=activity)
         if form.is_valid():
             form.save()
-            return redirect('some-view-name')
+            # Redirect to a success page
+            return redirect('some-success-url')
     else:
         form = CommunityActivityForm(instance=activity)
+
     return render(request, 'core/update-community-activity.html', {'form': form})
