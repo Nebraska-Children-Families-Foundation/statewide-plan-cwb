@@ -19,4 +19,5 @@ urlpatterns = [
     path('partner-activities/<uuid:strategy_id>/', views.partner_activities, name='partner_activities'),
     path('create-community-activity/', views.create_community_activity, name='create_community_activity'),
     path('create-partner-activity/', views.create_partner_activity, name='create_partner_activity'),
+    path('create-nc-action-step/', views.create_nc_activity, name='create_nc_activity'),
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionStep, CommunityCollaborative, NcffTeam,
                      SystemPartner, CollaborativeStrategyPriority)
-from .forms import CommunityActivityForm, PartnerActivityForm, SystemPartnerCommitmentForm
+from .forms import CommunityActivityForm, PartnerActivityForm, SystemPartnerCommitmentForm, NcffActivityForm
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from .permissions import has_edit_permission, has_commitment_edit_permission
@@ -108,6 +108,17 @@ def create_partner_activity(request):
     else:
         form = PartnerActivityForm()
     return render(request, 'core/create-partner-activity.html', {'form': form})
+
+
+def create_nc_activity(request):
+    if request.method == 'POST':
+        form = NcffActivityForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core/create-nc-action-step.html')
+    else:
+        form = PartnerActivityForm()
+    return render(request, 'core/create-nc-action-step.html', {'form': form})
 
 
 # For the dynamic chaining for dropdowns of Goals and Objectives

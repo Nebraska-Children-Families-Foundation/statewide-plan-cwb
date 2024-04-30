@@ -63,7 +63,7 @@ class CommunityActivityForm(forms.ModelForm):
 
 class PartnerActivityForm(forms.ModelForm):
     class Meta:
-        model = NCActionStep
+        model = SystemPartnerCommitment
         fields = '__all__'
         widgets = {
             'activity_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -87,3 +87,9 @@ class SystemPartnerCommitmentForm(forms.ModelForm):
     class Meta:
         model = SystemPartnerCommitment
         fields = '__all__'  # Customize as needed
+
+
+class NcffActivityForm(forms.ModelForm):
+    class Meta:
+        model = NCActionStep
+        fields = '__all__'
