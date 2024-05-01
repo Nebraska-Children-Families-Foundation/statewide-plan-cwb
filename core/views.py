@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionStep, CommunityCollaborative, NcffTeam,
                      SystemPartner, CollaborativeStrategyPriority)
-from .forms import CommunityActivityForm, PartnerActivityForm, SystemPartnerCommitmentForm, NcffActivityForm
+from .forms import CommunityActivityForm, PartnerActivityForm, NcffActivityForm
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from .permissions import has_edit_permission, has_commitment_edit_permission
@@ -151,11 +151,11 @@ def update_system_partner_commitment(request, pk):
         return HttpResponseForbidden("You do not have permission to edit this commitment.")
 
     if request.method == 'POST':
-        form = SystemPartnerCommitmentForm(request.POST, instance=commitment)
+        form = PartnerActivityForm(request.POST, instance=commitment)
         if form.is_valid():
             form.save()
             return redirect('commitment-detail-view', pk=commitment.pk)  # Redirect to the commitment's detail view or another appropriate page
     else:
-        form = SystemPartnerCommitmentForm(instance=commitment)
+        form = PartnerActivityForm(instance=commitment)
 
     return render(request, 'core/update-system-partner-commitment.html', {'form': form})
