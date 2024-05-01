@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from .permissions import has_edit_permission, has_commitment_edit_permission
 from .plan_work.models import SystemPartnerCommitment
+from django.contrib import messages
 
 
 def home(request):
@@ -99,14 +100,16 @@ def create_community_activity(request):
     return render(request, 'core/create-community-activity.html', {'form': form})
 
 
-def create_partner_activity(request):
+def create_partner_commitment(request):
     if request.method == 'POST':
         form = PartnerActivityForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('core/create-partner-activity.html')
+            messages.success(request, 'Your commitment has been recorded.')
+            return redirect('create_partner_commitment')  # Redirect back to the form
     else:
         form = PartnerActivityForm()
+
     return render(request, 'core/create-partner-activity.html', {'form': form})
 
 

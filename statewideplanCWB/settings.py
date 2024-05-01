@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from django.contrib.messages import constants as messages
 import mimetypes
 mimetypes.add_type("text/css", ".css", True)
 
@@ -98,6 +99,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'statewideplanCWB.wsgi.application'
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
