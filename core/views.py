@@ -106,7 +106,9 @@ def create_partner_commitment(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your commitment has been recorded.')
-            return redirect('create_partner_commitment')  # Redirect back to the form
+            return redirect('create_partner_activity')
+        else:
+            print(form.errors)  # This will show form errors in the console
     else:
         form = PartnerActivityForm()
 
