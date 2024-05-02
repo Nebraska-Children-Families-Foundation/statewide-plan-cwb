@@ -12,6 +12,7 @@ urlpatterns = [
     path('partner-activities/<uuid:strategy_id>/', views.partner_activities, name='partner_activities'),
     path('community-collaboratives/', views.community_collaboratives, name='community_collaboratives'),
     path('activities', views.activities, name='activities'),
+    path('create-strategy', views.create_strategy, name='create_strategy'),
     path('strategies/<uuid:objective_id>/', views.strategies, name='strategies'),
     path('strategy-list/', views.strategy_list, name='strategy_list'),
     path('ajax/load-objectives/', views.load_objectives, name='ajax_load_objectives'),

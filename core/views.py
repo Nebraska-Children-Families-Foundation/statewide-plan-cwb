@@ -24,6 +24,11 @@ def communication_plan(request):
     return render(request, 'core/communication-plan.html')
 
 
+@login_required
+def create_strategy(request):
+    return render(request, 'core/create-strategy.html')
+
+
 def community_activities(request, strategy_id):
     activities = CommunityActionStep.objects.filter(related_strategy=strategy_id)
     collaboratives = CommunityCollaborative.objects.all()
