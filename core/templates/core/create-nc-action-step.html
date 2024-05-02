@@ -4,7 +4,7 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<h2>Create an NC Action Step</h2>
+<h2>Create a Nebraska Children Action Step</h2>
 <form method="post">
     {% csrf_token %}
 
@@ -63,4 +63,7 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
+{% endblock %}
+{% block extra_js %}
+    {{ form.media }}
 {% endblock %}

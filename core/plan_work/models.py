@@ -176,8 +176,20 @@ class NCActionStep(models.Model):
         null=True
     )
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
-    related_strategy = models.ForeignKey('Strategy', on_delete=models.CASCADE)
-    related_objective = models.ForeignKey('Objective', on_delete=models.CASCADE)
+    related_objective = ChainedForeignKey(
+        'Objective',
+        chained_field="related_goal",
+        chained_model_field="related_goal",
+        show_all=False,
+        auto_choose=True,
+        sort=True)
+    related_strategy = ChainedForeignKey(
+        'Strategy',
+        chained_field="related_objective",
+        chained_model_field="related_objective",
+        show_all=False,
+        auto_choose=True,
+        sort=True)
 
     # Functionality that increments the strategy number is the ACT-1XXX format.
     def save(self, *args, **kwargs):
@@ -226,9 +238,21 @@ class SystemPartnerCommitment(models.Model):
         blank=True
     )
     related_systempartner = models.ForeignKey(SystemPartner, on_delete=models.CASCADE)
-    related_goal = models.ForeignKey('core.Goal', on_delete=models.CASCADE)
-    related_strategy = models.ForeignKey('core.Strategy', on_delete=models.CASCADE)
-    related_objective = models.ForeignKey('core.Objective', on_delete=models.CASCADE)
+    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_objective = ChainedForeignKey(
+        'Objective',
+        chained_field="related_goal",
+        chained_model_field="related_goal",
+        show_all=False,
+        auto_choose=True,
+        sort=True)
+    related_strategy = ChainedForeignKey(
+        'Strategy',
+        chained_field="related_objective",
+        chained_model_field="related_objective",
+        show_all=False,
+        auto_choose=True,
+        sort=True)
 
     def save(self, *args, **kwargs):
         if not self.commitment_number:
