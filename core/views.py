@@ -7,6 +7,7 @@ from django.http import HttpResponseForbidden
 from .permissions import has_edit_permission, has_commitment_edit_permission
 from .plan_work.models import SystemPartnerCommitment
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -100,18 +101,30 @@ def create_community_activity(request):
     return render(request, 'core/create-community-activity.html', {'form': form})
 
 
+@login_required
 def create_partner_commitment(request):
     if request.method == 'POST':
         form = PartnerActivityForm(request.POST)
         if form.is_valid():
-            form.save()
+            commitment = form.save(commit=False)
+            if not commitment.commitment_number:
+                prefix = "COMMIT-"
+                last_commitment = SystemPartnerCommitment.objects.order_by('-commitment_number').last()
+                new_number = 1000  # Start from 1000
+                if last_commitment:
+                    number_part = last_commitment.commitment_number.split('-')[2]
+                    new_number = int(number_part) + 1
+                commitment.commitment_number = f"{prefix}{new_number}"
+            commitment.system_partner_creator = request.user
+            commitment.save()
             messages.success(request, 'Your commitment has been recorded.')
-            return redirect('create_partner_activity')
+            return redirect('it_worked')
         else:
-            print(form.errors)  # This will show form errors in the console
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = PartnerActivityForm()
-
     return render(request, 'core/create-partner-activity.html', {'form': form})
 
 
@@ -164,3 +177,7 @@ def update_system_partner_commitment(request, pk):
         form = PartnerActivityForm(instance=commitment)
 
     return render(request, 'core/update-system-partner-commitment.html', {'form': form})
+
+
+def it_worked(request):
+    return render(request, 'core/it-worked.html')

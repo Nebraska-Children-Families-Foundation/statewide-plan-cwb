@@ -204,7 +204,8 @@ class NCActionStep(models.Model):
 
 class SystemPartnerCommitment(models.Model):
     commitment_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    commitment_number = models.CharField(max_length=12, help_text="Automatically generated. No need to set manually.")
+    commitment_number = models.CharField(max_length=12, null=True, blank=True,
+                                         help_text="Automatically generated. No need to set manually.")
     commitment_name = models.CharField(max_length=255)
     commitment_details = models.TextField(max_length=1500)
     commitment_lead = models.CharField(max_length=100,
@@ -218,7 +219,8 @@ class SystemPartnerCommitment(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='created_system_partner_commitments',  # unique related_name
-        null=True
+        null=True,
+        blank=True
     )
     related_systempartner = models.ForeignKey(SystemPartner, on_delete=models.CASCADE)
     related_goal = models.ForeignKey('core.Goal', on_delete=models.CASCADE)
@@ -227,17 +229,18 @@ class SystemPartnerCommitment(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.commitment_number:
-            try:
-                prefix = "COMMIT-"
-                last_commitment = SystemPartnerCommitment.objects.order_by('commitment_number').last()
-                if last_commitment:
-                    last_number = int(last_commitment.commitment_number.split('-')[1])
-                    new_number = last_number + 1
-                else:
-                    new_number = 1000
-                self.commitment_number = f"{prefix}{new_number}"
-            except Exception as e:
-                print(f"Error generating commitment number: {e}")
+            prefix = "COMMIT-"
+            last_commitment = SystemPartnerCommitment.objects.order_by('commitment_number').last()
+
+            if last_commitment:
+                number_part = last_commitment.commitment_number.split('-')[2]
+                last_number = int(number_part)  # Converting extracted part to an integer
+                new_number = last_number + 1
+            else:
+                new_number = 1000  # Start from 1000
+
+            self.commitment_number = f"{prefix}{new_number}"
+
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -20,4 +20,5 @@ urlpatterns = [
     path('create-community-activity/', views.create_community_activity, name='create_community_activity'),
     path('create-partner-activity/', views.create_partner_commitment, name='create_partner_activity'),
     path('create-nc-action-step/', views.create_nc_activity, name='create_nc_activity'),
+    path('it-worked/', views.it_worked, name='it_worked'),
 ]

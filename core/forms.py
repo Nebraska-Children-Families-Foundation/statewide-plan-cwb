@@ -64,7 +64,7 @@ class CommunityActivityForm(forms.ModelForm):
 class PartnerActivityForm(forms.ModelForm):
     class Meta:
         model = SystemPartnerCommitment
-        fields = '__all__'
+        exclude = ['commitment_number', 'system_partner_creator']  # Exclude these fields from the form
         widgets = {
             'commitment_name': forms.TextInput(attrs={'class': 'form-control'}),
             'commitment_details': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
@@ -73,6 +73,18 @@ class PartnerActivityForm(forms.ModelForm):
             'completedby_year': forms.Select(attrs={'class': 'form-select'}),
             'completedby_quarter': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def clean_commitment_number(self):
+        if not self.cleaned_data.get('commitment_number'):
+            prefix = "COMMIT-"
+            last_commitment = SystemPartnerCommitment.objects.order_by('commitment_number').last()
+            if last_commitment:
+                number_part = last_commitment.commitment_number.split('-')[2]
+                new_number = int(number_part) + 1
+            else:
+                new_number = 1000  # Start from 1000
+            return f"{prefix}{new_number}"
+        return self.cleaned_data.get('commitment_number')
 
     def __init__(self, *args, **kwargs):
         super(PartnerActivityForm, self).__init__(*args, **kwargs)
