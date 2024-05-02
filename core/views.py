@@ -94,11 +94,14 @@ def create_community_activity(request):
     if request.method == 'POST':
         form = CommunityActivityForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('core/create-community-activity.html')
+            community_activity = form.save(commit=False)
+            community_activity.community_creator = request.user  # Set the creator to the current user
+            community_activity.save()
+            return redirect('it_worked')  # Ensure this redirects to an appropriate confirmation or success page
     else:
         form = CommunityActivityForm()
     return render(request, 'core/create-community-activity.html', {'form': form})
+
 
 
 @login_required

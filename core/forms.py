@@ -7,7 +7,7 @@ from django.db.models import F
 class CommunityActivityForm(forms.ModelForm):
     class Meta:
         model = CommunityActionStep
-        fields = '__all__'
+        exclude = ['activity_number', 'community_creator']  # Exclude auto-managed fields
         widgets = {
             'activity_name': forms.TextInput(attrs={'class': 'form-control'}),
             'activity_details': forms.Textarea(attrs={'class': 'form-control'}),
