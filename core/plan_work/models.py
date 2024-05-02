@@ -156,7 +156,8 @@ class CommunityActionStep(models.Model):
 
 class NCActionStep(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    activity_number = models.CharField(max_length=10, help_text="Automatically generated. No need to set manually.")
+    activity_number = models.CharField(max_length=10, blank=True, null=True,
+                                       help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
     activity_details = models.TextField(max_length=1500)
     activity_lead = models.CharField(max_length=100,

@@ -103,4 +103,12 @@ class PartnerActivityForm(forms.ModelForm):
 class NcffActivityForm(forms.ModelForm):
     class Meta:
         model = NCActionStep
-        fields = '__all__'
+        exclude = ['activity_number', 'nc_staff_creator']  # Exclude fields that are set programmatically
+        widgets = {
+            'activity_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'activity_details': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'activity_lead': forms.TextInput(attrs={'class': 'form-control'}),
+            'activity_status': forms.Select(attrs={'class': 'form-select'}),
+            'completedby_year': forms.Select(attrs={'class': 'form-select'}),
+            'completedby_quarter': forms.Select(attrs={'class': 'form-select'}),
+        }

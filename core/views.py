@@ -128,14 +128,30 @@ def create_partner_commitment(request):
     return render(request, 'core/create-partner-activity.html', {'form': form})
 
 
+@login_required
 def create_nc_activity(request):
     if request.method == 'POST':
         form = NcffActivityForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('core/create-nc-action-step.html')
+            nc_activity = form.save(commit=False)
+            # Set the activity number if not already set
+            if not nc_activity.activity_number:
+                prefix = "NC_ACT-"
+                last_activity = NCActionStep.objects.order_by('-activity_number').last()
+                new_number = 1000  # Start from 1000
+                if last_activity:
+                    last_number = int(last_activity.activity_number.split('-')[1])
+                    new_number = last_number + 1
+                nc_activity.activity_number = f"{prefix}{new_number}"
+            # Set the creator of the activity
+            nc_activity.nc_staff_creator = request.user
+            nc_activity.save()
+            return redirect('it_worked')  # Change this to the appropriate URL
+        else:
+            # If the form is not valid, return form with errors
+            return render(request, 'core/create-nc-action-step.html', {'form': form})
     else:
-        form = PartnerActivityForm()
+        form = NcffActivityForm()  # Ensure correct form is used here
     return render(request, 'core/create-nc-action-step.html', {'form': form})
 
 
