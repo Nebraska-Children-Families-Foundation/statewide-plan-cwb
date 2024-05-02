@@ -62,13 +62,13 @@
 {#          <a class="nav-link" href="{% url 'about' %}"><i class="bi bi-file-earmark-text-fill" style="padding-right: 5px"></i> About the Plan</a>#}
 {#        </li>#}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'goals' %}"><i class="bi bi-flag-fill" style="padding-right: 5px"></i> Goals</a>
+          <a class="nav-link" href="{% url 'goals' %}"><i class="bi bi-flag-fill" style="padding-right: 5px"></i> Plan Goals</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'strategies_objectives' %}"><i class="bi bi-lightbulb-fill" style="padding-right: 5px"></i> Objectives & Strategies</a>
+          <a class="nav-link" href="{% url 'strategies_objectives' %}"><i class="bi bi-lightbulb-fill" style="padding-right: 5px"></i> Plan Objectives</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'strategy_list' %}"><i class="bi bi-star-fill" style="padding-right: 5px"></i> Strategy List</a>
+          <a class="nav-link" href="{% url 'strategy_list' %}"><i class="bi bi-star-fill" style="padding-right: 5px"></i> Plan Strategies</a>
         </li>
         {% if user.is_authenticated %}
             <div style="margin-top: 20px">
