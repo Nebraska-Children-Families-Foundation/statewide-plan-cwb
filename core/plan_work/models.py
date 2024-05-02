@@ -15,7 +15,7 @@ class Goal(models.Model):
     goal_name = models.CharField(max_length=255)
 
     def __str__(self):
-        return str(self.goal_number) or str(self.goal_name)
+        return f"Goal: {self.goal_number} - {self.goal_name}"
 
     class Meta:
         verbose_name = 'Goal'
@@ -31,8 +31,7 @@ class Objective(models.Model):
     related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
 
     def __str__(self):
-        return (f"Goal {self.related_goal.goal_number}, Objective {self.objective_number}" or
-                f"Objective {self.objective_number}: {self.objective_name}")
+        return f"Goal {self.related_goal.goal_number}, Obj {self.objective_number} - {self.objective_name}"
 
     class Meta:
         verbose_name = 'Objective'
@@ -80,8 +79,9 @@ class Strategy(models.Model):
     )
 
     def __str__(self):
-        return (f"Goal {self.related_goal.goal_number}, Obj {self.related_objective.objective_number}, "
-                f"Strategy {self.strategy_number}")
+        return (f"Goal {self.related_goal.goal_number}, "
+                f"Obj {self.related_objective.objective_number} | "
+                f"Strategy {self.strategy_number} - {self.strategy_name}")
 
     class Meta:
         verbose_name = 'Strategy'
