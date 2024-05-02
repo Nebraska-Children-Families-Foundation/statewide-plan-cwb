@@ -6,7 +6,6 @@ from core.standardization import ActivityStatusChoice, Quarters, Years
 from core.plan_actors import CommunityCollaborative
 from core.plan_actors import SystemPartner
 from django.conf import settings
-from core.relationships import CollaborativeStrategyPriority
 
 
 class Goal(models.Model):

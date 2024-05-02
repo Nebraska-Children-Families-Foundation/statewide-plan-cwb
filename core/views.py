@@ -89,7 +89,7 @@ def strategy_list(request):
     }
     return render(request, 'core/strategy-list.html', context)
 
-
+@login_required
 def create_community_activity(request):
     if request.method == 'POST':
         form = CommunityActivityForm(request.POST)
