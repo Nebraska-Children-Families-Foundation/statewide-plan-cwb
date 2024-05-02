@@ -112,14 +112,14 @@ class CommunityActionStep(models.Model):
     related_objective = ChainedForeignKey(
         'Objective',
         chained_field="related_goal",
-        chained_model_field="goal",
+        chained_model_field="related_goal",
         show_all=False,
         auto_choose=True,
         sort=True)
     related_strategy = ChainedForeignKey(
         'Strategy',
         chained_field="related_objective",
-        chained_model_field="objective",
+        chained_model_field="related_objective",
         show_all=False,
         auto_choose=True,
         sort=True)
