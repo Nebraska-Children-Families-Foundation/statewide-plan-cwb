@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
+from core.plan_actors.models import NcffTeam
 from core.standardization import ActivityStatusChoice, Quarters, Years
 from core.plan_actors import CommunityCollaborative
 from core.plan_actors import SystemPartner
@@ -167,6 +168,8 @@ class NCActionStep(models.Model):
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices)
     completedby_quarter = models.CharField(max_length=3, choices=Quarters.choices)
+    ncff_team = models.ForeignKey(NcffTeam, on_delete=models.SET_NULL, null=True, blank=True,
+                                  related_name="action_steps")
     nc_staff_creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

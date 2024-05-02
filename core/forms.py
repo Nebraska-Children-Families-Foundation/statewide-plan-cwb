@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import CommunityActionStep, NCActionStep, Goal, Objective, Strategy, SystemPartnerCommitment, SystemPartner
+from .models import (CommunityActionStep, NCActionStep, Goal, Objective, Strategy, SystemPartnerCommitment, SystemPartner, NcffTeam)
 from django.db.models import F
 
 
@@ -101,6 +101,13 @@ class PartnerActivityForm(forms.ModelForm):
 
 
 class NcffActivityForm(forms.ModelForm):
+    ncff_team = forms.ModelChoiceField(
+        queryset=NcffTeam.objects.all(),
+        label="NCFF Team",
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = NCActionStep
         exclude = ['activity_number', 'nc_staff_creator']  # Exclude fields that are set programmatically
