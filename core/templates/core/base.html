@@ -20,14 +20,14 @@
             <div class="d-flex justify-content-end w-100">
                 {% if user.is_authenticated %}
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'activities' %}">View All Action Steps</a>
-                        </li>
-                        {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'create_partner_activity' %}">Enter Strategy</a>
-                            </li>
-                        {% endif %}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="{% url 'activities' %}">View All Action Steps</a>#}
+{#                        </li>#}
+{#                        {% if user.is_superuser %}#}
+{#                            <li class="nav-item">#}
+{#                                <a class="nav-link" href="{% url 'create_partner_activity' %}">Enter Strategy</a>#}
+{#                            </li>#}
+{#                        {% endif %}#}
                         {% if user.is_superuser or user.member_type == 'SP' %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'create_partner_activity' %}">Create Partner Commitment</a>
