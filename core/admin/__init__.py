@@ -8,7 +8,7 @@ from .planactors_admin import (CommunityCollaborativeAdmin, NcffTeamStrategyPrio
 from .standardization_admin import ActivityStatusAdmin
 from .actionsteps_admin import SystemPartnerCommitmentAdmin, CommunityActionStepAdmin, NCActionStepAdmin
 from ..measurement.models import PerformanceMeasure, ChangeIndicator
-from ..plan_actors.models import NcffTeam, SystemPartner
+from ..plan_actors.models import NcffTeam, SystemPartner, CommunityCollaborative
 from ..plan_work.models import Strategy, Objective, Goal, SystemPartnerCommitment, CommunityActionStep, NCActionStep
 from ..standardization.models import ActivityStatus
 
@@ -23,3 +23,4 @@ admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(SystemPartnerCommitment, SystemPartnerCommitmentAdmin)
 admin.site.register(CommunityActionStep, CommunityActionStepAdmin)
 admin.site.register(NCActionStep, NCActionStepAdmin)
+admin.site.register(CommunityCollaborative, CommunityCollaborativeAdmin)

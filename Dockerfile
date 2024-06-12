@@ -3,7 +3,7 @@ FROM python:3.9
 
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONDONTWRITEBYTECODE 1  # Prevents Python from writing .pyc files to disk
 
 # Set work directory
 WORKDIR /app
