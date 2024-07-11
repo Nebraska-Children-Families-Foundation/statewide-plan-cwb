@@ -4,7 +4,6 @@ services:
   django_gunicorn:
     build: .
     restart: always
-    env_file: .env
     environment:
       - VIRTUAL_HOST=statewideplan.bringupnebraska.org
       - VIRTUAL_PORT=8000
@@ -12,6 +11,11 @@ services:
       - LETSENCRYPT_EMAIL=znelson@nebraskachildren.org
     volumes:
       - static_volume:/app/staticfiles
+    networks:
+      - webapp_network
 
 volumes:
   static_volume:
+
+networks:
+  webapp_network:
