@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /app/
 COPY . /app/
 
-# Copy the .env file into the container
+# Copy the .env file into the container at /app/.env
 COPY .env /app/.env
 
 # Copy the entrypoint script into the container at /entrypoint.sh
