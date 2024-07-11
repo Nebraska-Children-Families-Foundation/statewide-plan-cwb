@@ -12,10 +12,11 @@ services:
     volumes:
       - static_volume:/app/staticfiles
     networks:
-      - webapp_network
+      - nginx_webapp_network
 
 volumes:
   static_volume:
 
 networks:
-  webapp_network:
+  nginx_webapp_network:
+    external: true
