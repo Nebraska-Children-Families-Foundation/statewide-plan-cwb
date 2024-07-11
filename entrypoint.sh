@@ -3,6 +3,9 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Load environment variables from .env file
+export $(grep -v '^#' /app/.env | xargs)
+
 # Function to wait for the database to be ready
 function waitForDB() {
     echo "Waiting for database..."
