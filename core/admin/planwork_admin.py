@@ -36,8 +36,7 @@ class StrategyAdmin(admin.ModelAdmin):
     get_ncff_team_priorities.short_description = 'NCFF Team Priorities'
 
     def get_state_partner_priorities(self, obj):
-        return ", ".join(
-            [partner.system_partner_name for partner in obj.partnerstrategypriority_set.filter(is_priority=True)])
+        return ", ".join([priority.system_partner.system_partner_name for priority in obj.partnerstrategypriority_set.filter(is_priority=True)])
 
     get_state_partner_priorities.short_description = 'State Partner Priorities'
 
