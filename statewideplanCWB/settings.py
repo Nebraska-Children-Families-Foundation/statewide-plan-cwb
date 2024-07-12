@@ -37,7 +37,7 @@ if ENVIRONMENT == 'development':
 
 # Production settings
 elif ENVIRONMENT == 'production':
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ['statewideplan.bringupnebraska.org']
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_DOMAIN = '.bringupnebraska.org'
