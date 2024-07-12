@@ -31,7 +31,7 @@ class StrategyAdmin(admin.ModelAdmin):
     get_priority_collaboratives.short_description = 'Collab Designated Priority'
 
     def get_ncff_team_priorities(self, obj):
-        return ", ".join([team.ncff_team_name for team in obj.ncffteamstrategypriority_set.filter(is_priority=True)])
+        return ", ".join([priority.ncff_team.ncff_team_name for priority in obj.ncffteamstrategypriority_set.filter(is_priority=True)])
 
     get_ncff_team_priorities.short_description = 'NCFF Team Priorities'
 
