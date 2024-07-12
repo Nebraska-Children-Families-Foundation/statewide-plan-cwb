@@ -6,47 +6,23 @@ services:
     restart: always
     env_file: .env
     environment:
-      - VIRTUAL_HOST=statewideplan.bringupnebraska.org
-      - VIRTUAL_PORT=8000
-      - LETSENCRYPT_HOST=statewideplan.bringupnebraska.org
-      - LETSENCRYPT_EMAIL=znelson@nebraskachildren.org
+      - DOMAIN=statewideplan.bringupnebraska.org
+      - EMAIL=znelson@nebraskachildren.org
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.swp.rule=Host(`statewideplan.bringupnebraska.org`)"
+      - "traefik.http.routers.swp.entrypoints=websecure"
+      - "traefik.http.routers.swp.tls.certresolver=letsencrypt"
+      - "traefik.http.services.swp.loadbalancer.server.port=8000"
+      - "traefik.http.routers.swp.tls=true"
+    networks:
+      - traefik_network
     volumes:
       - static_volume:/app/staticfiles
 
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy:alpine
-    container_name: nginx-proxy
-    labels:
-      com.github.nginx-proxy.docker-gen: "true"
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - certbot-certs:/etc/nginx/certs:rw
-      - proxy-vhost:/etc/nginx/vhost.d
-      - proxy-html:/usr/share/nginx/html
-      - proxy-dhparams:/etc/nginx/dhparam
-    environment:
-      - ENABLE_IPV6=true
-
-  acme-companion:
-    image: nginxproxy/acme-companion
-    container_name: acme-companion
-    restart: always
-    environment:
-      - DEFAULT_EMAIL=znelson@nebraskachildren.org
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-    volumes:
-      - certbot-certs:/etc/nginx/certs:rw
-      - proxy-vhost:/etc/nginx/vhost.d
-      - proxy-html:/usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+networks:
+  traefik_network:
+    external: true
 
 volumes:
-  certbot-certs:
-  proxy-vhost:
-  proxy-html:
-  proxy-dhparams:
   static_volume:
