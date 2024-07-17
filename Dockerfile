@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 && rm -rf /var/lib/apt/lists/*
 
 RUN pip install psycopg2
-RUN pip install --upgrade pip;
+RUN pip install --upgrade pip
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -32,9 +32,6 @@ RUN chmod +x /entrypoint.sh
 
 # Set the entrypoint script to be executed
 ENTRYPOINT ["/entrypoint.sh"]
-
-# Set environment variable for Django
-ENV DJANGO_ENV=production
 
 # Expose port 8000
 EXPOSE 8000

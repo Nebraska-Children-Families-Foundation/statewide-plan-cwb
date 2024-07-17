@@ -5,8 +5,9 @@ set -e
 
 # Function to wait for the database to be ready
 function waitForDB() {
-    echo "Waiting for database..."
+    echo "Waiting for database at $DB_HOST:$DB_PORT..."
     while ! nc -z $DB_HOST $DB_PORT; do
+        echo "Database not yet available, retrying in 0.1 seconds..."
         sleep 0.1
     done
     echo "Database started"

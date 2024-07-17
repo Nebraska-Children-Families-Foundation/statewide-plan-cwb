@@ -7,6 +7,8 @@ services:
     environment:
       - DOMAIN=statewideplan.bringupnebraska.org
       - EMAIL=znelson@nebraskachildren.org
+      - DB_HOST=private-db-postgresql-nyc3-nc-ops-do-user-14651347-0.b.db.ondigitalocean.com
+      - DB_PORT=25060
     labels:
       - "traefik.enable=true" # Explicitly tell Traefik to manage this container
       - "traefik.http.routers.swp.rule=Host(`statewideplan.bringupnebraska.org`)" # Define the rule under which this service
