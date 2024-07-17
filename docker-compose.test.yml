@@ -9,12 +9,11 @@ services:
       - DOMAIN=statewideplan.ncffapps.dev
       - EMAIL=znelson@nebraskachildren.org
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.swp-test.rule=Host(`statewideplan.ncffapps.dev`)"
-      - "traefik.http.routers.swp-test.entrypoints=websecure"
-      - "traefik.http.routers.swp-test.tls.certresolver=letsencrypt"
-      - "traefik.http.services.swp-test.loadbalancer.server.port=8000"
-      - "traefik.http.routers.swp-test.tls=true"
+      - "traefik.enable=true" # Explicitly tell Traefik to manage this container
+      - "traefik.http.routers.swpdev.rule=Host(`statewideplan.ncffapps.dev`)" # Define the rule under which this service
+      - "traefik.http.routers.swpdev.entrypoints=websecure" # Specify the entrypoints
+      - "traefik.http.routers.swpdev.tls=true" # Enable TLS for this service
+      - "traefik.http.routers.swpdev.tls.certresolver=production" #Use the defined certificate resolver for HTTPS
     networks:
       - traefik_network
     volumes:

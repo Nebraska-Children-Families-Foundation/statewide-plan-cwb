@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   django_gunicorn:
     build: .
@@ -9,11 +7,11 @@ services:
       - DOMAIN=statewideplan.bringupnebraska.org
       - EMAIL=znelson@nebraskachildren.org
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.swp.rule=Host(`statewideplan.bringupnebraska.org`)"
-      - "traefik.http.routers.swp.entrypoints=websecure"
-      - "traefik.http.routers.swp.tls.certresolver=letsencrypt"
-      - "traefik.http.services.swp.loadbalancer.server.port=8000"
+      - "traefik.enable=true" # Explicitly tell Traefik to manage this container
+      - "traefik.http.routers.swp.rule=Host(`statewideplan.bringupnebraska.org`)" # Define the rule under which this service
+      - "traefik.http.routers.swp.entrypoints=websecure" # Specify the entrypoints
+      - "traefik.http.routers.swp.tls=true" # Enable TLS for this service
+      - "traefik.http.routers.swp.tls.certresolver=production" #Use the defined certificate resolver for HTTPS
     networks:
       - traefik_network
     volumes:
