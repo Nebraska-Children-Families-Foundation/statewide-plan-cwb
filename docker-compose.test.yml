@@ -2,6 +2,7 @@ version: '3'
 
 services:
   django_gunicorn:
+    container_name: test-statewideplan
     build: .
     restart: always
     env_file: .env
