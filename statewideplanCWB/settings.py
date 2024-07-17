@@ -29,10 +29,10 @@ elif ENVIRONMENT == 'production':
 # Test server settings
 elif ENVIRONMENT == 'test':
     DEBUG = True
-    ALLOWED_HOSTS = ['statewide-plan.hyperionhub.dev']
+    ALLOWED_HOSTS = ['statewideplan.ncffapps.dev']
     CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_DOMAIN = '.hyperionhub.dev'
-    CSRF_TRUSTED_ORIGINS = ['https://statewide-plan.hyperionhub.dev']
+    CSRF_COOKIE_DOMAIN = 'statewideplan.ncffapps.dev'
+    CSRF_TRUSTED_ORIGINS = ['statewideplan.ncffapps.dev']
 
 # Application definition
 INSTALLED_APPS = [
