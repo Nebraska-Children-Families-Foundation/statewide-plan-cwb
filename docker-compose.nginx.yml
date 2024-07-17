@@ -2,6 +2,7 @@ version: '3'
 
 services:
   django_gunicorn:
+    container_name: statewideplan-django
     build: .
     restart: always
     env_file: .env
@@ -10,6 +11,8 @@ services:
       - VIRTUAL_PORT=8000
       - LETSENCRYPT_HOST=statewideplan.bringupnebraska.org
       - LETSENCRYPT_EMAIL=znelson@nebraskachildren.org
+      - DB_HOST=private-db-postgresql-nyc3-nc-ops-do-user-14651347-0.b.db.ondigitalocean.com
+      - DB_PORT=25060
     volumes:
       - static_volume:/app/staticfiles
 
