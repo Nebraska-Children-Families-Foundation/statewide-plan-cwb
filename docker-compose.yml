@@ -1,5 +1,6 @@
 services:
   django_gunicorn:
+    container_name: statewideplan-gunicorn
     build: .
     restart: always
     env_file: .env
