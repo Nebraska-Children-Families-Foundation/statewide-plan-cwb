@@ -95,7 +95,7 @@ class CommunityActionStep(models.Model):
     activity_name = models.CharField(max_length=255)
     activity_details = models.TextField(max_length=1200)
     activity_lead = models.CharField(max_length=100,
-                                     help_text="Indicate who will lead to the activity (person or organization).",
+                                     help_text="Indicate who will lead the activity (person or organization).",
                                      blank=True, default="")
     activity_status = models.CharField(max_length=25, choices=ActivityStatusChoice.choices)
     completedby_year = models.CharField(max_length=4, choices=Years.choices, blank=True)
@@ -107,23 +107,30 @@ class CommunityActionStep(models.Model):
         null=True
     )
     related_collaborative = models.ForeignKey(CommunityCollaborative, on_delete=models.CASCADE)
-    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_goal = models.ForeignKey('Goal', on_delete=models.SET_NULL, null=True, blank=True)
     related_objective = ChainedForeignKey(
         'Objective',
         chained_field="related_goal",
         chained_model_field="related_goal",
         show_all=False,
         auto_choose=True,
-        sort=True)
+        sort=True,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     related_strategy = ChainedForeignKey(
         'Strategy',
         chained_field="related_objective",
         chained_model_field="related_objective",
         show_all=False,
         auto_choose=True,
-        sort=True)
+        sort=True,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
-    # Functionality that increments the strategy number is the C-ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
             prefix = "C-ACT-"
@@ -151,7 +158,7 @@ class CommunityActionStep(models.Model):
         verbose_name = 'Community Action Steps'
         db_table = 'community_actionstep'
         ordering = ['related_collaborative', 'related_goal', 'related_objective', 'related_strategy',
-                    'activity_status', 'completedby_year',]
+                    'activity_status', 'completedby_year']
 
 
 class NCActionStep(models.Model):
@@ -175,23 +182,30 @@ class NCActionStep(models.Model):
         related_name='created_nc_action_steps',  # unique related_name
         null=True
     )
-    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_goal = models.ForeignKey('Goal', on_delete=models.SET_NULL, null=True, blank=True)
     related_objective = ChainedForeignKey(
         'Objective',
         chained_field="related_goal",
         chained_model_field="related_goal",
         show_all=False,
         auto_choose=True,
-        sort=True)
+        sort=True,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     related_strategy = ChainedForeignKey(
         'Strategy',
         chained_field="related_objective",
         chained_model_field="related_objective",
         show_all=False,
         auto_choose=True,
-        sort=True)
+        sort=True,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
-    # Functionality that increments the strategy number is the ACT-1XXX format.
     def save(self, *args, **kwargs):
         if not self.activity_number:
             prefix = "NC_ACT-"
@@ -238,21 +252,29 @@ class SystemPartnerCommitment(models.Model):
         blank=True
     )
     related_systempartner = models.ForeignKey(SystemPartner, on_delete=models.CASCADE)
-    related_goal = models.ForeignKey('Goal', on_delete=models.CASCADE)
+    related_goal = models.ForeignKey('Goal', on_delete=models.SET_NULL, null=True, blank=True)
     related_objective = ChainedForeignKey(
         'Objective',
         chained_field="related_goal",
         chained_model_field="related_goal",
         show_all=False,
         auto_choose=True,
-        sort=True)
+        sort=True,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     related_strategy = ChainedForeignKey(
         'Strategy',
         chained_field="related_objective",
         chained_model_field="related_objective",
         show_all=False,
         auto_choose=True,
-        sort=True)
+        sort=True,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     def save(self, *args, **kwargs):
         if not self.commitment_number:
