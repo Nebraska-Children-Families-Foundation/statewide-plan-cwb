@@ -44,6 +44,8 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=30, unique=True)
     first_name = models.CharField(_('first name'), max_length=150, blank=True, null=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True, null=True)
+    must_reset_password = models.BooleanField(default=True,
+                                              help_text=_('Requires user to reset password on next login'))
     start_date = models.DateTimeField(_('start date'), default=timezone.now)
     end_date = models.DateTimeField(_('end date'), blank=True, null=True)
 
