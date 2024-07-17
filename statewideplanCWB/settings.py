@@ -32,7 +32,7 @@ elif ENVIRONMENT == 'test':
     ALLOWED_HOSTS = ['statewideplan.ncffapps.dev']
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_DOMAIN = 'statewideplan.ncffapps.dev'
-    CSRF_TRUSTED_ORIGINS = ['statewideplan.ncffapps.dev']
+    CSRF_TRUSTED_ORIGINS = ['https://statewideplan.ncffapps.dev']
 
 # Application definition
 INSTALLED_APPS = [
