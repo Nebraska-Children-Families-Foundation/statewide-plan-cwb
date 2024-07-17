@@ -59,10 +59,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Define the main content area */
-.main-content {
-        margin-left: 300px; /* same as sidebar width */
-        padding: 20px;
-      }
+/*.main-content {*/
+/*        margin-left: 300px; !* same as sidebar width *!*/
+/*        padding: 20px;*/
+/*      }*/
 
 /* main.css */
 .custom-navbar .navbar-nav .nav-item .nav-link {

@@ -13,107 +13,89 @@
   </head>
   <body>
 
-    <!-- Navbar for Desktop Only -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light d-none d-lg-block custom-navbar">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Your Brand</a>
-            <div class="d-flex justify-content-end w-100">
-                {% if user.is_authenticated %}
-                    <ul class="navbar-nav">
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" href="{% url 'activities' %}">View All Action Steps</a>#}
-{#                        </li>#}
-{#                        {% if user.is_superuser %}#}
-{#                            <li class="nav-item">#}
-{#                                <a class="nav-link" href="{% url 'create_partner_activity' %}">Enter Strategy</a>#}
-{#                            </li>#}
-{#                        {% endif %}#}
-                        {% if user.is_superuser or user.member_type == 'SP' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'create_partner_activity' %}">Create Partner Commitment</a>
-                            </li>
-                        {% endif %}
-                        {% if user.is_superuser or user.member_type == 'CC' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'create_community_activity' %}">Create Community Action Step</a>
-                            </li>
-                        {% endif %}
-                        {% if user.is_superuser or user.member_type == 'NT' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'create_nc_activity' %}">Create Nebraska Children Action Step</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                {% else %}
-                    <a class="btn btn-primary" href="{% url 'login' %}"><i class="bi bi-pencil-fill" style="padding-right: 5px"></i> Manage Activities</a>
-                {% endif %}
+    <!-- Merged Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/bringupnebraska_logo.png' %}" alt="Bring Up Nebraska Logo" class="img-fluid" width="50" style="margin-right: 10px">
+                Statewide Plan Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="planComponentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Plan Components
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="planComponentsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'goals' %}">Goals</a></li>
+                            <li><a class="dropdown-item" href="{% url 'strategies_objectives' %}">Objectives</a></li>
+                            <li><a class="dropdown-item" href="{% url 'strategy_list' %}">Strategies</a></li>
+                        </ul>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Reports
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="reportsDropdown">
+                                <li><a class="dropdown-item" href="{% url 'community_collaboratives' %}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{% url 'community_collaboratives' %}">Reports</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="createDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Create
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="createDropdown">
+                                {% if user.is_superuser or user.member_type == 'SP' %}
+                                    <li><a class="dropdown-item" href="{% url 'create_partner_activity' %}">Partner Commitment</a></li>
+                                {% endif %}
+                                {% if user.is_superuser or user.member_type == 'CC' %}
+                                    <li><a class="dropdown-item" href="{% url 'create_community_activity' %}">Community Action Step</a></li>
+                                {% endif %}
+                                {% if user.is_superuser or user.member_type == 'NT' %}
+                                    <li><a class="dropdown-item" href="{% url 'create_nc_activity' %}">Nebraska Children Action Step</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="toolsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Tools
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="toolsDropdown">
+                                <li><a class="dropdown-item" href="{% url 'communication_plan' %}">Communication Plan</a></li>
+                                {% if user.is_superuser %}
+                                    <li><a class="dropdown-item" href="/admin/" title="Admin Interface Login">Admin Panel</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="bi bi-box-arrow-right" style="padding-right: 5px"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Sidebar -->
-<div class="sidebar">
-  <a href="/">
-    <img src="{% static 'images/bringupnebraska_logo.png' %}" alt="Bring Up Nebraska Logo" class="mx-auto d-block img-fluid mb-3" width="200">
-  </a>
-  <h2 class="text-center" style="padding-bottom: 20px">Statewide Plan for Community<br />Well-Being</h2>
 
-  <!-- Scrollable nav container -->
-  <div class="nav-scrollable" style="max-height: 70vh; overflow-y: auto;">
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'goals' %}"><i class="bi bi-flag-fill" style="padding-right: 5px"></i> Plan Goals</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'strategies_objectives' %}"><i class="bi bi-lightbulb-fill" style="padding-right: 5px"></i> Plan Objectives</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'strategy_list' %}"><i class="bi bi-star-fill" style="padding-right: 5px"></i> Plan Strategies</a>
-      </li>
-      {% if user.is_authenticated %}
-        <div style="margin-top: 20px">
-          <h5>Tools for Partners</h5>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'communication_plan' %}"><i class="bi bi-megaphone-fill" style="padding-right: 5px"></i> Communication Plan</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'community_collaboratives' %}"><i class="bi bi-clipboard-data-fill" style="padding-right: 5px"></i> Plan Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'community_collaboratives' %}"><i class="bi bi-file-earmark-text-fill" style="padding-right: 5px"></i> Reports</a>
-          </li>
-        </div>
-      {% endif %}
-    </ul>
-    <ul class="nav flex-column">
-      {% if user.is_superuser %}
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/" title="Admin Interface Login">
-            <i class="bi bi-gear-fill" style="padding-right: 5px"></i> Access Admin Interface
-          </a>
-        </li>
-      {% endif %}
-      {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">
-            <i class="bi bi-box-arrow-right" style="padding-right: 5px"></i> Logout
-          </a>
-        </li>
-      {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">
-            <i class="bi bi-box-arrow-in-right"></i> Login
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </div>
-</div>
 
 
 
     <!-- Page Content -->
     <div class="main-content">
+    <div class="container" style="margin-top: 1.75rem">
       {% block content %}
       <!-- Your page content goes here -->
       {% endblock %}
@@ -122,6 +104,7 @@
       {% block extra_js %}
           <!-- Page JS goes here -->
       {% endblock extra_js %}
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
