@@ -1,8 +1,95 @@
 {% extends "core/base.html" %}
-{% block title %} Create a Community Activity {% endblock %}
+{% block title %}Individual Dashboard{% endblock %}
 {% load static %}
 {% load widget_tweaks %}
 
 {% block content %}
+<div class="container">
+    <h2>Activity Summary</h2>
+    <h3>Total Activities: {{ activities_count.total }}</h3>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Not Started</h5>
+                    <p class="card-text">{{ activities_count.not_started }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress</h5>
+                    <p class="card-text">{{ activities_count.in_progress }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Completed</h5>
+                    <p class="card-text">{{ activities_count.completed }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ongoing</h5>
+                    <p class="card-text">{{ activities_count.ongoing }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <h2>Activities</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Activity Number</th>
+                <th>Activity Name</th>
+                <th>Status</th>
+                <th>Completed by (YYYY QQ)</th>
+                <th>Related Goal</th>
+                <th>Related Objective</th>
+                <th>Related Strategy</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in activities %}
+                <tr>
+                    <td>{{ activity.activity_number }}</td>
+                    <td>{{ activity.activity_name }}</td>
+                    <td>{{ activity.activity_status }}</td>
+                    <td>{{ activity.completedby_year }} {{ activity.completedby_quarter }}</td>
+                    <td>
+                        <span data-toggle="tooltip" title="{{ activity.related_goal.goal_name }}">
+                            {{ activity.related_goal.goal_number }}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-toggle="tooltip" title="{{ activity.related_objective.objective_name }}">
+                            {{ activity.related_objective.objective_number }}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-toggle="tooltip" title="{{ activity.related_strategy.strategy_name }}">
+                            {{ activity.related_strategy.strategy_number }}
+                        </span>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7">No activities found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}

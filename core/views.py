@@ -8,6 +8,8 @@ from .permissions import has_edit_permission, has_commitment_edit_permission
 from .plan_work.models import SystemPartnerCommitment
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from users.models import AppUser
+from django.db.models import Count
 
 
 def home(request):
@@ -208,6 +210,38 @@ def update_system_partner_commitment(request, pk):
         form = PartnerActivityForm(instance=commitment)
 
     return render(request, 'core/update-system-partner-commitment.html', {'form': form})
+
+
+@login_required
+def individual_dashboard(request):
+    user = request.user
+    activities_count = {
+        'total': 0,
+        'not_started': 0,
+        'in_progress': 0,
+        'completed': 0,
+        'ongoing': 0,
+    }
+    activities = []
+
+    if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
+        activities = CommunityActionStep.objects.filter(community_creator=user)
+    elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
+        activities = NCActionStep.objects.filter(nc_staff_creator=user)
+    elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
+        activities = SystemPartnerCommitment.objects.filter(system_partner_creator=user)
+
+    activities_count['total'] = activities.count()
+    activities_count['not_started'] = activities.filter(activity_status='Not Started').count()
+    activities_count['in_progress'] = activities.filter(activity_status='In Progress').count()
+    activities_count['completed'] = activities.filter(activity_status='Completed').count()
+    activities_count['ongoing'] = activities.filter(activity_status='Ongoing').count()
+
+    context = {
+        'activities_count': activities_count,
+        'activities': activities
+    }
+    return render(request, 'core/individual-dashboard.html', context)
 
 
 def it_worked(request):
