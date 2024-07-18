@@ -3,57 +3,57 @@
 {% block content %}
     <h1>Strategies List</h1>
     <!-- Top row with dropdowns -->
-    <div class="row mb-3" style="margin-top: 20px">
-        <h2>Select Filters</h2>
-    </div>
-    <div class="row mb-3">
-        <!-- Goal Number -->
-        <div class="col">
-            <select id="id_goal" name="goal" class="form-select">
-                <option value="">Select a Goal</option>
-                {% for goal in goals %}
-                <option value="{{ goal.goal_id }}">{{ goal.goal_number }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Objective Number -->
-        <div class="col">
-            <select id="id_objective" name="objective" class="form-select">
-                <option value="">Select an Objective</option>
-            </select>
-        </div>
-
-        <!-- NCFF Teams Dropdown -->
-        <div class="col">
-            <select class="form-select" multiple aria-label="NCFF Teams multi select">
-                {% for team in ncff_teams %}
-                <option value="{{ teams.ncff_team_id }}">{{ team.ncff_team_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- System Partners Dropdown -->
-        <div class="col">
-            <select class="form-select" multiple aria-label="System Partners multi select">
-                {% for partner in system_partners %}
-                <option value="{{ partner.system_partner_id }}">{{ partner.system_partner_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <!-- Community Collaboratives Dropdown -->
-    <div class="row">
-        <div class="col-6 offset-6">
-            <select class="form-select" id="communityCollaborativeSelect" name="community_collaboratives">
-                <option value="">Select a Community Collaborative</option>
-                {% for collaborative in community_collaboratives %}
-                <option value="{{ collaborative.community_collab_id }}">{{ collaborative.community_collab_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
+{#    <div class="row mb-3" style="margin-top: 20px">#}
+{#        <h2>Select Filters</h2>#}
+{#    </div>#}
+{#    <div class="row mb-3">#}
+{#        <!-- Goal Number -->#}
+{#        <div class="col">#}
+{#            <select id="id_goal" name="goal" class="form-select">#}
+{#                <option value="">Select a Goal</option>#}
+{#                {% for goal in goals %}#}
+{#                <option value="{{ goal.goal_id }}">{{ goal.goal_number }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{##}
+{#        <!-- Objective Number -->#}
+{#        <div class="col">#}
+{#            <select id="id_objective" name="objective" class="form-select">#}
+{#                <option value="">Select an Objective</option>#}
+{#            </select>#}
+{#        </div>#}
+{##}
+{#        <!-- NCFF Teams Dropdown -->#}
+{#        <div class="col">#}
+{#            <select class="form-select" multiple aria-label="NCFF Teams multi select">#}
+{#                {% for team in ncff_teams %}#}
+{#                <option value="{{ teams.ncff_team_id }}">{{ team.ncff_team_name }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{##}
+{#        <!-- System Partners Dropdown -->#}
+{#        <div class="col">#}
+{#            <select class="form-select" multiple aria-label="System Partners multi select">#}
+{#                {% for partner in system_partners %}#}
+{#                <option value="{{ partner.system_partner_id }}">{{ partner.system_partner_name }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- Community Collaboratives Dropdown -->#}
+{#    <div class="row">#}
+{#        <div class="col-6 offset-6">#}
+{#            <select class="form-select" id="communityCollaborativeSelect" name="community_collaboratives">#}
+{#                <option value="">Select a Community Collaborative</option>#}
+{#                {% for collaborative in community_collaboratives %}#}
+{#                <option value="{{ collaborative.community_collab_id }}">{{ collaborative.community_collab_name }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
 
     <!-- Strategies Accordion -->
     <div class="row mb-3" style="margin-top: 20px">
