@@ -244,5 +244,22 @@ def individual_dashboard(request):
     return render(request, 'core/individual-dashboard.html', context)
 
 
+@login_required
+def activity_details(request, activity_id):
+    user = request.user
+
+    if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
+        activity = get_object_or_404(CommunityActionStep, activity_id=activity_id)
+    elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
+        activity = get_object_or_404(NCActionStep, activity_id=activity_id)
+    elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
+        activity = get_object_or_404(SystemPartnerCommitment, commitment_id=activity_id)
+
+    context = {
+        'activity': activity
+    }
+    return render(request, 'core/activity-details.html', context)
+
+
 def it_worked(request):
     return render(request, 'core/it-worked.html')

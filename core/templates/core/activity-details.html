@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% block title %}Activity Details{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+    <h1>Activity Details</h1>
+    <h2>{{ activity.activity_name }}</h2>
+    <p>{{ activity.activity_details }}</p>
+    <p><strong>Activity Lead:</strong> {{ activity.activity_lead }}</p>
+    <div class="row">
+        <div class="col-md-4">
+            <p><strong>Status:</strong> {{ activity.activity_status }}</p>
+        </div>
+        <div class="col-md-4">
+            <p><strong>Year to be Completed by:</strong> {{ activity.completedby_year }}</p>
+        </div>
+        <div class="col-md-4">
+            <p><strong>Quarter to be Completed by:</strong> {{ activity.completedby_quarter }}</p>
+        </div>
+    </div>
+    <h2>Related Details</h2>
+    <p><strong>Related Goal:</strong> {{ activity.related_goal.goal_name }}</p>
+    <p><strong>Related Objective:</strong> {{ activity.related_objective.objective_name }}</p>
+    <p><strong>Related Strategy:</strong> {{ activity.related_strategy.strategy_name }}</p>
+</div>
+{% endblock %}

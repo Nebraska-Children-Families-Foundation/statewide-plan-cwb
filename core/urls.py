@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .views import create_community_activity, individual_dashboard
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -24,5 +23,6 @@ urlpatterns = [
     path('it-worked/', views.it_worked, name='it_worked'),
     path('privacy', views.privacy, name='privacy'),
     path('terms-of-use', views.terms_of_use, name='terms_of_use'),
-    path('dashboard/', individual_dashboard, name='individual_dashboard'),
+    path('dashboard/', views.individual_dashboard, name='individual_dashboard'),
+    path('activity/<uuid:activity_id>/', views.activity_details, name='activity_details'),
 ]
