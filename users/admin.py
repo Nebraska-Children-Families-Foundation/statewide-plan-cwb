@@ -16,7 +16,8 @@ class AppUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'must_reset_password'),
+            'fields': ('email', 'password1', 'password2', 'must_reset_password', 'is_active', 'is_staff',
+                       'is_superuser'),
         }),
         ('Associations', {'fields': ('community_collaborative', 'system_partner', 'member_type')}),
     )
