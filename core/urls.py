@@ -21,6 +21,7 @@ urlpatterns = [
     path('create-partner-activity/', views.create_partner_commitment, name='create_partner_activity'),
     path('create-nc-action-step/', views.create_nc_activity, name='create_nc_activity'),
     path('it-worked/', views.it_worked, name='it_worked'),
+    path('reports/', views.reports, name='reports'),
     path('privacy', views.privacy, name='privacy'),
     path('terms-of-use', views.terms_of_use, name='terms_of_use'),
     path('dashboard/', views.individual_dashboard, name='individual_dashboard'),

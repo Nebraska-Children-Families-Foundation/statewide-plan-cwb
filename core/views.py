@@ -32,6 +32,9 @@ def about(request):
 def communication_plan(request):
     return render(request, 'core/communication-plan.html')
 
+def reports(request):
+    return render(request, 'core/reports.html')
+
 
 @login_required
 def create_strategy(request):
