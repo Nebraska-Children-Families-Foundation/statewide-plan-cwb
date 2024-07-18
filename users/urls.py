@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import CustomLoginView
+from .views import CustomLoginView, PasswordResetView
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    # Add other URLs as needed
+    path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
 ]
