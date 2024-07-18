@@ -88,3 +88,33 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none; /* No underline on hover/focus */
     transition: background-color 0.3s, color 0.3s;
 }
+
+footer {
+    border-top: #2E7D97 solid 5px;
+}
+
+footer a {
+    font-family: 'Cabin', sans-serif;
+    font-size: 18px;
+    color: #333; /* Text color */
+    padding-left: 15px;
+}
+
+footer a:hover {
+    color: #2E7D97;
+}
+
+.sub-footer {
+    background-color: #2E7D97;
+    color: #ffffff;
+    padding: 15px 0;
+}
+
+.sub-footer a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.sub-footer a:hover {
+    color: #E9EBB4;
+}
