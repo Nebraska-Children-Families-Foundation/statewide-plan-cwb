@@ -11,7 +11,7 @@
     <!-- Regular label structure for each field -->
     <div class="mb-3">
         <label for="{{ form.ncff_team.id_for_label }}" class="form-label">{{ form.ncff_team.label }}</label>
-        {% render_field form.ncff_team class="form-control" %}
+        {% render_field form.ncff_team class="form-select" %}
     </div>
     <div class="mb-3">
         <label for="{{ form.activity_name.id_for_label }}" class="form-label">{{ form.activity_name.label }}</label>
@@ -47,17 +47,17 @@
     <!-- Add other fields as needed -->
     <div class="mb-3">
         <label for="{{ form.related_goal.id_for_label }}" class="form-label">{{ form.related_goal.label }}</label>
-        {% render_field form.related_goal class="form-control" %}
+        {% render_field form.related_goal class="form-select" %}
     </div>
 
     <div class="mb-3">
         <label for="{{ form.related_objective.id_for_label }}" class="form-label">{{ form.related_objective.label }}</label>
-        {% render_field form.related_objective class="form-control" %}
+        {% render_field form.related_objective class="form-select" %}
     </div>
 
     <div class="mb-3">
         <label for="{{ form.related_strategy.id_for_label }}" class="form-label">{{ form.related_strategy.label }}</label>
-        {% render_field form.related_strategy class="form-control" %}
+        {% render_field form.related_strategy class="form-select" %}
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
