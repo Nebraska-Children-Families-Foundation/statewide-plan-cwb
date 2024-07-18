@@ -1,6 +1,7 @@
 /* Apply Merriweather to all body text */
 body {
     font-family: 'Merriweather', serif;
+    font-size: 16px;
 }
 
 /* Apply Cabin to headings */
@@ -11,6 +12,12 @@ h1, h2, h3, h4, h5, h6 {
 /* Apply Cabin to navigation links */
 .nav-link {
     font-family: 'Cabin', sans-serif;
+    font-size: 1.25rem;
+}
+
+.dropdown-item {
+    font-family: 'Cabin', sans-serif;
+    font-size: 1.1rem;
 }
 
 .custom-navbar {
