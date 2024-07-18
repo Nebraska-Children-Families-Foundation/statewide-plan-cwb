@@ -15,6 +15,13 @@ def home(request):
     context = {'goals': goals}
     return render(request, 'core/home.html', context)
 
+def privacy(request):
+    return render(request, 'core/privacy.html')
+
+
+def terms_of_use(request):
+    return render(request, 'core/terms-of-use.html')
+
 
 def about(request):
     return render(request, 'core/about.html')

@@ -89,23 +89,66 @@
         </div>
     </nav>
 
-
-
-
-
     <!-- Page Content -->
     <div class="main-content">
-    <div class="container" style="margin-top: 1.75rem">
-      {% block content %}
-      <!-- Your page content goes here -->
-      {% endblock %}
-      <!-- Make jQuery available to page scripts, mainly for smart-selects -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      {% block extra_js %}
-          <!-- Page JS goes here -->
-      {% endblock extra_js %}
+        <div class="container" style="margin-top: 1.75rem; margin-bottom: 2.75rem">
+          {% block content %}
+          <!-- Your page content goes here -->
+          {% endblock %}
+          <!-- Make jQuery available to page scripts, mainly for smart-selects -->
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+          {% block extra_js %}
+              <!-- Page JS goes here -->
+          {% endblock extra_js %}
+        </div>
     </div>
-    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-dark mt-auto py-4">
+        <div class="container" style="padding-top: 2.5rem; padding-bottom:1.25rem">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <img src="{% static 'images/bringupnebraska_logo.png' %}" alt="Bring Up Nebraska Logo" class="img-fluid mb-2">
+                    <p>Nebraska Children and Families Foundation</p>
+                    <p>215 Centennial Mall South<br>Suite 200<br>Lincoln, NE 68508</p>
+                    <p>(402) 476-9401</p>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-4 mb-lg-0" style="padding: 0 20px">
+                    <h4>About Bring Up Nebraska</h4>
+                    <p>Bring Up Nebraska partners work to keep children safe, support strong parents, and help families address challenges before they become a crisis.</p>
+                    <p>Bring Up Nebraska collaborative partners:</p>
+                    <ul>
+                        <li>Center for the Study of Social Policy</li>
+                        <li>Children & Family Coalition of Nebraska (CAFCON)</li>
+                        <li>Nebraska Department of Health & Human Services</li>
+                        <li>Nebraska Department of Education</li>
+                        <li>Nebraska Child Abuse Prevention Fund Board</li>
+                        <li>Nebraska Children and Families Foundation</li>
+                        <li>Administrative Office of Courts and Probation</li>
+                        <li>Casey Family Programs</li>
+                        <li>Annie E. Casey Foundation - CHAMPS</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <h4>Statewide Plan for Community Well-Being</h4>
+                    <p><a href="{% url 'home' %}">About the Plan</a></p>
+                    <p><a href="{% url 'goals' %}">Plan Goals</a></p>
+                    <p><a href="{% url 'strategies_objectives' %}">Plan Objectives</a></p>
+                    <p><a href="{% url 'strategy_list' %}">Plan Strategies</a></p>
+
+                    <h4>Bring Up Nebraska</h4>
+                    <p><a href="https://bringupnebraska.org/">Main Site</a></p>
+                    <p><a href="https://bringupnebraska.org/who-we-are/collaboratives/community-collaboratives.html">Find Your Collaborative</a></p>
+                    <p><a href="https://bringupnebraska.org/what-we-believe/">What We Believe</a></p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <p>&copy; 2024 Bring Up Nebraska Initiative | <a href="{% url 'privacy' %}">Privacy Policy</a> | <a href="{% url 'terms_of_use' %}">Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
