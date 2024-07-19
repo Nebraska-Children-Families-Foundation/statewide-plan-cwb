@@ -64,19 +64,19 @@
                     <td>{{ activity.activity_status }}</td>
                     <td>{{ activity.completedby_year }} {{ activity.completedby_quarter }}</td>
                     <td>
-                        <span data-toggle="tooltip" title="{{ activity.related_goal.goal_name }}">
-                            {{ activity.related_goal.goal_number }}
-                        </span>
+                        <button type="button" class="btn btn-ghost-grey" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Goal: {{ activity.related_goal.goal_number }}" data-bs-content="{{ activity.related_goal.goal_name }}">
+                            Goal {{ activity.related_goal.goal_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                        </button>
                     </td>
                     <td>
-                        <span data-toggle="tooltip" title="{{ activity.related_objective.objective_name }}">
-                            {{ activity.related_objective.objective_number }}
-                        </span>
+                        <button type="button" class="btn btn-ghost-grey" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Objective: {{ activity.related_objective.objective_number }}" data-bs-content="{{ activity.related_objective.objective_name }}">
+                            Objective {{ activity.related_objective.objective_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                        </button>
                     </td>
                     <td>
-                        <span data-toggle="tooltip" title="{{ activity.related_strategy.strategy_name }}">
-                            {{ activity.related_strategy.strategy_number }}
-                        </span>
+                        <button type="button" class="btn btn-ghost-grey" data-bs-toggle="popover" data-bs-placement="right" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-title="Strategy: {{ activity.related_strategy.strategy_number }}" data-bs-content="{{ activity.related_strategy.strategy_name }}">
+                            {{ activity.related_strategy.strategy_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                        </button>
                     </td>
                     <td>
                         <a href="{% url 'activity_details' activity.activity_id %}" class="btn btn-ghost-grey">View</a>
@@ -90,10 +90,9 @@
         </tbody>
     </table>
 
-
 <script>
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-bs-toggle="popover"]').popover();
     });
 </script>
 {% endblock %}
