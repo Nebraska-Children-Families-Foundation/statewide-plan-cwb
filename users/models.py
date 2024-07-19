@@ -29,7 +29,7 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
 
@@ -75,4 +75,4 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     def __str__(self):
-        return self.username
+        return f"{self.first_name} {self.last_name}"
