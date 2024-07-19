@@ -163,7 +163,7 @@ class CommunityActionStep(models.Model):
 
 class NCActionStep(models.Model):
     activity_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    activity_number = models.CharField(max_length=10, blank=True, null=True,
+    activity_number = models.CharField(max_length=15, blank=True, null=True,
                                        help_text="Automatically generated. No need to set manually.")
     activity_name = models.CharField(max_length=255)
     activity_details = models.TextField(max_length=1500)
@@ -208,16 +208,17 @@ class NCActionStep(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.activity_number:
-            prefix = "NC_ACT-"
-            last_activity = NCActionStep.objects.order_by('activity_number').last()
+            prefix = "NC-ACT-"
+            last_activity = NCActionStep.objects.filter(activity_number__startswith=prefix).order_by(
+                '-activity_number').first()
 
-            if last_activity:
-                last_number = int(last_activity.activity_number.split('-')[1])
+            if last_activity and last_activity.activity_number:
+                last_number = int(last_activity.activity_number.split('-')[-1])
                 new_number = last_number + 1
             else:
                 new_number = 1000  # Start from 1000
 
-            self.activity_number = f"{prefix}{new_number}"
+            self.activity_number = f"{prefix}{new_number:04d}"  # Ensure consistent 4-digit numbering
         super().save(*args, **kwargs)
 
     def __str__(self):

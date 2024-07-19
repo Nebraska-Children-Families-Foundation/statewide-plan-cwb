@@ -85,3 +85,17 @@ class NcffActivityForm(forms.ModelForm):
             'completedby_year': forms.Select(attrs={'class': 'form-select'}),
             'completedby_quarter': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(NcffActivityForm, self).__init__(*args, **kwargs)
+
+        # Customize querysets for related fields if needed
+        self.fields['related_goal'].queryset = Goal.objects.all().order_by('goal_number')
+        self.fields['related_objective'].queryset = Objective.objects.all().order_by('objective_number')
+        self.fields['related_strategy'].queryset = Strategy.objects.all().order_by('strategy_number')
+
+        # Concatenate goal_number with goal_name, and similar for objective and strategy
+        self.fields['related_goal'].label_from_instance = lambda obj: f"Goal {obj.goal_number}: {obj.goal_name}"
+        self.fields['related_objective'].label_from_instance = lambda obj: f"Obj. {obj.objective_number}: {obj.objective_name}"
+        self.fields['related_strategy'].label_from_instance = lambda obj: f"{obj.strategy_number}: {obj.strategy_name}"
+

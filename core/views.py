@@ -159,24 +159,17 @@ def create_nc_activity(request):
         form = NcffActivityForm(request.POST)
         if form.is_valid():
             nc_activity = form.save(commit=False)
-            # Set the activity number if not already set
-            if not nc_activity.activity_number:
-                prefix = "NC_ACT-"
-                last_activity = NCActionStep.objects.order_by('-activity_number').last()
-                new_number = 1000  # Start from 1000
-                if last_activity:
-                    last_number = int(last_activity.activity_number.split('-')[1])
-                    new_number = last_number + 1
-                nc_activity.activity_number = f"{prefix}{new_number}"
-            # Set the creator of the activity
             nc_activity.nc_staff_creator = request.user
             nc_activity.save()
-            return redirect('it_worked')  # Change this to the appropriate URL
+            messages.success(request, 'NC Activity has been successfully created.')
+            # Use 'strategy_id' instead of 'id' for the primary key attribute
+            return redirect('nc_activities', strategy_id=nc_activity.related_strategy.strategy_id)
         else:
-            # If the form is not valid, return form with errors
-            return render(request, 'core/create-nc-action-step.html', {'form': form})
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
-        form = NcffActivityForm()  # Ensure correct form is used here
+        form = NcffActivityForm()
     return render(request, 'core/create-nc-action-step.html', {'form': form})
 
 
