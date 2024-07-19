@@ -32,6 +32,7 @@ class PasswordResetView(FormView):
     def dispatch(self, *args, **kwargs):
         user_id = self.request.session.get('reset_password_user_id')
         if not user_id:
+            print("No user ID in session, redirecting to login.")
             return redirect('login')
         return super().dispatch(*args, **kwargs)
 
@@ -41,17 +42,26 @@ class PasswordResetView(FormView):
         if user_id:
             user = AppUser.objects.get(id=user_id)
             kwargs['user'] = user
+        print(f"Form kwargs: {kwargs}")
         return kwargs
 
     def form_valid(self, form):
         user_id = self.request.session.get('reset_password_user_id')
         if not user_id:
+            print("No user ID in session during form validation, redirecting to login.")
             return redirect('login')
 
         user = AppUser.objects.get(id=user_id)
-        form.save()  # This saves the new password
+        form.save()  # This should save the new password
+
+        # Debugging logs to verify password change
+        print(f"Password for user {user.email} before saving: {user.password}")
+
         user.must_reset_password = False
         user.save()
+
+        # Debugging logs to verify password change
+        print(f"Password for user {user.email} after saving: {user.password}")
 
         # Log the user in
         login(self.request, user)
@@ -59,5 +69,7 @@ class PasswordResetView(FormView):
         # Clear the session variable
         del self.request.session['reset_password_user_id']
 
-        logging.info(f'Password reset complete for user {user.email}')
+        print(f'Password reset complete for user {user.email}')
         return super().form_valid(form)
+
+
