@@ -30,6 +30,22 @@ h1, h2, h3, h4, h5, h6 {
     color: #333333;
 }
 
+/* Style buttons that lead to detail pages */
+.btn-ghost-grey {
+    background: transparent;
+    border: 2px solid #333;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.btn-ghost-grey:hover {
+    background: #2E7D97;
+    border-color: #2E7D97;
+    color: #fff;
+}
+
+
+
 /* Style for the navigation items in the sidebar */
 .sidebar .nav-item {
     margin-bottom: 10px; /* Spacing between items */
