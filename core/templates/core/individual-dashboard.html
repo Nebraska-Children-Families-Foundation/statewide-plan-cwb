@@ -4,12 +4,12 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="container">
-    <h2>Activity Summary</h2>
-    <h3>Total Activities: {{ activities_count.total }}</h3>
-    <div class="row">
+    <h1 style="margin-bottom: 15px">Activity Summary</h1>
+    <h3 style="margin-bottom: 15px">Total Activities: {{ activities_count.total }}</h3>
+    <h4 style="margin-bottom: 15px">Activities by Status</h4>
+    <div class="row" style="margin-bottom: 25px">
         <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Not Started</h5>
                     <p class="card-text">{{ activities_count.not_started }}</p>
@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-info mb-3">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">In Progress</h5>
                     <p class="card-text">{{ activities_count.in_progress }}</p>
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-success mb-3">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Completed</h5>
                     <p class="card-text">{{ activities_count.completed }}</p>
@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Ongoing</h5>
                     <p class="card-text">{{ activities_count.ongoing }}</p>
@@ -42,14 +42,14 @@
         </div>
     </div>
 
-    <h2>Activities</h2>
+    <h2>List of All Activities</h2>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Activity Number</th>
                 <th>Activity Name</th>
                 <th>Status</th>
-                <th>Completed by (YYYY QQ)</th>
+                <th>To be Completed</th>
                 <th>Related Goal</th>
                 <th>Related Objective</th>
                 <th>Related Strategy</th>
@@ -79,7 +79,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{% url 'activity_details' activity.activity_id %}" class="btn btn-primary">Details</a>
+                        <a href="{% url 'activity_details' activity.activity_id %}" class="btn btn-ghost-grey">View</a>
                     </td>
                 </tr>
             {% empty %}
@@ -89,7 +89,7 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
+
 
 <script>
     $(document).ready(function(){
