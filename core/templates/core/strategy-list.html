@@ -57,7 +57,7 @@
 
     <!-- Strategies Accordion -->
     <div class="row mb-3" style="margin-top: 20px">
-        <h2>Strategies of the Statewide Plan</h2>
+        <h2>Strategies of the Statewide Plan for Community Well-Being</h2>
     </div>
     <div class="accordion" id="strategiesAccordion" style="margin-top: 30px">
         {% for strategy in strategies %}
@@ -100,10 +100,10 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-primary">Community Activities</a>
+                            <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Community Activities</a>
                         </div>
                         <div class="col">
-                            <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-primary">Partner Activities</a>
+                            <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Partner Activities</a>
                         </div>
                     </div>
                 </div>
