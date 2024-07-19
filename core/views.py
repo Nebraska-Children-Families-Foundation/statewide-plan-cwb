@@ -49,8 +49,13 @@ def community_activities(request, strategy_id):
 
 
 def partner_activities(request, strategy_id=None):
-    activities = NCActionStep.objects.filter(related_strategy=strategy_id)
+    activities = SystemPartnerCommitment.objects.filter(related_strategy=strategy_id)
     return render(request, 'core/partner-activities.html', {'activities': activities})
+
+
+def nc_activities(request, strategy_id):
+    activities = NCActionStep.objects.filter(related_strategy=strategy_id)
+    return render(request, 'core/nc-activities.html', {'activities': activities})
 
 
 def community_collaboratives(request):
