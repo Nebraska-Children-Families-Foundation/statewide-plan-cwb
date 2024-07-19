@@ -7,7 +7,7 @@ class AppUserAdmin(BaseUserAdmin):
     model = AppUser
     fieldsets = (
         (None, {'fields': ('email', 'password', 'must_reset_password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'username')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Important dates', {'fields': ('last_login', 'start_date')}),
         ('Associations', {'fields': ('community_collaborative', 'system_partner', 'member_type')}),
@@ -15,14 +15,14 @@ class AppUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'must_reset_password'),
+            'fields': ('email', 'username', 'password1', 'password2', 'must_reset_password'),
         }),
         ('Roles', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
         ('Associations', {'fields': ('member_type', 'community_collaborative', 'system_partner')}),
     )
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'member_type')
-    search_fields = ('email', 'first_name', 'last_name')
+    search_fields = ('email', 'first_name', 'last_name', 'username')
     ordering = ('email',)
 
 

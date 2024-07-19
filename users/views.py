@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from .forms import CustomAuthenticationForm, PasswordResetForm
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .models import AppUser
 
@@ -30,17 +30,12 @@ class PasswordResetView(FormView):
     success_url = reverse_lazy('home')
 
     def dispatch(self, *args, **kwargs):
-        # Check if the session variable is set
         user_id = self.request.session.get('reset_password_user_id')
         if not user_id:
             return redirect('login')
         return super().dispatch(*args, **kwargs)
 
     def get_form_kwargs(self):
-        """
-        Returns the keyword arguments for instantiating the form.
-        Adds the user instance to the form.
-        """
         kwargs = super().get_form_kwargs()
         user_id = self.request.session.get('reset_password_user_id')
         if user_id:
@@ -54,7 +49,7 @@ class PasswordResetView(FormView):
             return redirect('login')
 
         user = AppUser.objects.get(id=user_id)
-        form.save()
+        form.save()  # This saves the new password
         user.must_reset_password = False
         user.save()
 

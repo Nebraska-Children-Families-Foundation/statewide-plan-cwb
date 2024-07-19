@@ -7,7 +7,6 @@ from core.plan_actors import CommunityCollaborative, SystemPartner
 
 class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
-
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -30,7 +29,7 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
 
@@ -44,8 +43,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=30, unique=True)
     first_name = models.CharField(_('first name'), max_length=150, blank=True, null=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True, null=True)
-    must_reset_password = models.BooleanField(default=True,
-                                              help_text=_('Requires user to reset password on next login'))
+    must_reset_password = models.BooleanField(default=True, help_text=_('Requires user to reset password on next login'))
     start_date = models.DateTimeField(_('start date'), default=timezone.now)
     end_date = models.DateTimeField(_('end date'), blank=True, null=True)
 
