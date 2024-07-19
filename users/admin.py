@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin
 from .models import AppUser
 
 
-class AppUserAdmin(BaseUserAdmin):
+class AppUserAdmin(UserAdmin):
     model = AppUser
     fieldsets = (
         (None, {'fields': ('email', 'password', 'must_reset_password')}),
