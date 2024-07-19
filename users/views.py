@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from .forms import CustomAuthenticationForm, PasswordResetForm
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth import login
 from .models import AppUser
 
