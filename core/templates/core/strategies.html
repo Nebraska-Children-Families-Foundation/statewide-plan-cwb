@@ -18,11 +18,11 @@
             <td>{{ strategy.strategy_number }}</td>
             <td>{{ strategy.strategy_name }}</td>
             <td>
-                <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-primary">Communities</a>
-                <a href="{% url 'nc_activities' strategy.strategy_id %}" class="btn btn-primary" style="margin-top: 5px">Nebr. Children</a>
+                <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Communities</a>
+                <a href="{% url 'nc_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">NC</a>
             </td>
             <td>
-                <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-primary">System Partners</a>
+                <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">System Partners</a>
             </td>
         </tr>
         {% empty %}
