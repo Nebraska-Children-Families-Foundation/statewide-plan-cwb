@@ -98,12 +98,20 @@
                             {% endfor %}
                         </div>
                     </div>
+                    <div class="row" style="margin-bottom: 10px">
+                        <div class="col">
+                            <strong>Action Steps &amp; Commitments</strong><br>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Community Activities</a>
                         </div>
                         <div class="col">
-                            <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Partner Activities</a>
+                            <a href="{% url 'nc_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Nebraska Children Activities</a>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">System Partner Commitments</a>
                         </div>
                     </div>
                 </div>
