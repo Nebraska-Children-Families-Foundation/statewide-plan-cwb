@@ -31,13 +31,13 @@
         <ul class="nav flex-column mt-auto">
         {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">
+            <a class="nav-link" href="{% url 'users:logout' %}">
               <i class="bi bi-box-arrow-right"></i> Logout
             </a>
           </li>
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">
+            <a class="nav-link" href="{% url 'users:login' %}">
               <i class="bi bi-box-arrow-in-right"></i> Login
             </a>
           </li>

@@ -75,13 +75,13 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">
+                            <a class="nav-link" href="{% url 'users:logout' %}">
                                 <i class="bi bi-box-arrow-right" style="padding-right: 5px"></i> Logout
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
+                            <a class="nav-link" href="{% url 'users:login' %}">
                                 <i class="bi bi-box-arrow-in-right"></i> Login
                             </a>
                         </li>

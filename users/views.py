@@ -19,7 +19,7 @@ class CustomLoginView(LoginView):
         if user.must_reset_password:
             logging.info('Redirecting to password reset')
             self.request.session['reset_password_user_id'] = user.id
-            return redirect('password_reset')
+            return redirect('users:password_reset')
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
