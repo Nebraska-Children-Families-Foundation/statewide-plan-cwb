@@ -8,8 +8,8 @@
         <tr>
             <th scope="col">Strategy Number</th>
             <th scope="col">Strategy Name</th>
-            <th scope="col">Community Activities</th>
-            <th scope="col">Partner Activities</th>
+            <th scope="col">Action Steps</th>
+            <th scope="col">Commitments</th>
         </tr>
     </thead>
     <tbody>
@@ -17,8 +17,13 @@
         <tr>
             <td>{{ strategy.strategy_number }}</td>
             <td>{{ strategy.strategy_name }}</td>
-            <td><a href="{% url 'community_activities' strategy.strategy_id %}">View Activities</a></td>
-            <td><a href="{% url 'partner_activities' strategy.strategy_id %}">View Activities</a></td>
+            <td>
+                <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-primary">Communities</a>
+                <a href="{% url 'nc_activities' strategy.strategy_id %}" class="btn btn-primary" style="margin-top: 5px">Nebr. Children</a>
+            </td>
+            <td>
+                <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-primary">System Partners</a>
+            </td>
         </tr>
         {% empty %}
         <tr>
