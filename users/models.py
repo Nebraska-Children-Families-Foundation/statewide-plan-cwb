@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from core.plan_actors import CommunityCollaborative, SystemPartner
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import logging
 
 
 class CustomUserManager(BaseUserManager):
@@ -19,6 +20,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must be assigned to is_superuser=True.'))
 
+        logging.info(f'Creating superuser with must_reset_password: {extra_fields["must_reset_password"]}')
         return self.create_user(email, password, **extra_fields)
 
     def create_user(self, email, password, **extra_fields):
@@ -34,6 +36,7 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save()
+        logging.info(f'Created user {email} with must_reset_password: {user.must_reset_password}')  # Logs
         return user
 
 
