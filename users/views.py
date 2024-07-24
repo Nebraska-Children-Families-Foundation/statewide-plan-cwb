@@ -28,7 +28,6 @@ class CustomLoginView(LoginView):
         return context
 
 
-
 class PasswordResetView(FormView):
     form_class = PasswordResetForm
     template_name = 'users/password_reset.html'
