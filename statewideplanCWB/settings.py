@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'users.middleware.CheckPasswordResetMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
