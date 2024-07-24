@@ -5,7 +5,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),
     path('', include('core.urls')),
-    path('users/', include('users.urls')),
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 admin.site.site_header = 'Statewide Plan Admin Panel'
