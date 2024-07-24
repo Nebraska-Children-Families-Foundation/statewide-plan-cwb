@@ -1,11 +1,7 @@
-from django.shortcuts import render
 import logging
 from django.contrib.auth.views import LoginView
 from .forms import CustomAuthenticationForm
-from django.urls import reverse_lazy
 from django.shortcuts import redirect
-from django.contrib.auth import login
-from .models import AppUser
 
 
 class CustomLoginView(LoginView):
