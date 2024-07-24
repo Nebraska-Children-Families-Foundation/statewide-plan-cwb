@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from core.plan_actors import CommunityCollaborative, SystemPartner
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class CustomUserManager(BaseUserManager):
@@ -76,3 +78,10 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+
+@receiver(post_save, sender=AppUser)
+def reset_password_handler(sender, instance, **kwargs):
+    if instance.has_usable_password() and instance.must_reset_password:
+        instance.must_reset_password = False
+        instance.save()
