@@ -84,6 +84,6 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
 @receiver(post_save, sender=AppUser)
 def reset_password_handler(sender, instance, **kwargs):
-    if instance.has_usable_password() and instance.must_reset_password:
-        instance.must_reset_password = False
+    if instance.must_reset_password and not instance.has_usable_password():
+        instance.must_reset_password = True
         instance.save()
