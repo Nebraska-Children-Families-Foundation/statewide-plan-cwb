@@ -12,6 +12,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('must_reset_password', True)
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(_('Superuser must be assigned to is_staff=True.'))
@@ -29,6 +30,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('You must provide a unique username'))
 
         email = self.normalize_email(email)
+        extra_fields.setdefault('must_reset_password', True)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save()
