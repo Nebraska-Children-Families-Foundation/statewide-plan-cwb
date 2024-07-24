@@ -2,6 +2,7 @@ import logging
 from django.contrib.auth.views import LoginView
 from .forms import CustomAuthenticationForm
 from django.shortcuts import redirect
+from django.urls import reverse
 
 
 class CustomLoginView(LoginView):
@@ -14,7 +15,7 @@ class CustomLoginView(LoginView):
         if user.must_reset_password:
             logging.info('Redirecting to password change')
             self.request.session['reset_password_user_id'] = user.id
-            return redirect('password_change')
+            return redirect('users:password_change')
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
