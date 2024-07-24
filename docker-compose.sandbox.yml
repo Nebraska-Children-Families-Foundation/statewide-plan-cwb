@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  django_gunicorn:
+    container_name: test-statewideplan
+    build: .
+    restart: always
+    env_file: .env
+    environment:
+      - DOMAIN=statewideplan-sandbox.ncffapps.dev
+      - EMAIL=znelson@nebraskachildren.org
+      - DB_HOST=private-db-postgresql-nyc3-nc-ops-do-user-14651347-0.b.db.ondigitalocean.com
+      - DB_PORT=25060
+    labels:
+      - "traefik.enable=true" # Explicitly tell Traefik to manage this container
+      - "traefik.http.routers.swpsndbx.rule=Host(`statewideplan-sandbox.ncffapps.dev`)" # Define the rule under which this service
+      - "traefik.http.routers.swpsndbx.entrypoints=websecure" # Specify the entrypoints
+      - "traefik.http.routers.swpsndbx.tls=true" # Enable TLS for this service
+      - "traefik.http.routers.swpsndbx.tls.certresolver=production" #Use the defined certificate resolver for HTTPS
+    networks:
+      - traefik_network
+    volumes:
+      - static_volume:/app/staticfiles
+
+networks:
+  traefik_network:
+    external: true
+
+volumes:
+  static_volume:
