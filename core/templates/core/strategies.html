@@ -1,7 +1,12 @@
 {% extends 'core/base.html' %}
 {% block content %}
-    <h1 style="margin-bottom: 20px">List of Strategies</h1>
-    <h2 style="padding-bottom: 15px">Strategies for Objective: {{ objective.objective_name }}</h2>
+    <h1 style="margin-bottom: 20px">Related Strategies</h1>
+    <div class="card" style="margin-bottom: 15px">
+        <div class="card-body" style="background-color: #eeeeee">
+            <h3 style="margin-bottom: 0">Objective {{ objective.objective_number }}: {{ objective.objective_name }}</h3>
+        </div>
+    </div>
+
 
     <!-- Strategies Table -->
     <table class="table">
