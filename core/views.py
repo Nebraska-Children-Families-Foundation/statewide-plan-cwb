@@ -256,16 +256,22 @@ def individual_dashboard(request):
 @login_required
 def activity_details(request, activity_id):
     user = request.user
+    activity = None
+    activity_type = None
 
     if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
         activity = get_object_or_404(CommunityActionStep, activity_id=activity_id)
+        activity_type = 'community'
     elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
         activity = get_object_or_404(NCActionStep, activity_id=activity_id)
+        activity_type = 'nc'
     elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
         activity = get_object_or_404(SystemPartnerCommitment, commitment_id=activity_id)
+        activity_type = 'partner'
 
     context = {
-        'activity': activity
+        'activity': activity,
+        'activity_type': activity_type
     }
     return render(request, 'core/activity-details.html', context)
 

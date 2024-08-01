@@ -47,8 +47,12 @@
     <p><strong>Related Objective:</strong> {{ activity.related_objective.objective_name }}</p>
     <p><strong>Related Strategy:</strong> {{ activity.related_strategy.strategy_name }}</p>
 
-    {% if activity.community_creator == request.user %}
+    {% if activity_type == 'community' and activity.community_creator == request.user %}
         <a href="{% url 'edit_community_activity' activity.pk %}" class="btn btn-ghost-grey">Edit</a>
+    {% elif activity_type == 'nc' and activity.nc_staff_creator == request.user %}
+        <a href="{% url 'edit_nc_activity' activity.pk %}" class="btn btn-ghost-grey">Edit</a>
+    {% elif activity_type == 'partner' and activity.system_partner_creator == request.user %}
+        <a href="{% url 'edit_system_partner_commitment' activity.pk %}" class="btn btn-ghost-grey">Edit</a>
     {% endif %}
 </div>
 
