@@ -31,7 +31,7 @@
                     <strong>Objectives:</strong>
                     <ul>
                         {% for objective in goal.objective_set.all %}
-                            <li>{{ objective.objective_name }} <a href="{% url 'strategies' objective.objective_id %}">View Related Strategies</a></li>
+                            <li style="margin-bottom: 8px"><strong>Objective {{ objective.objective_number }}:</strong> {{ objective.objective_name }} <a href="{% url 'strategies' objective.objective_id %}">View Related Strategies</a></li>
                         {% empty %}
                         <li>No objectives available</li>
                         {% endfor %}
