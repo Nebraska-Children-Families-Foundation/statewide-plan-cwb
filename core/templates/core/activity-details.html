@@ -6,6 +6,28 @@
 {% block content %}
 <div class="container">
     <h1>Activity Details</h1>
+
+    <!-- Bootstrap Breadcrumbs with Popovers -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color: #333333; text-decoration: none" href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Goal {{ activity.related_goal.goal_number }}" data-bs-content="{{ activity.related_goal.goal_name }}">
+                    Goal {{ activity.related_goal.goal_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a style="color: #333333; text-decoration: none" href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Objective {{ activity.related_objective.objective_number }}" data-bs-content="{{ activity.related_objective.objective_name }}">
+                    Objective {{ activity.related_objective.objective_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <a style="color: #333333; text-decoration: none" href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Strategy {{ activity.related_strategy.strategy_number }}" data-bs-content="{{ activity.related_strategy.strategy_name }}">
+                    Strategy {{ activity.related_strategy.strategy_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                </a>
+            </li>
+        </ol>
+    </nav>
+
     <h2>{{ activity.activity_name }}</h2>
     <p>{{ activity.activity_details }}</p>
     <p><strong>Activity Lead:</strong> {{ activity.activity_lead }}</p>
@@ -24,5 +46,18 @@
     <p><strong>Related Goal:</strong> {{ activity.related_goal.goal_name }}</p>
     <p><strong>Related Objective:</strong> {{ activity.related_objective.objective_name }}</p>
     <p><strong>Related Strategy:</strong> {{ activity.related_strategy.strategy_name }}</p>
+
+    {% if activity.community_creator == request.user %}
+        <a href="{% url 'edit_community_activity' activity.pk %}" class="btn btn-ghost-grey">Edit</a>
+    {% endif %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+    });
+</script>
 {% endblock %}
