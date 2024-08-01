@@ -1,41 +1,66 @@
 {% extends "core/base.html" %}
-{% block title %} Create a Community Activity {% endblock %}
+{% block title %}Edit Community Action Step{% endblock %}
 {% load static %}
 {% load widget_tweaks %}
 
 {% block content %}
+<h2>Edit Community Action Step</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div class="form-group">
-        <label for="{{ form.activity_name.id_for_label }}">Activity Name:</label>
-        {{ form.activity_name }}
-        {{ form.activity_name.errors }}
-    </div>
-    <div class="form-group">
-        <label for="{{ form.activity_details.id_for_label }}">Activity Details:</label>
-        {{ form.activity_details }}
-        {{ form.activity_details.errors }}
-    </div>
-    <div class="form-row">
-        <div class="col-md-4">
-            <label for="{{ form.activity_status.id_for_label }}">Activity Status:</label>
-            {{ form.activity_status }}
-            {{ form.activity_status.errors }}
-        </div>
-        <div class="col-md-4">
-            <label for="{{ form.completedby_year.id_for_label }}">Complete By Year:</label>
-            {{ form.completedby_year }}
-            {{ form.completedby_year.errors }}
-        </div>
-        <div class="col-md-4">
-            <label for="{{ form.completedby_quarter.id_for_label }}">Complete By Quarter:</label>
-            {{ form.completedby_quarter }}
-            {{ form.completedby_quarter.errors }}
-        </div>
-    </div>
-    <!-- Similar for other fields -->
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
 
+    <div class="mb-3">
+        <label for="{{ form.related_collaborative.id_for_label }}" class="form-label">Community Collaborative</label>
+        {% render_field form.related_collaborative class="form-select" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.activity_name.id_for_label }}" class="form-label">{{ form.activity_name.label }}</label>
+        {% render_field form.activity_name class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.activity_details.id_for_label }}" class="form-label">{{ form.activity_details.label }}</label>
+        {% render_field form.activity_details class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.activity_lead.id_for_label }}" class="form-label">{{ form.activity_lead.label }}</label>
+        {% render_field form.activity_lead class="form-control" %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.activity_status.id_for_label }}" class="form-label">{{ form.activity_status.label }}:</label>
+            {% render_field form.activity_status class="form-select" %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.completedby_year.id_for_label }}" class="form-label">Year to be completed by:</label>
+            {% render_field form.completedby_year class="form-select" %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.completedby_quarter.id_for_label }}" class="form-label">Quarter to be completed by:</label>
+            {% render_field form.completedby_quarter class="form-select" %}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.related_goal.id_for_label }}" class="form-label">{{ form.related_goal.label }}</label>
+        {% render_field form.related_goal class="form-select" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.related_objective.id_for_label }}" class="form-label">{{ form.related_objective.label }}</label>
+        {% render_field form.related_objective class="form-select" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.related_strategy.id_for_label }}" class="form-label">{{ form.related_strategy.label }}</label>
+        {% render_field form.related_strategy class="form-select" %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
+{% block extra_js %}
+    {{ form.media }}
 {% endblock %}
