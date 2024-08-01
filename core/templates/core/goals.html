@@ -29,13 +29,20 @@
                         {% endfor %}
                     </ul>
                     <strong>Objectives:</strong>
-                    <ul>
-                        {% for objective in goal.objective_set.all %}
-                            <li style="margin-bottom: 8px"><strong>Objective {{ objective.objective_number }}:</strong> {{ objective.objective_name }} <a href="{% url 'strategies' objective.objective_id %}">View Related Strategies</a></li>
-                        {% empty %}
-                        <li>No objectives available</li>
-                        {% endfor %}
-                    </ul>
+                        <div class="row">
+                            {% for objective in goal.objective_set.all %}
+                                <div class="col-md-9" style="margin-bottom: 8px">
+                                    <p><strong>Objective {{ objective.objective_number }}:</strong> {{ objective.objective_name }}</p>
+                                </div>
+                                <div class="col-md-3" style="margin-bottom: 8px">
+                                    <a href="{% url 'strategies' objective.objective_id %}" class="btn btn-ghost-grey">View Related Strategies</a>
+                                </div>
+                            {% empty %}
+                            <div class="col-md-12">
+                                <li>No objectives available</li>
+                            </div>
+                            {% endfor %}
+                        </div>
                 </div>
             </div>
         </div>
