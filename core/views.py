@@ -189,6 +189,23 @@ def load_objectives(request):
 
 
 @login_required
+def update_nc_activity(request, pk):
+    activity = get_object_or_404(NCActionStep, pk=pk)
+    if not activity.nc_staff_creator == request.user:
+        return HttpResponseForbidden("You do not have permission to edit this action step.")
+
+    if request.method == 'POST':
+        form = NcffActivityForm(request.POST, instance=activity)
+        if form.is_valid():
+            form.save()
+            return redirect('nc_activities', strategy_id=activity.related_strategy.pk)
+    else:
+        form = NcffActivityForm(instance=activity)
+
+    return render(request, 'core/edit-nc-activity.html', {'form': form})
+
+
+@login_required
 def update_community_activity(request, pk):
     activity = get_object_or_404(CommunityActionStep, pk=pk)
     if not has_edit_permission(request.user, activity):
@@ -205,20 +222,21 @@ def update_community_activity(request, pk):
     return render(request, 'core/update-community-activity.html', {'form': form})
 
 
+@login_required
 def update_system_partner_commitment(request, pk):
     commitment = get_object_or_404(SystemPartnerCommitment, pk=pk)
-    if not has_commitment_edit_permission(request.user, commitment):
+    if not commitment.system_partner_creator == request.user:
         return HttpResponseForbidden("You do not have permission to edit this commitment.")
 
     if request.method == 'POST':
         form = PartnerActivityForm(request.POST, instance=commitment)
         if form.is_valid():
             form.save()
-            return redirect('commitment-detail-view', pk=commitment.pk)  # Redirect to the commitment's detail view or another appropriate page
+            return redirect('partner_activities', strategy_id=commitment.related_strategy.pk)
     else:
         form = PartnerActivityForm(instance=commitment)
 
-    return render(request, 'core/update-system-partner-commitment.html', {'form': form})
+    return render(request, 'core/edit-system-partner-commitment.html', {'form': form})
 
 
 @login_required
