@@ -26,6 +26,9 @@
                 <div style="margin-bottom: 10px"><strong>Lead:</strong> {{ activity.activity_lead }}<br></div>
                 <div style="margin-bottom: 10px"><strong>Status:</strong> {{ activity.activity_status }}<br></div>
                 <strong>To be completed by:</strong> {{ activity.completedby_year }} {{ activity.completedby_quarter }}<br>
+                {% if activity.community_creator == request.user %}
+                    <p><a href="{% url 'edit_community_activity' activity.pk %}">Edit</a></p>
+                {% endif %}
             </div>
         </div>
     </div>
