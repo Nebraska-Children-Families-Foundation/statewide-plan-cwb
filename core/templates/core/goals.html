@@ -12,7 +12,7 @@
             </h2>
             <div id="collapse{{ goal.goal_number }}" class="accordion-collapse collapse" aria-labelledby="heading{{ goal.goal_number }}" data-bs-parent="#goalsAccordion">
                 <div class="accordion-body">
-                    <strong>Indicator of Change:</strong>
+                    <h4>Indicator of Change:</h4>
                     <ul>
                         {% for indicator in goal.changeindicator_set.all %}
                         <li>{{ indicator.indicator }}</li>
@@ -20,7 +20,7 @@
                         <li>No indicators available</li>
                         {% endfor %}
                     </ul>
-                    <strong>Performance Measure:</strong>
+                    <h4>Performance Measure:</h4>
                     <ul>
                         {% for measure in goal.performancemeasure_set.all %}
                         <li>{{ measure.measure }}</li>
@@ -28,18 +28,18 @@
                         <li>No measures available</li>
                         {% endfor %}
                     </ul>
-                    <strong>Objectives:</strong>
+                    <h4>Objectives:</h4>
                         <div class="row">
                             {% for objective in goal.objective_set.all %}
-                                <div class="col-md-9" style="margin-bottom: 8px">
+                                <div class="col-md-10" style="margin-bottom: 8px">
                                     <p><strong>Objective {{ objective.objective_number }}:</strong> {{ objective.objective_name }}</p>
                                 </div>
-                                <div class="col-md-3" style="margin-bottom: 8px">
+                                <div class="col-md-2" style="margin-bottom: 8px">
                                     <a href="{% url 'strategies' objective.objective_id %}" class="btn btn-ghost-grey">View Related Strategies</a>
                                 </div>
                             {% empty %}
                             <div class="col-md-12">
-                                <li>No objectives available</li>
+                                <ul><li>No objectives available</li></ul>
                             </div>
                             {% endfor %}
                         </div>
