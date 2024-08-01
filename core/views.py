@@ -180,6 +180,7 @@ def load_objectives(request):
     return JsonResponse(list(objectives.values('id', 'name')), safe=False)
 
 
+@login_required
 def update_community_activity(request, pk):
     activity = get_object_or_404(CommunityActionStep, pk=pk)
     if not has_edit_permission(request.user, activity):
@@ -189,8 +190,7 @@ def update_community_activity(request, pk):
         form = CommunityActivityForm(request.POST, instance=activity)
         if form.is_valid():
             form.save()
-            # Redirect to a success page
-            return redirect('some-success-url')
+            return redirect('community_activities', strategy_id=activity.related_strategy.pk)
     else:
         form = CommunityActivityForm(instance=activity)
 
