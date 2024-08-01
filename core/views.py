@@ -42,10 +42,18 @@ def create_strategy(request):
 
 
 def community_activities(request, strategy_id):
+    strategy = get_object_or_404(Strategy, pk=strategy_id)
+    objective = strategy.related_objective
+    goal = objective.related_goal
     activities = CommunityActionStep.objects.filter(related_strategy=strategy_id)
     collaboratives = CommunityCollaborative.objects.all()
-    return render(request, 'core/community-activities.html', {'activities': activities,
-                                                              'collaboratives': collaboratives})
+    return render(request, 'core/community-activities.html', {
+        'activities': activities,
+        'collaboratives': collaboratives,
+        'goal': goal,
+        'objective': objective,
+        'strategy': strategy
+    })
 
 
 def partner_activities(request, strategy_id=None):
