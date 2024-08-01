@@ -1,4 +1,7 @@
-{% extends "core/base.html" %} {% block title %} Goals of the Statewide Plan for Community Well-Being {% endblock %}
+{% extends "core/base.html" %}
+{% block title %} Goals of the Statewide Plan for Community Well-Being {% endblock %}
+{% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
     <h1 style="margin-bottom: 15px">Goals of the Statewide Plan for Community Well-Being</h1>
@@ -6,7 +9,7 @@
         {% for goal in goals %}
         <div class="accordion-item">
             <h2 class="accordion-header" id="heading{{ goal.goal_number }}">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ goal.goal_number }}" aria-expanded="false" aria-controls="collapse{{ goal.goal_number }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ objective.related_goal.goal_number }}" aria-expanded="false" aria-controls="collapse{{ goal.goal_number }}">
                     Goal {{ goal.goal_number }}: {{ goal.goal_name }}
                 </button>
             </h2>

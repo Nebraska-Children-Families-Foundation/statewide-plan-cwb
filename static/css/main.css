@@ -114,6 +114,12 @@ h1, h2, h3, h4, h5, h6 {
     transition: background-color 0.3s, color 0.3s;
 }
 
+.breadcrumb-item {
+    color: #333333;
+    text-decoration: none;
+}
+
+
 footer {
     border-top: #2E7D97 solid 5px;
 }

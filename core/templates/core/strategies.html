@@ -1,6 +1,27 @@
 {% extends 'core/base.html' %}
 {% block content %}
+{% load static %}
+{% load widget_tweaks %}
+
     <h1 style="margin-bottom: 20px">Related Strategies</h1>
+
+    <!-- Bootstrap Breadcrumbs with Popovers -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color: #333333; text-decoration: none" href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Goal {{ objective.related_goal.goal_number }}" data-bs-content="{{ objective.related_goal.goal_name }}">
+                    Goal {{ objective.related_goal.goal_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Objective {{ objective.objective_number }}" data-bs-content="{{ objective.objective_name }}">
+                    Objective {{ objective.objective_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Related Strategies <i class="bi bi-chevron-compact-down" style="margin-left: 2px"></i></li>
+        </ol>
+    </nav>
+
     <div class="card" style="margin-bottom: 15px">
         <div class="card-body" style="background-color: #eeeeee">
             <h3 style="margin-bottom: 0">Objective {{ objective.objective_number }}: {{ objective.objective_name }}</h3>
@@ -9,7 +30,7 @@
 
 
     <!-- Strategies Table -->
-    <table class="table">
+    <table class="table" style="margin-bottom: 140px">
         <thead>
             <tr>
                 <th scope="col">Strategy Number</th>
@@ -39,10 +60,12 @@
         </tbody>
     </table>
 
-    <!-- Goal Information -->
-    <div class="mt-4">
-        <h4>Related Goal</h4>
-        <p>Goal Number: {{ objective.related_goal.goal_number }}</p>
-        <p>Goal Name: {{ objective.related_goal.goal_name }}</p>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl)
+            })
+        });
+    </script>
     {% endblock %}
