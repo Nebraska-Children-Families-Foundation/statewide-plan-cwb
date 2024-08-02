@@ -44,18 +44,6 @@ h1, h2, h3, h4, h5, h6 {
     color: #fff;
 }
 
-.btn-bun-primary {
-    background-color: #2E7D97;
-    color: #fff;
-    border: 1px solid #2E7D97;
-}
-
-.btn-bun-primary:hover {
-    background: #1f5365;
-    color: #fff;
-    border: 1px solid #1f5365;
-}
-
 /* Style for the navigation items in the sidebar */
 .sidebar .nav-item {
     margin-bottom: 10px; /* Spacing between items */
@@ -129,6 +117,10 @@ h1, h2, h3, h4, h5, h6 {
 .breadcrumb-item {
     color: #333333;
     text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #2E7D97 !important;
 }
 
 
