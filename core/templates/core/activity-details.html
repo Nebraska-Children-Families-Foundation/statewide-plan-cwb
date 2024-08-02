@@ -9,7 +9,7 @@
 
     <!-- Bootstrap Breadcrumbs with Popovers -->
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb" style="margin-bottom: 25px">
             <li class="breadcrumb-item">
                 <a style="color: #333333; text-decoration: none" href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Goal {{ activity.related_goal.goal_number }}" data-bs-content="{{ activity.related_goal.goal_name }}">
                     Goal {{ activity.related_goal.goal_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
@@ -25,6 +25,7 @@
                     Strategy {{ activity.related_strategy.strategy_number }} <i class="bi bi-info-circle-fill" style="margin-left: 5px"></i>
                 </a>
             </li>
+            <li class="breadcrumb-item active" aria-current="page">Activity Details <i class="bi bi-chevron-compact-down" style="margin-left: 2px"></i></li>
         </ol>
     </nav>
 
