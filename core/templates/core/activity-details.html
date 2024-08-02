@@ -5,7 +5,13 @@
 
 {% block content %}
 <div class="container">
-    <h1>Activity Details</h1>
+    <h1>
+        {% if activity_type == 'community' or activity_type == 'nc' %}
+            Action Step Details
+        {% elif activity_type == 'partner' %}
+            Commitment Details
+        {% endif %}
+    </h1>
 
     <!-- Bootstrap Breadcrumbs with Popovers -->
     <nav aria-label="breadcrumb">
@@ -43,7 +49,7 @@
             <p><strong>Quarter to be Completed by:</strong> {{ activity.completedby_quarter }}</p>
         </div>
     </div>
-    <h2 style="margin-top: 35px">Related Details</h2>
+    <h2 style="margin-top: 35px">Related Plan Details</h2>
     <div class="row">
         <div class="col-md-4 mb-3">
             <div class="card">
