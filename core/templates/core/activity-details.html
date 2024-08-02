@@ -37,7 +37,17 @@
 
     <h2>{{ activity.activity_name }}</h2>
     <p>{{ activity.activity_details }}</p>
+
+    {% if activity_type == 'community' %}
+        <p><strong>Community Collaborative:</strong> {{ activity.related_collaborative.community_collab_name }}</p>
+    {% elif activity_type == 'nc' %}
+        <p><strong>NCFF Team:</strong> {{ activity.ncff_team.ncff_team_name }}</p>
+    {% elif activity_type == 'partner' %}
+        <p><strong>System Partner:</strong> {{ activity.related_systempartner.system_partner_name }}</p>
+    {% endif %}
+
     <p><strong>Activity Lead:</strong> {{ activity.activity_lead }}</p>
+
     <div class="row">
         <div class="col-md-4">
             <p><strong>Status:</strong> {{ activity.activity_status }}</p>
@@ -49,6 +59,7 @@
             <p><strong>Quarter to be Completed by:</strong> {{ activity.completedby_quarter }}</p>
         </div>
     </div>
+
     <h2 style="margin-top: 35px">Related Plan Details</h2>
     <div class="row">
         <div class="col-md-4 mb-3">
