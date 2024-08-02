@@ -1,0 +1,69 @@
+{% extends "core/base.html" %}
+{% block title %} Edit NC Action Step {% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h2>Edit Nebraska Children Action Step</h2>
+<form method="post">
+    {% csrf_token %}
+
+    <!-- Regular label structure for each field -->
+    <div class="mb-3">
+        <label for="{{ form.ncff_team.id_for_label }}" class="form-label">{{ form.ncff_team.label }}</label>
+        {% render_field form.ncff_team class="form-select" %}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.activity_name.id_for_label }}" class="form-label">{{ form.activity_name.label }}</label>
+        {% render_field form.activity_name class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.activity_details.id_for_label }}" class="form-label">{{ form.activity_details.label }}</label>
+        {% render_field form.activity_details class="form-control", rows=4 %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.activity_lead.id_for_label }}" class="form-label">{{ form.activity_lead.label }}</label>
+        {% render_field form.activity_lead class="form-control" %}
+    </div>
+
+    <!-- Row for activity_status, completedby_year, and completedby_quarter -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.activity_status.id_for_label }}" class="form-label">{{ form.activity_status.label }}</label>
+            {% render_field form.activity_status class="form-select" %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.completedby_year.id_for_label }}" class="form-label">Year to be completed by:</label>
+            {% render_field form.completedby_year class="form-select" %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.completedby_quarter.id_for_label }}" class="form-label">Quarter to be completed by:</label>
+            {% render_field form.completedby_quarter class="form-select" %}
+        </div>
+    </div>
+
+    <!-- Add other fields as needed -->
+    <div class="mb-3">
+        <label for="{{ form.related_goal.id_for_label }}" class="form-label">{{ form.related_goal.label }}</label>
+        {% render_field form.related_goal class="form-select" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.related_objective.id_for_label }}" class="form-label">{{ form.related_objective.label }}</label>
+        {% render_field form.related_objective class="form-select" %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.related_strategy.id_for_label }}" class="form-label">{{ form.related_strategy.label }}</label>
+        {% render_field form.related_strategy class="form-select" %}
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 15px">Update Record</button>
+</form>
+
+{% endblock %}
+{% block extra_js %}
+    {{ form.media }}
+{% endblock %}
