@@ -43,10 +43,39 @@
             <p><strong>Quarter to be Completed by:</strong> {{ activity.completedby_quarter }}</p>
         </div>
     </div>
-    <h2>Related Details</h2>
-    <p><strong>Related Goal:</strong> {{ activity.related_goal.goal_name }}</p>
-    <p><strong>Related Objective:</strong> {{ activity.related_objective.objective_name }}</p>
-    <p><strong>Related Strategy:</strong> {{ activity.related_strategy.strategy_name }}</p>
+    <h2 style="margin-top: 35px">Related Details</h2>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Related Goal
+                </div>
+                <div class="card-body">
+                    {{ activity.related_goal.goal_name }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Related Objective
+                </div>
+                <div class="card-body">
+                    {{ activity.related_objective.objective_name }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Related Strategy
+                </div>
+                <div class="card-body">
+                    {{ activity.related_strategy.strategy_name }}
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% if activity_type == 'community' and activity.community_creator == request.user %}
         <a href="{% url 'edit_community_activity' activity.pk %}" class="btn btn-ghost-grey">Edit</a>
