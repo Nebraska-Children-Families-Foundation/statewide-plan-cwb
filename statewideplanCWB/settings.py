@@ -110,8 +110,12 @@ elif ENVIRONMENT == 'test':
 elif ENVIRONMENT == 'development':
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DEV_DATABASE_NAME', default='test_db'),
+            'USER': config('DEV_DATABASE_USER', default='test_user'),
+            'PASSWORD': config('DEV_DATABASE_PASSWORD', default='test_password'),
+            'HOST': config('DEV_DATABASE_HOST', default='localhost'),
+            'PORT': config('DEV_DATABASE_PORT', default='5433'),
         }
     }
 
