@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from . import forms
 from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionStep, CommunityCollaborative, NcffTeam,
                      SystemPartner, CollaborativeStrategyPriority)
 from .forms import CommunityActivityForm, PartnerActivityForm, NcffActivityForm
@@ -134,11 +136,17 @@ def create_partner_commitment(request):
             commitment = form.save(commit=False)
             if not commitment.commitment_number:
                 prefix = "COMMIT-"
-                last_commitment = SystemPartnerCommitment.objects.order_by('-commitment_number').last()
+                last_commitment = SystemPartnerCommitment.objects.filter(commitment_number__startswith=prefix).order_by('-commitment_number').first()
                 new_number = 1000  # Start from 1000
-                if last_commitment:
-                    number_part = last_commitment.commitment_number.split('-')[2]
-                    new_number = int(number_part) + 1
+                if last_commitment and last_commitment.commitment_number:
+                    parts = last_commitment.commitment_number.split('-')
+                    if len(parts) >= 3 and parts[2].isdigit():
+                        last_number = int(parts[2])
+                        new_number = last_number + 1
+                    else:
+                        new_number = 1000  # Fallback
+                else:
+                    new_number = 1000  # Start from 1000 if no last commitment
                 commitment.commitment_number = f"{prefix}{new_number}"
             commitment.system_partner_creator = request.user
             commitment.save()
@@ -260,6 +268,17 @@ def activity_details(request, activity_id):
         'activity': activity
     }
     return render(request, 'core/activity-details.html', context)
+
+
+def clean(self):
+    cleaned_data = super().clean()
+    if not cleaned_data.get('related_goal'):
+        raise forms.ValidationError("Related Goal is required.")
+    if not cleaned_data.get('related_objective'):
+        raise forms.ValidationError("Related Objective is required.")
+    if not cleaned_data.get('related_strategy'):
+        raise forms.ValidationError("Related Strategy is required.")
+    return cleaned_data
 
 
 def it_worked(request):
