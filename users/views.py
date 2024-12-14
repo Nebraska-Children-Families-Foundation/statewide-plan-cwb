@@ -21,6 +21,7 @@ class CustomLoginView(LoginView):
         context = super().get_context_data(**kwargs)
         return context
 
+
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'users/password_change_form.html'
     success_url = reverse_lazy('users:password_change_done')
