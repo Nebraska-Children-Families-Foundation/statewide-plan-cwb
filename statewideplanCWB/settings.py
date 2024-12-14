@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'smart_selects',
     'widget_tweaks',
+    'anymail',
     'core',
     'users',
 ]
@@ -160,6 +161,20 @@ LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+# Email Configuration
+if ENVIRONMENT == 'development':
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
+    ANYMAIL = {
+        "MAILJET_API_KEY": config('MAILJET_API_KEY'),
+        "MAILJET_SECRET_KEY": config('MAILJET_API_SECRET'),
+    }
+
+DEFAULT_FROM_EMAIL = config('MAILJET_FROM_EMAIL')
+SERVER_EMAIL = config('MAILJET_FROM_EMAIL')
+
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
