@@ -34,7 +34,9 @@ class CustomPasswordChangeView(PasswordChangeView):
 
 
 class CustomPasswordResetView(SuccessMessageMixin, PasswordResetView):
-    email_template_name = 'registration/password_reset_email.txt'
-    html_email_template_name = 'registration/password_reset_email.html'
-    subject_template_name = 'registration/password_reset_subject.txt'
+    template_name = 'users/password_reset_form.html'
+    email_template_name = 'users/password_reset_email.html'
+    html_email_template_name = 'users/password_reset_email.html'
+    subject_template_name = 'users/password_reset_subject.txt'
+    success_url = reverse_lazy('users:password_reset_done')
     success_message = "If an account exists with the email you entered, you will receive password reset instructions."
