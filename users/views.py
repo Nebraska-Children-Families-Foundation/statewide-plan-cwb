@@ -1,8 +1,9 @@
 from django.contrib.auth import login, update_session_auth_hash
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .forms import CustomAuthenticationForm
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 class CustomLoginView(LoginView):
@@ -30,3 +31,10 @@ class CustomPasswordChangeView(PasswordChangeView):
         self.request.user.save()  # Save the updated user object
         update_session_auth_hash(self.request, form.user)  # Prevents the user from being logged out
         return response
+
+
+class CustomPasswordResetView(SuccessMessageMixin, PasswordResetView):
+    email_template_name = 'registration/password_reset_email.txt'
+    html_email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_message = "If an account exists with the email you entered, you will receive password reset instructions."
