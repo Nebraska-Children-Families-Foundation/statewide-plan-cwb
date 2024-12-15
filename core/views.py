@@ -85,6 +85,132 @@ def activities(request):
     return render(request, 'core/activities.html')
 
 
+@login_required
+def action_steps_view(request):
+    """
+    Main view for action steps filtering interface
+    """
+    user = request.user
+    initial_actor_type = None
+
+    # Set initial actor type based on user's member type
+    if user.member_type == AppUser.MemberTypes.NCFF_TEAM:
+        initial_actor_type = 'nc'
+    elif user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
+        initial_actor_type = 'community'
+    elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
+        initial_actor_type = 'partner'
+
+    context = {
+        'form': ActionStepsFilterForm(actor_type=initial_actor_type),
+        'actor_type': initial_actor_type,
+        'goals': Goal.objects.all().order_by('goal_number'),
+        'years': Years.choices,
+        'quarters': Quarters.choices,
+        'statuses': ActivityStatusChoice.choices,
+    }
+
+    return render(request, 'core/action_steps.html', context)
+
+
+@login_required
+def get_action_steps_data(request):
+    """
+    AJAX view to get filtered action steps data
+    """
+    user = request.user
+    actor_type = request.GET.get('actor_type')
+    actor_id = request.GET.get('actor_id')
+    goal_id = request.GET.get('goal_id')
+    objective_id = request.GET.get('objective_id')
+    strategy_id = request.GET.get('strategy_id')
+    status = request.GET.get('status')
+    year = request.GET.get('year')
+    quarter = request.GET.get('quarter')
+
+    # Base query depending on actor type and user permissions
+    if actor_type == 'nc':
+        queryset = NCActionStep.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
+        )
+        if user.member_type == AppUser.MemberTypes.NCFF_TEAM:
+            queryset = queryset.filter(ncff_team=user.ncff_team)
+    elif actor_type == 'community':
+        queryset = CommunityActionStep.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
+        )
+        if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
+            queryset = queryset.filter(related_collaborative=user.community_collaborative)
+    else:  # system partner
+        queryset = SystemPartnerCommitment.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
+        )
+        if user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
+            queryset = queryset.filter(related_systempartner=user.system_partner)
+
+    # Apply filters
+    if actor_id:
+        if actor_type == 'nc':
+            queryset = queryset.filter(ncff_team_id=actor_id)
+        elif actor_type == 'community':
+            queryset = queryset.filter(related_collaborative_id=actor_id)
+        else:
+            queryset = queryset.filter(related_systempartner_id=actor_id)
+
+    if goal_id:
+        queryset = queryset.filter(related_goal_id=goal_id)
+    if objective_id:
+        queryset = queryset.filter(related_objective_id=objective_id)
+    if strategy_id:
+        queryset = queryset.filter(related_strategy_id=strategy_id)
+    if status:
+        queryset = queryset.filter(activity_status=status)
+    if year:
+        queryset = queryset.filter(completedby_year=year)
+    if quarter:
+        queryset = queryset.filter(completedby_quarter=quarter)
+
+    # Prepare data for DataTables
+    data = []
+    for item in queryset:
+        data.append({
+            'DT_RowId': str(item.activity_id if hasattr(item, 'activity_id') else item.commitment_id),
+            'activity_number': item.activity_number if hasattr(item, 'activity_number') else item.commitment_number,
+            'activity_name': item.activity_name if hasattr(item, 'activity_name') else item.commitment_name,
+            'activity_details': item.activity_details if hasattr(item, 'activity_details') else item.commitment_details,
+            'activity_status': item.activity_status if hasattr(item, 'activity_status') else item.commitment_status,
+            'goal': f"Goal {item.related_goal.goal_number}",
+            'objective': f"Obj {item.related_objective.objective_number}",
+            'strategy': item.related_strategy.strategy_number,
+            'completedby': f"{item.completedby_quarter} {item.completedby_year}",
+            'view_url': request.build_absolute_uri(
+                reverse('activity_details', kwargs={
+                    'activity_id': item.activity_id if hasattr(item, 'activity_id') else item.commitment_id})
+            )
+        })
+
+    return JsonResponse({'data': data})
+
+
+def get_objectives(request, goal_id):
+    """
+    AJAX view to get objectives for a goal
+    """
+    objectives = Objective.objects.filter(related_goal_id=goal_id).values('objective_id', 'objective_number',
+                                                                          'objective_name')
+    return JsonResponse(list(objectives), safe=False)
+
+
+def get_strategies(request, objective_id):
+    """
+    AJAX view to get strategies for an objective
+    """
+    strategies = Strategy.objects.filter(related_objective_id=objective_id).values(
+        'strategy_id', 'strategy_number', 'strategy_name'
+    )
+    return JsonResponse(list(strategies), safe=False)
+
+
 def strategy_list(request):
     # Fetching initial data for dropdowns
     goals = Goal.objects.all()
