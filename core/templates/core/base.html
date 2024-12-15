@@ -70,6 +70,9 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="toolsDropdown">
                                 <li><a class="dropdown-item" href="{% url 'communication_plan' %}">Communication Plan</a></li>
+                                {% if user.member_type == 'CC' %}
+                                    <li><a class="dropdown-item" href="{% url 'set_collaborative_priorities' %}">Set Strategy Priorities</a></li>
+                                {% endif %}
                                 {% if user.is_superuser %}
                                     <li><a class="dropdown-item" href="/admin/" title="Admin Interface Login">Admin Panel</a></li>
                                 {% endif %}
