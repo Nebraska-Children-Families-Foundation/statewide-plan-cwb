@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.db import models
+from django.urls import reverse
 from . import forms
 from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionStep, CommunityCollaborative, NcffTeam,
                      SystemPartner, CollaborativeStrategyPriority)
@@ -125,64 +126,103 @@ def get_action_steps_data(request):
     """AJAX view to get filtered action steps data"""
     actor_type = request.GET.get('actor_type')
     actor_id = request.GET.get('actor_id')
+    goal_id = request.GET.get('goal_id')
+    objective_id = request.GET.get('objective_id')
+    strategy_id = request.GET.get('strategy_id')
+    status = request.GET.get('status')
+    year = request.GET.get('year')
+    quarter = request.GET.get('quarter')
 
-    # Base queries for each type
-    nc_steps = NCActionStep.objects.select_related(
-        'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
-    )
-    community_steps = CommunityActionStep.objects.select_related(
-        'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
-    )
-    partner_steps = SystemPartnerCommitment.objects.select_related(
-        'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
-    )
+    # Initialize empty data list
+    data = []
 
-    # Filter by actor type and ID if provided
-    if actor_type and actor_id:
-        if actor_type == 'nc':
-            queryset = nc_steps.filter(ncff_team_id=actor_id)
-        elif actor_type == 'community':
-            queryset = community_steps.filter(related_collaborative_id=actor_id)
-        elif actor_type == 'partner':
-            queryset = partner_steps.filter(related_systempartner_id=actor_id)
-    else:
-        # If no specific type selected, combine all
-        queryset = list(nc_steps) + list(community_steps) + list(partner_steps)
-
-    # Apply filters
-    if actor_id:
-        if actor_type == 'nc':
+    # Define which querysets to include based on actor_type
+    if actor_type == 'nc':
+        queryset = NCActionStep.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
+        )
+        if actor_id:
             queryset = queryset.filter(ncff_team_id=actor_id)
-        elif actor_type == 'community':
+
+    elif actor_type == 'community':
+        queryset = CommunityActionStep.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
+        )
+        if actor_id:
             queryset = queryset.filter(related_collaborative_id=actor_id)
-        else:
+
+    elif actor_type == 'partner':
+        queryset = SystemPartnerCommitment.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
+        )
+        if actor_id:
             queryset = queryset.filter(related_systempartner_id=actor_id)
 
-    if goal_id:
-        queryset = queryset.filter(related_goal_id=goal_id)
-    if objective_id:
-        queryset = queryset.filter(related_objective_id=objective_id)
-    if strategy_id:
-        queryset = queryset.filter(related_strategy_id=strategy_id)
-    if status:
-        queryset = queryset.filter(activity_status=status)
-    if year:
-        queryset = queryset.filter(completedby_year=year)
-    if quarter:
-        queryset = queryset.filter(completedby_quarter=quarter)
+    else:
+        # If no specific actor type, get all types
+        nc_steps = NCActionStep.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
+        )
+        community_steps = CommunityActionStep.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
+        )
+        partner_steps = SystemPartnerCommitment.objects.select_related(
+            'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
+        )
+        queryset = list(nc_steps) + list(community_steps) + list(partner_steps)
 
-    # Prepare data for DataTables
-    data = []
-    for item in queryset:
+    # Apply common filters if there's a specific queryset
+    if actor_type and isinstance(queryset, models.QuerySet):
+        if goal_id:
+            queryset = queryset.filter(related_goal_id=goal_id)
+        if objective_id:
+            queryset = queryset.filter(related_objective_id=objective_id)
+        if strategy_id:
+            queryset = queryset.filter(related_strategy_id=strategy_id)
+        if status:
+            queryset = queryset.filter(activity_status=status)
+        if year:
+            queryset = queryset.filter(completedby_year=year)
+        if quarter:
+            queryset = queryset.filter(completedby_quarter=quarter)
+
+    # Convert queryset to list if it isn't already
+    items = queryset if isinstance(queryset, list) else list(queryset)
+
+    # Format data for DataTables
+    for item in items:
+        if isinstance(item, NCActionStep):
+            actor_type_display = "Nebraska Children"
+            actor_name = str(item.ncff_team) if item.ncff_team else "N/A"
+            number = item.activity_number
+            name = item.activity_name
+            details = item.activity_details
+            status = item.activity_status
+        elif isinstance(item, CommunityActionStep):
+            actor_type_display = "Community Collaborative"
+            actor_name = str(item.related_collaborative) if item.related_collaborative else "N/A"
+            number = item.activity_number
+            name = item.activity_name
+            details = item.activity_details
+            status = item.activity_status
+        else:  # SystemPartnerCommitment
+            actor_type_display = "System Partner"
+            actor_name = str(item.related_systempartner) if item.related_systempartner else "N/A"
+            number = item.commitment_number
+            name = item.commitment_name
+            details = item.commitment_details
+            status = item.commitment_status
+
         data.append({
-            'DT_RowId': str(item.activity_id if hasattr(item, 'activity_id') else item.commitment_id),
-            'activity_number': item.activity_number if hasattr(item, 'activity_number') else item.commitment_number,
-            'activity_name': item.activity_name if hasattr(item, 'activity_name') else item.commitment_name,
-            'activity_details': item.activity_details if hasattr(item, 'activity_details') else item.commitment_details,
-            'activity_status': item.activity_status if hasattr(item, 'activity_status') else item.commitment_status,
-            'goal': f"Goal {item.related_goal.goal_number}",
-            'objective': f"Obj {item.related_objective.objective_number}",
-            'strategy': item.related_strategy.strategy_number,
+            'activity_number': number,
+            'activity_name': name,
+            'activity_details': details,
+            'actor_type': actor_type_display,
+            'actor_name': actor_name,
+            'goal': f"Goal {item.related_goal.goal_number}" if item.related_goal else "N/A",
+            'objective': f"Obj {item.related_objective.objective_number}" if item.related_objective else "N/A",
+            'strategy': item.related_strategy.strategy_number if item.related_strategy else "N/A",
+            'activity_status': status,
             'completedby': f"{item.completedby_quarter} {item.completedby_year}",
             'view_url': request.build_absolute_uri(
                 reverse('activity_details', kwargs={
@@ -190,7 +230,12 @@ def get_action_steps_data(request):
             )
         })
 
-    return JsonResponse({'data': data})
+    return JsonResponse({
+        'data': data,  # DataTables expects data in this format
+        'recordsTotal': len(data),
+        'recordsFiltered': len(data),
+        'draw': int(request.GET.get('draw', 1))
+    })
 
 
 @login_required
