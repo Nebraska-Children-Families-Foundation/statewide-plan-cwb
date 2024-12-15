@@ -32,11 +32,4 @@ urlpatterns = [
     path('terms-of-use', views.terms_of_use, name='terms_of_use'),
     path('dashboard/', views.individual_dashboard, name='individual_dashboard'),
     path('activity/<uuid:activity_id>/', views.activity_details, name='activity_details'),
-    # Action Steps URLs
-    path('action-steps/', views.action_steps_view, name='action_steps'),
-    path('api/action-steps/actors/', views.get_actors, name='get_actors'),
-    path('api/action-steps/data/', views.get_action_steps_data, name='get_action_steps_data'),
-    path('api/action-steps/objectives/<uuid:goal_id>/', views.get_objectives, name='get_objectives'),
-    path('api/action-steps/strategies/<uuid:objective_id>/', views.get_strategies, name='get_strategies'),
-    path('', include(router.urls)),
 ]
