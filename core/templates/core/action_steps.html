@@ -89,9 +89,27 @@
 {% block extra_js %}
 <script>
 $(document).ready(function() {
-    // Initialize dependent selects as disabled
-    $('#id_actor, #id_related_objective, #id_related_strategy').prop('disabled', true);
+    // Setup CSRF token for AJAX requests
+    $.ajaxSetup({
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    });
+
+    // Initialize dependent selects
+    const actorType = $('#id_actor_type').val();
+    if (!actorType) {
+        $('#id_actor').prop('disabled', true);
+    }
     
+    if (!$('#id_related_goal').val()) {
+        $('#id_related_objective').prop('disabled', true);
+    }
+    
+    if (!$('#id_related_objective').val()) {
+        $('#id_related_strategy').prop('disabled', true);
+    }
+
     // Handle actor type change
     $('#id_actor_type').change(function() {
         let actorType = $(this).val();
@@ -121,12 +139,13 @@ $(document).ready(function() {
         strategySelect.empty().append('<option value="">All Strategies</option>').prop('disabled', true);
         
         if (goalId) {
-            $.get(`/api/action-steps/objectives/${goalId}/`, function(data) {
+            $.get('{% url "get_objectives" goal_id=1 %}'.replace('1', goalId), function(data) {
                 data.forEach(function(obj) {
                     objectiveSelect.append(
                         `<option value="${obj.objective_id}">Obj ${obj.objective_number}: ${obj.objective_name}</option>`
                     );
                 });
+                objectiveSelect.prop('disabled', false);
             });
         }
         
@@ -141,12 +160,13 @@ $(document).ready(function() {
         strategySelect.empty().append('<option value="">All Strategies</option>').prop('disabled', !objectiveId);
         
         if (objectiveId) {
-            $.get(`/api/action-steps/strategies/${objectiveId}/`, function(data) {
+            $.get('{% url "get_strategies" objective_id=1 %}'.replace('1', objectiveId), function(data) {
                 data.forEach(function(strat) {
                     strategySelect.append(
                         `<option value="${strat.strategy_id}">${strat.strategy_number}: ${strat.strategy_name}</option>`
                     );
                 });
+                strategySelect.prop('disabled', false);
             });
         }
         
@@ -157,73 +177,74 @@ $(document).ready(function() {
     $('#filterForm select').change(loadResults);
 
     function loadResults() {
-    const resultsContainer = $('#actionStepsResults');
-    resultsContainer.html('<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>');
+        const resultsContainer = $('#actionStepsResults');
+        resultsContainer.html('<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>');
 
-    $.get('{% url "get_action_steps_data" %}', {
-        actor_type: $('#id_actor_type').val(),
-        actor_id: $('#id_actor').val(),
-        goal_id: $('#id_related_goal').val(),
-        objective_id: $('#id_related_objective').val(),
-        strategy_id: $('#id_related_strategy').val(),
-        status: $('#id_activity_status').val(),
-        year: $('#id_completedby_year').val(),
-        quarter: $('#id_completedby_quarter').val()
-    }, function(response) {
-        resultsContainer.empty();
-        
-        if (!response.data || response.data.length === 0) {
-            resultsContainer.html('<div class="alert alert-info">No results found matching your criteria.</div>');
-            return;
-        }
-
-        response.data.forEach(function(item) {
-            const statusClass = `status-${item.activity_status.toLowerCase().replace(' ', '-')}`;
+        $.get('{% url "get_action_steps_data" %}', {
+            actor_type: $('#id_actor_type').val(),
+            actor_id: $('#id_actor').val(),
+            goal_id: $('#id_related_goal').val(),
+            objective_id: $('#id_related_objective').val(),
+            strategy_id: $('#id_related_strategy').val(),
+            status: $('#id_activity_status').val(),
+            year: $('#id_completedby_year').val(),
+            quarter: $('#id_completedby_quarter').val()
+        }, function(response) {
+            resultsContainer.empty();
             
-            const card = `
-                <div class="card action-step-card ${statusClass}">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h5 class="card-title mb-3">
-                                    ${item.activity_number}: ${item.activity_name}
-                                </h5>
-                                <p class="card-text">${item.activity_details}</p>
-                                <div class="text-muted small mb-2">
-                                    ${item.goal} › ${item.objective} › ${item.strategy}
+            if (!response.data || response.data.length === 0) {
+                resultsContainer.html('<div class="alert alert-info">No results found matching your criteria.</div>');
+                return;
+            }
+
+            response.data.forEach(function(item) {
+                const statusClass = `status-${item.activity_status.toLowerCase().replace(' ', '-')}`;
+                
+                const card = `
+                    <div class="card action-step-card ${statusClass}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="card-title mb-3">
+                                        ${item.activity_number}: ${item.activity_name}
+                                    </h5>
+                                    <p class="card-text">${item.activity_details}</p>
+                                    <div class="text-muted small mb-2">
+                                        ${item.goal} › ${item.objective} › ${item.strategy}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 border-start">
-                                <div class="mb-2">
-                                    <span class="badge bg-${getStatusColor(item.activity_status)}">
-                                        ${item.activity_status}
-                                    </span>
+                                <div class="col-md-4 border-start">
+                                    <div class="mb-2">
+                                        <span class="badge bg-${getStatusColor(item.activity_status)}">
+                                            ${item.activity_status}
+                                        </span>
+                                    </div>
+                                    <div class="small mb-2">
+                                        <strong>Type:</strong> ${item.actor_type}
+                                    </div>
+                                    <div class="small mb-2">
+                                        <strong>Actor:</strong> ${item.actor_name}
+                                    </div>
+                                    <div class="small mb-2">
+                                        <strong>Complete By:</strong> ${item.completedby}
+                                    </div>
+                                    <a href="${item.view_url}" class="btn btn-primary btn-sm">View Details</a>
                                 </div>
-                                <div class="small mb-2">
-                                    <strong>Type:</strong> ${item.actor_type}
-                                </div>
-                                <div class="small mb-2">
-                                    <strong>Actor:</strong> ${item.actor_name}
-                                </div>
-                                <div class="small mb-2">
-                                    <strong>Complete By:</strong> ${item.completedby}
-                                </div>
-                                <a href="${item.view_url}" class="btn btn-primary btn-sm">View Details</a>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-            resultsContainer.append(card);
+                `;
+                resultsContainer.append(card);
+            });
         });
-    });
-}
+    }
 
     function getStatusColor(status) {
-        switch(status) {
-            case 'Completed': return 'success';
-            case 'In Progress': return 'warning';
-            case 'Not Started': return 'secondary';
+        switch(status.toLowerCase()) {
+            case 'completed': return 'success';
+            case 'in progress': return 'warning';
+            case 'not started': return 'secondary';
+            case 'ongoing': return 'info';
             default: return 'secondary';
         }
     }
