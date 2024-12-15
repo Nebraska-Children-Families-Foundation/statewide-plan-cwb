@@ -88,6 +88,8 @@ def activities(request):
     return render(request, 'core/activities.html')
 
 
+# views.py
+
 @login_required
 def action_steps_view(request):
     """
@@ -104,8 +106,10 @@ def action_steps_view(request):
     elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
         initial_actor_type = 'partner'
 
+    form = ActionStepsFilterForm()
+
     context = {
-        'form': ActionStepsFilterForm(actor_type=initial_actor_type),
+        'form': form,
         'actor_type': initial_actor_type,
         'goals': Goal.objects.all().order_by('goal_number'),
         'years': Years.choices,
@@ -187,6 +191,26 @@ def get_action_steps_data(request):
         })
 
     return JsonResponse({'data': data})
+
+
+@login_required
+def get_actors(request):
+    """AJAX view to get actors based on selected type"""
+    actor_type = request.GET.get('actor_type')
+
+    if actor_type == 'nc':
+        actors = NcffTeam.objects.all().values('ncff_team_id', 'ncff_team_name')
+        actors_list = [{'id': actor['ncff_team_id'], 'name': actor['ncff_team_name']} for actor in actors]
+    elif actor_type == 'community':
+        actors = CommunityCollaborative.objects.all().values('community_collab_id', 'community_collab_name')
+        actors_list = [{'id': actor['community_collab_id'], 'name': actor['community_collab_name']} for actor in actors]
+    elif actor_type == 'partner':
+        actors = SystemPartner.objects.all().values('system_partner_id', 'system_partner_name')
+        actors_list = [{'id': actor['system_partner_id'], 'name': actor['system_partner_name']} for actor in actors]
+    else:
+        actors_list = []
+
+    return JsonResponse({'actors': actors_list})
 
 
 def get_objectives(request, goal_id):

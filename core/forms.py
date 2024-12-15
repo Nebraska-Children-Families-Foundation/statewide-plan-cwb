@@ -103,6 +103,7 @@ class NcffActivityForm(forms.ModelForm):
 
 
 # forms.py
+# forms.py
 class ActionStepsFilterForm(forms.Form):
     ACTOR_TYPES = [
         ('', 'All Actors'),
@@ -114,30 +115,39 @@ class ActionStepsFilterForm(forms.Form):
     actor_type = forms.ChoiceField(
         choices=ACTOR_TYPES,
         required=False,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'id': 'id_actor_type'
+        })
     )
 
-    actor = forms.ModelChoiceField(
-        queryset=None,  # Will be set dynamically via JavaScript
+    actor = forms.ChoiceField(
+        choices=[('', 'Select an Actor')],  # Initial empty choice
         required=False,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'id': 'id_actor'
+        })
     )
 
     related_goal = forms.ModelChoiceField(
         queryset=Goal.objects.all().order_by('goal_number'),
         required=False,
+        empty_label="All Goals",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
     related_objective = forms.ModelChoiceField(
         queryset=Objective.objects.none(),
         required=False,
+        empty_label="All Objectives",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
     related_strategy = forms.ModelChoiceField(
         queryset=Strategy.objects.none(),
         required=False,
+        empty_label="All Strategies",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 

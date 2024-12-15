@@ -3,81 +3,93 @@
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<style>
+    .filter-card {
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .filter-section {
+        padding: 1rem;
+        border-radius: 0.375rem;
+        background-color: #f8f9fa;
+        margin-bottom: 1rem;
+    }
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .table-card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
-    <div class="row mb-4">
+    <div class="row">
         <div class="col">
-            <div class="card">
+            <h1 class="h3 mb-4">Action Steps Report</h1>
+            
+            <div class="card filter-card">
                 <div class="card-body">
                     <form id="filterForm">
-                        <div class="row g-3">
-                            {% if user.is_superuser %}
-                            <div class="col-md-4">
-                                <label class="form-label">View Actions For:</label>
-                                <select class="form-select" name="actor_type" id="actor_type">
-                                    <option value="nc">NCFF Teams</option>
-                                    <option value="community">Community Collaboratives</option>
-                                    <option value="partner">System Partners</option>
-                                </select>
+                        <!-- Actor Selection -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="id_actor_type">Select Actor Type:</label>
+                                {{ form.actor_type }}
                             </div>
-                            {% endif %}
-
-                            <!-- Actor Selection -->
-                            <div class="col-md-4">
-                                <label class="form-label">{{ form.actor.label }}:</label>
+                            <div class="col-md-6">
+                                <label class="form-label" for="id_actor">Select Specific Actor:</label>
                                 {{ form.actor }}
                             </div>
+                        </div>
 
-                            <!-- Plan Hierarchy -->
+                        <!-- Plan Hierarchy -->
+                        <div class="row g-3 mb-4">
                             <div class="col-md-4">
-                                <label class="form-label">Goal:</label>
+                                <label class="form-label" for="id_related_goal">Goal:</label>
                                 {{ form.related_goal }}
                             </div>
-
                             <div class="col-md-4">
-                                <label class="form-label">Objective:</label>
+                                <label class="form-label" for="id_related_objective">Objective:</label>
                                 {{ form.related_objective }}
                             </div>
-
                             <div class="col-md-4">
-                                <label class="form-label">Strategy:</label>
+                                <label class="form-label" for="id_related_strategy">Strategy:</label>
                                 {{ form.related_strategy }}
                             </div>
+                        </div>
 
-                            <!-- Status and Timeline -->
+                        <!-- Status and Timeline -->
+                        <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label">Status:</label>
+                                <label class="form-label" for="id_activity_status">Status:</label>
                                 {{ form.activity_status }}
                             </div>
-
-                            <div class="col-md-2">
-                                <label class="form-label">Year:</label>
+                            <div class="col-md-4">
+                                <label class="form-label" for="id_completedby_year">Year:</label>
                                 {{ form.completedby_year }}
                             </div>
-
-                            <div class="col-md-2">
-                                <label class="form-label">Quarter:</label>
+                            <div class="col-md-4">
+                                <label class="form-label" for="id_completedby_quarter">Quarter:</label>
                                 {{ form.completedby_quarter }}
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <div class="card">
+            <div class="card table-card">
                 <div class="card-body">
                     <table id="actionStepsTable" class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Number</th>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Details</th>
+                                <th>Actor Type</th>
+                                <th>Actor Name</th>
                                 <th>Goal</th>
                                 <th>Objective</th>
                                 <th>Strategy</th>
@@ -86,6 +98,8 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
+                        <tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -99,49 +113,31 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
 $(document).ready(function() {
-    let table = $('#actionStepsTable').DataTable({
-        processing: true,
-        serverSide: false,
-        ajax: {
-            url: '{% url "get_action_steps_data" %}',
-            data: function(d) {
-                return {
-                    actor_type: '{{ actor_type }}',
-                    actor_id: $('#id_actor').val(),
-                    goal_id: $('#id_related_goal').val(),
-                    objective_id: $('#id_related_objective').val(),
-                    strategy_id: $('#id_related_strategy').val(),
-                    status: $('#id_activity_status').val(),
-                    year: $('#id_completedby_year').val(),
-                    quarter: $('#id_completedby_quarter').val()
-                };
-            }
-        },
-        columns: [
-            { data: 'activity_number' },
-            { data: 'activity_name' },
-            { data: 'activity_details' },
-            { data: 'goal' },
-            { data: 'objective' },
-            { data: 'strategy' },
-            { data: 'activity_status' },
-            { data: 'completedby' },
-            { 
-                data: 'view_url',
-                render: function(data) {
-                    return '<a href="' + data + '" class="btn btn-sm btn-primary">View</a>';
-                }
-            }
-        ],
-        order: [[0, 'asc']],
-        pageLength: 25
-    });
+    // Initialize actor select as disabled
+    $('#id_actor').prop('disabled', true);
     
-    // Handle filter changes
-    $('#filterForm select').change(function() {
+    // Handle actor type change
+    $('#id_actor_type').change(function() {
+        let actorType = $(this).val();
+        let actorSelect = $('#id_actor');
+        
+        // Reset and disable actor select initially
+        actorSelect.empty().append('<option value="">All</option>').prop('disabled', !actorType);
+        
+        if (actorType) {
+            // Get actors for selected type
+            $.get('{% url "get_actors" %}', {actor_type: actorType}, function(data) {
+                data.actors.forEach(function(actor) {
+                    actorSelect.append(`<option value="${actor.id}">${actor.name}</option>`);
+                });
+                actorSelect.prop('disabled', false);
+            });
+        }
+        
+        // Reload table with new filters
         table.ajax.reload();
     });
-
+    
     // Handle Goal change
     $('#id_related_goal').change(function() {
         let goalId = $(this).val();
@@ -158,7 +154,7 @@ $(document).ready(function() {
             });
         }
     });
-
+    
     // Handle Objective change
     $('#id_related_objective').change(function() {
         let objectiveId = $(this).val();
@@ -173,6 +169,57 @@ $(document).ready(function() {
                 });
             });
         }
+    });
+    
+    // Initialize DataTable
+    let table = $('#actionStepsTable').DataTable({
+        processing: true,
+        serverSide: false,
+        ajax: {
+            url: '{% url "get_action_steps_data" %}',
+            data: function(d) {
+                return {
+                    actor_type: $('#id_actor_type').val(),
+                    actor_id: $('#id_actor').val(),
+                    goal_id: $('#id_related_goal').val(),
+                    objective_id: $('#id_related_objective').val(),
+                    strategy_id: $('#id_related_strategy').val(),
+                    status: $('#id_activity_status').val(),
+                    year: $('#id_completedby_year').val(),
+                    quarter: $('#id_completedby_quarter').val()
+                };
+            }
+        },
+        columns: [
+            { data: 'activity_number' },
+            { data: 'activity_name' },
+            { data: 'activity_details' },
+            { data: 'actor_type' },
+            { data: 'actor_name' },
+            { data: 'goal' },
+            { data: 'objective' },
+            { data: 'strategy' },
+            { data: 'activity_status' },
+            { data: 'completedby' },
+            { 
+                data: 'view_url',
+                render: function(data) {
+                    return '<a href="' + data + '" class="btn btn-sm btn-primary">View</a>';
+                }
+            }
+        ],
+        order: [[0, 'asc']],
+        pageLength: 25,
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+    
+    // Handle all filter changes
+    $('#filterForm select').change(function() {
+        table.ajax.reload();
     });
 });
 </script>
