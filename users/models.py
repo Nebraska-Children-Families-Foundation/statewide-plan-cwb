@@ -1,3 +1,9 @@
+# users/models.py
+"""
+The User Model is responsible for handling custom login and connecting users to a Community Collaborative, an NCFF Team,
+or a System Partner.
+"""
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
