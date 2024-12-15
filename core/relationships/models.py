@@ -1,3 +1,7 @@
+# core/relationships/models.py
+"""
+This model facilitates the many-to-one relationship between plan actors and plan work.
+"""
 import uuid
 from django.db import models
 
