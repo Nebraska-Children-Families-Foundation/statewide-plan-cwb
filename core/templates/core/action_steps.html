@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="row g-3">
+                            {% if user.is_superuser %}
+                            <div class="col-md-4">
+                                <label class="form-label">View Actions For:</label>
+                                <select class="form-select" name="actor_type" id="actor_type">
+                                    <option value="nc">NCFF Teams</option>
+                                    <option value="community">Community Collaboratives</option>
+                                    <option value="partner">System Partners</option>
+                                </select>
+                            </div>
+                            {% endif %}
+
+                            <!-- Actor Selection -->
+                            <div class="col-md-4">
+                                <label class="form-label">{{ form.actor.label }}:</label>
+                                {{ form.actor }}
+                            </div>
+
+                            <!-- Plan Hierarchy -->
+                            <div class="col-md-4">
+                                <label class="form-label">Goal:</label>
+                                {{ form.related_goal }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Objective:</label>
+                                {{ form.related_objective }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Strategy:</label>
+                                {{ form.related_strategy }}
+                            </div>
+
+                            <!-- Status and Timeline -->
+                            <div class="col-md-4">
+                                <label class="form-label">Status:</label>
+                                {{ form.activity_status }}
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Year:</label>
+                                {{ form.completedby_year }}
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Quarter:</label>
+                                {{ form.completedby_quarter }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <table id="actionStepsTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Name</th>
+                                <th>Details</th>
+                                <th>Goal</th>
+                                <th>Objective</th>
+                                <th>Strategy</th>
+                                <th>Status</th>
+                                <th>Complete By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function() {
+    let table = $('#actionStepsTable').DataTable({
+        processing: true,
+        serverSide: false,
+        ajax: {
+            url: '{% url "get_action_steps_data" %}',
+            data: function(d) {
+                return {
+                    actor_type: '{{ actor_type }}',
+                    actor_id: $('#id_actor').val(),
+                    goal_id: $('#id_related_goal').val(),
+                    objective_id: $('#id_related_objective').val(),
+                    strategy_id: $('#id_related_strategy').val(),
+                    status: $('#id_activity_status').val(),
+                    year: $('#id_completedby_year').val(),
+                    quarter: $('#id_completedby_quarter').val()
+                };
+            }
+        },
+        columns: [
+            { data: 'activity_number' },
+            { data: 'activity_name' },
+            { data: 'activity_details' },
+            { data: 'goal' },
+            { data: 'objective' },
+            { data: 'strategy' },
+            { data: 'activity_status' },
+            { data: 'completedby' },
+            { 
+                data: 'view_url',
+                render: function(data) {
+                    return '<a href="' + data + '" class="btn btn-sm btn-primary">View</a>';
+                }
+            }
+        ],
+        order: [[0, 'asc']],
+        pageLength: 25
+    });
+    
+    // Handle filter changes
+    $('#filterForm select').change(function() {
+        table.ajax.reload();
+    });
+
+    // Handle Goal change
+    $('#id_related_goal').change(function() {
+        let goalId = $(this).val();
+        $('#id_related_objective').empty().append('<option value="">All Objectives</option>').prop('disabled', !goalId);
+        $('#id_related_strategy').empty().append('<option value="">All Strategies</option>').prop('disabled', true);
+        
+        if (goalId) {
+            $.get(`/api/action-steps/objectives/${goalId}/`, function(data) {
+                data.forEach(function(obj) {
+                    $('#id_related_objective').append(
+                        `<option value="${obj.objective_id}">Obj ${obj.objective_number}: ${obj.objective_name}</option>`
+                    );
+                });
+            });
+        }
+    });
+
+    // Handle Objective change
+    $('#id_related_objective').change(function() {
+        let objectiveId = $(this).val();
+        $('#id_related_strategy').empty().append('<option value="">All Strategies</option>').prop('disabled', !objectiveId);
+        
+        if (objectiveId) {
+            $.get(`/api/action-steps/strategies/${objectiveId}/`, function(data) {
+                data.forEach(function(strat) {
+                    $('#id_related_strategy').append(
+                        `<option value="${strat.strategy_id}">${strat.strategy_number}: ${strat.strategy_name}</option>`
+                    );
+                });
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
