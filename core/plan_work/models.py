@@ -1,3 +1,15 @@
+# core/plan_work/models.py
+"""
+The Plan Work module contains the elements of the Statewide Plan for Community Well-Being.
+The Statewide Plan has 4 Goals. Each Goal has several Objectives. Each Objective has multiple Strategies.
+Plan Actors, those who will work toward achieving the goals of this plan, have Action Steps or Commitments
+the detail how they will advance one of the Strategies on the Plan.
+
+Goals, Objectives, Strategies, and Action Steps/Commitments are links to run reports easily.
+For example, under this relationship scheme, it is possible to filter all the Nebraska Children's teams with
+Action Steps related to a specific Goal, Objective, or Strategy.
+"""
+
 import uuid
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey

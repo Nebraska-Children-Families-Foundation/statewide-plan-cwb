@@ -1,3 +1,15 @@
+# core/plan_actors/models.py
+"""
+The Plan Actors module contains the entities that are tasked with accomplishing the Statewide Plan
+for Community Well-Being. There are three main actors: the Community Collaboratives (e.g., Communities),
+Nebraska Children and Families Foundation (e.g., Nebraska Children or NCFF), and System Partners
+(generally government agencies, state/national foundations, or quasi-governmental organizations).
+
+This module is designed to make it easy to update the names of System Partners, Community Collaboratives,
+and teams at Nebraska Children. Additionally, this module makes it possible to filter the plan work by
+those tasked with carrying it out.
+"""
+
 import uuid
 from django.db import models
 

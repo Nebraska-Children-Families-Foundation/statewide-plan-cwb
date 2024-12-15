@@ -1,3 +1,8 @@
+# core/standardization/models.py
+"""
+The Standardization module provides standard terms that are used in dropdowns and filtering across the plan.
+"""
+
 import uuid
 from django.db import models
 
