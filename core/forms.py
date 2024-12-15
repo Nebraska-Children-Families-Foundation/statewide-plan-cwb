@@ -1,7 +1,7 @@
 from django import forms
 from .models import (CommunityActionStep, NCActionStep, Goal, Objective, Strategy, SystemPartnerCommitment,
                      SystemPartner, NcffTeam, CommunityCollaborative, SystemPartner, ActivityStatusChoice,
-                     Years, Quarters)
+                     Years, Quarters, CollaborativeStrategyPriority)
 
 
 class CommunityActivityForm(forms.ModelForm):
@@ -98,3 +98,14 @@ class NcffActivityForm(forms.ModelForm):
         self.fields['related_goal'].label_from_instance = lambda obj: f"Goal {obj.goal_number}: {obj.goal_name}"
         self.fields['related_objective'].label_from_instance = lambda obj: f"Obj. {obj.objective_number}: {obj.objective_name}"
         self.fields['related_strategy'].label_from_instance = lambda obj: f"{obj.strategy_number}: {obj.strategy_name}"
+
+
+class CollaborativeStrategyPriorityForm(forms.Form):
+    """
+    Creates the ability for Collaboratives to set their strategy priorities.
+    """
+    priority_strategies = forms.ModelMultipleChoiceField(
+        queryset=Strategy.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
