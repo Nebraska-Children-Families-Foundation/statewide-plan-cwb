@@ -316,3 +316,56 @@ def clean(self):
 
 def it_worked(request):
     return render(request, 'core/it-worked.html')
+
+
+@login_required
+def set_collaborative_priorities(request):
+    # Ensure user is associated with a collaborative
+    if not request.user.community_collaborative:
+        messages.error(request, "You must be associated with a Community Collaborative to access this page.")
+        return redirect('home')
+
+    collaborative = request.user.community_collaborative
+
+    # Get all strategies and mark which ones are priorities
+    strategies = Strategy.objects.all().select_related(
+        'related_goal',
+        'related_objective'
+    ).prefetch_related(
+        'collaborativestrategypriority_set'
+    )
+
+    # Mark which strategies are priorities for this collaborative
+    for strategy in strategies:
+        strategy.is_priority = strategy.collaborativestrategypriority_set.filter(
+            community_collaborative=collaborative,
+            is_priority=True
+        ).exists()
+
+    if request.method == 'POST':
+        # Get the list of selected strategy IDs
+        selected_strategies = request.POST.getlist('priority_strategies')
+
+        # Update priorities
+        # First, set all existing priorities to False
+        CollaborativeStrategyPriority.objects.filter(
+            community_collaborative=collaborative
+        ).update(is_priority=False)
+
+        # Then set selected ones to True
+        for strategy_id in selected_strategies:
+            CollaborativeStrategyPriority.objects.update_or_create(
+                community_collaborative=collaborative,
+                strategy_id=strategy_id,
+                defaults={'is_priority': True}
+            )
+
+        messages.success(request, "Strategy priorities have been updated successfully.")
+        return redirect('set_collaborative_priorities')
+
+    context = {
+        'strategies': strategies,
+        'community_collab_name': collaborative.community_collab_name
+    }
+
+    return render(request, 'core/set_collaborative_priorities.html', context)
