@@ -1,29 +1,92 @@
 {% extends 'core/base.html' %}
 {% block content %}
-<h2 style="padding-bottom: 15px">System Partner Activities</h2>
-
-<!-- Accordion for Partner Activities -->
-<div class="accordion" id="partnerActivitiesAccordion">
-    {% for activity in activities %}
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="heading{{ activity.activity_id }}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ activity.activity_id }}" aria-expanded="false" aria-controls="collapse{{ activity.activity_id }}">
-                {{ activity.activity_number }} - {{ activity.activity_name }}
-            </button>
-        </h2>
-        <div id="collapse{{ activity.activity_id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ activity.activity_id }}" data-bs-parent="#partnerActivitiesAccordion">
-            <div class="accordion-body">
-                <div style="margin-bottom: 10px"><strong>Details:</strong> {{ activity.activity_details }}<br></div>
-                <div style="margin-bottom: 10px"><strong>Lead:</strong> {{ activity.activity_lead }}<br></div>
-                <div style="margin-bottom: 10px"><strong>Priority:</strong> {{ activity.activity_priority|yesno:"Yes,No" }}<br></div>
-                <div style="margin-bottom: 10px"><strong>Status:</strong> {{ activity.activity_status }}<br></div>
-                <strong>To be completed by:</strong> {{ activity.completedby_year }} {{ activity.completedby_quarter }}<br>
-            </div>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>System Partner Commitments</h2>
+            <p class="text-muted">View commitments made by system partners to support the statewide plan</p>
         </div>
     </div>
-    {% empty %}
-    <p>No partner activities available.</p>
-    {% endfor %}
-</div>
 
+    <!-- Accordion for Activities -->
+    <div class="accordion" id="partnerActivitiesAccordion">
+        {% for activity in activities %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ activity.commitment_id }}">
+                <button class="accordion-button collapsed" type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapse{{ activity.commitment_id }}" 
+                        aria-expanded="false" 
+                        aria-controls="collapse{{ activity.commitment_id }}">
+                    <div class="d-flex align-items-center w-100">
+                        <div class="me-auto">
+                            <strong class="me-2">{{ activity.commitment_number }}</strong>
+                            {{ activity.commitment_name }}
+                        </div>
+                        <div style="margin-right: 10px" class="badge bg-primary">{{ activity.related_systempartner.system_partner_name }}</div>
+                    </div>
+                </button>
+            </h2>
+            <div id="collapse{{ activity.commitment_id }}" 
+                 class="accordion-collapse collapse" 
+                 aria-labelledby="heading{{ activity.commitment_id }}" 
+                 data-bs-parent="#partnerActivitiesAccordion">
+                <div class="accordion-body">
+                    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-8">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">Details</h6>
+                                    <p class="card-text">{{ activity.commitment_details }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted">Commitment Information</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label class="small text-muted d-block">Status</label>
+                                        <span class="badge {% if activity.commitment_status == 'Completed' %}bg-success{% elif activity.commitment_status == 'In Progress' %}bg-warning{% else %}bg-secondary{% endif %} p-2">
+                                            {{ activity.commitment_status }}
+                                        </span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small text-muted d-block">Commitment Lead</label>
+                                        <strong>{{ activity.commitment_lead|default:"Not Assigned" }}</strong>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small text-muted d-block">System Partner</label>
+                                        <strong>{{ activity.related_systempartner.system_partner_name }}</strong>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small text-muted d-block">Target Completion</label>
+                                        <strong>{{ activity.completedby_quarter }} {{ activity.completedby_year }}</strong>
+                                    </div>
+
+                                    <div class="mb-0">
+                                        <label class="small text-muted d-block">Commitment ID</label>
+                                        <code>{{ activity.commitment_number }}</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            <p class="mb-0">No system partner commitments available.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
