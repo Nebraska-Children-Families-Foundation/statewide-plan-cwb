@@ -1,7 +1,44 @@
-{% extends "core/base.html" %} {% block title %} Home Page {% endblock %}
+{% extends 'core/base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
-
-    <p style="padding-bottom: 30vh">Coming Soon.</p>
-
+<div class="container mt-4">
+    <h1 style="margin-bottom: 25px; margin-top: 15px">Objectives of the Statewide Plan for Community Well-Being</h1>
+    {% if goals %}
+        {% for goal in goals %}
+            <div class="row mb-5">
+                <div class="col">
+                    <h2 class="mb-4">Goal {{goal.goal_number}}: {{goal.goal_name}}</h2>
+                    
+                    <div class="row g-4">
+                        {% for objective in goal.objective_set.all %}
+                            <div class="col-md-4">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-3">Objective {{objective.objective_number}}</h5>
+                                        <p class="card-text">{{objective.objective_name}}</p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-top-0" style="margin-bottom: 8px">
+                                        <a href="{% url 'strategies' objective_id=objective.objective_id %}" 
+                                           class="btn btn-ghost-grey">View Related Strategies &raquo;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <p class="mb-0">No objectives have been added for this goal yet.</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning">
+            <p class="mb-0">No goals found in the system.</p>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

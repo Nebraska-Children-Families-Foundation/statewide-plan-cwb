@@ -34,6 +34,7 @@ def about(request):
 def communication_plan(request):
     return render(request, 'core/communication-plan.html')
 
+
 def reports(request):
     return render(request, 'core/reports.html')
 
@@ -65,7 +66,8 @@ def community_collaboratives(request):
 
 
 def strategies_objectives(request):
-    return render(request, 'core/strategies-objectives.html')
+    goals = Goal.objects.prefetch_related('objective_set').all()
+    return render(request, 'core/strategies-objectives.html', {'goals': goals})
 
 
 def goals(request):

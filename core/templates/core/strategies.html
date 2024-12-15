@@ -1,48 +1,72 @@
 {% extends 'core/base.html' %}
 {% block content %}
-    <h1 style="margin-bottom: 20px">Related Strategies</h1>
-    <div class="card" style="margin-bottom: 15px">
-        <div class="card-body" style="background-color: #eeeeee">
-            <h3 style="margin-bottom: 0">Objective {{ objective.objective_number }}: {{ objective.objective_name }}</h3>
+<div class="container mt-4">
+    <!-- Context Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-4">Related Strategies</h1>
+            
+            <div class="card mb-4">
+                <div class="card-body" style="background-color: #eeeeee">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="mb-2">Goal {{objective.related_goal.goal_number}}: {{objective.related_goal.goal_name}}</h4>
+                            <hr>
+                            <h4 class="mb-0">Objective {{objective.objective_number}}: {{objective.objective_name}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-
     <!-- Strategies Table -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Strategy Number</th>
-                <th scope="col">Strategy Name</th>
-                <th scope="col">Action Steps</th>
-                <th scope="col">Commitments</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for strategy in strategies %}
-            <tr>
-                <td>{{ strategy.strategy_number }}</td>
-                <td>{{ strategy.strategy_name }}</td>
-                <td>
-                    <a href="{% url 'community_activities' strategy.strategy_id %}" class="btn btn-ghost-grey" style="margin-bottom: 7px">Communities</a>
-                    <a href="{% url 'nc_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">Nebraska Children</a>
-                </td>
-                <td>
-                    <a href="{% url 'partner_activities' strategy.strategy_id %}" class="btn btn-ghost-grey">System Partners</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No strategies available for this objective.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Goal Information -->
-    <div class="mt-4">
-        <h4>Related Goal</h4>
-        <p>Goal Number: {{ objective.related_goal.goal_number }}</p>
-        <p>Goal Name: {{ objective.related_goal.goal_name }}</p>
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 10%">Strategy Number</th>
+                            <th scope="col" style="width: 45%">Strategy Name</th>
+                            <th scope="col" style="width: 15%" colspan="2">Actions & Commitments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for strategy in strategies %}
+                        <tr>
+                            <td><strong>{{ strategy.strategy_number }}</strong></td>
+                            <td>{{ strategy.strategy_name }}</td>
+                            <td colspan="2">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <a href="{% url 'community_activities' strategy.strategy_id %}" 
+                                           class="btn btn-ghost-grey btn-sm w-100">Communities</a>
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="{% url 'nc_activities' strategy.strategy_id %}" 
+                                           class="btn btn-ghost-grey btn-sm w-100">Nebraska Children</a>
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="{% url 'partner_activities' strategy.strategy_id %}" 
+                                           class="btn btn-ghost-grey btn-sm w-100">System Partners</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    No strategies available for this objective.
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
