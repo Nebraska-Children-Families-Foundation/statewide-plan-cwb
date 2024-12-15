@@ -102,59 +102,59 @@ class NcffActivityForm(forms.ModelForm):
         self.fields['related_strategy'].label_from_instance = lambda obj: f"{obj.strategy_number}: {obj.strategy_name}"
 
 
+# forms.py
 class ActionStepsFilterForm(forms.Form):
-    actor = forms.ModelChoiceField(
-        queryset=None,  # Will be set in __init__
+    ACTOR_TYPES = [
+        ('', 'All Actors'),
+        ('nc', 'Nebraska Children'),
+        ('community', 'Community Collaboratives'),
+        ('partner', 'System Partners')
+    ]
+
+    actor_type = forms.ChoiceField(
+        choices=ACTOR_TYPES,
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
+    actor = forms.ModelChoiceField(
+        queryset=None,  # Will be set dynamically via JavaScript
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     related_goal = forms.ModelChoiceField(
         queryset=Goal.objects.all().order_by('goal_number'),
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
     related_objective = forms.ModelChoiceField(
-        queryset=Objective.objects.none(),  # Initially empty, populated via smart-selects
+        queryset=Objective.objects.none(),
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
     related_strategy = forms.ModelChoiceField(
-        queryset=Strategy.objects.none(),  # Initially empty, populated via smart-selects
+        queryset=Strategy.objects.none(),
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
     activity_status = forms.ChoiceField(
         choices=[('', 'All Statuses')] + list(ActivityStatusChoice.choices),
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
     completedby_year = forms.ChoiceField(
         choices=[('', 'All Years')] + list(Years.choices),
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
     completedby_quarter = forms.ChoiceField(
         choices=[('', 'All Quarters')] + list(Quarters.choices),
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-
-    def __init__(self, *args, actor_type='nc', **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Set actor queryset based on type
-        if actor_type == 'nc':
-            self.fields['actor'].queryset = NcffTeam.objects.all().order_by('ncff_team_name')
-            self.fields['actor'].label = 'NCFF Team'
-        elif actor_type == 'community':
-            self.fields['actor'].queryset = CommunityCollaborative.objects.all().order_by('community_collab_name')
-            self.fields['actor'].label = 'Community Collaborative'
-        else:  # system partner
-            self.fields['actor'].queryset = SystemPartner.objects.all().order_by('system_partner_name')
-            self.fields['actor'].label = 'System Partner'
-
-        # Customize display of related fields
-        self.fields['related_goal'].label_from_instance = lambda obj: f"Goal {obj.goal_number}: {obj.goal_name}"
-        self.fields['related_objective'].label_from_instance = lambda \
-            obj: f"Obj. {obj.objective_number}: {obj.objective_name}"
-        self.fields['related_strategy'].label_from_instance = lambda obj: f"{obj.strategy_number}: {obj.strategy_name}"
