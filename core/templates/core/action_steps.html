@@ -139,7 +139,8 @@ $(document).ready(function() {
         strategySelect.empty().append('<option value="">All Strategies</option>').prop('disabled', true);
         
         if (goalId) {
-            $.get('{% url "get_objectives" goal_id=1 %}'.replace('1', goalId), function(data) {
+            // Remove the placeholder value and use the actual goalId directly
+            $.get('{% url "get_objectives" goal_id="placeholder" %}'.replace('placeholder', goalId), function(data) {
                 data.forEach(function(obj) {
                     objectiveSelect.append(
                         `<option value="${obj.objective_id}">Obj ${obj.objective_number}: ${obj.objective_name}</option>`
@@ -151,7 +152,7 @@ $(document).ready(function() {
         
         loadResults();
     });
-
+    
     // Handle Objective change
     $('#id_related_objective').change(function() {
         let objectiveId = $(this).val();
@@ -160,7 +161,8 @@ $(document).ready(function() {
         strategySelect.empty().append('<option value="">All Strategies</option>').prop('disabled', !objectiveId);
         
         if (objectiveId) {
-            $.get('{% url "get_strategies" objective_id=1 %}'.replace('1', objectiveId), function(data) {
+            // Remove the placeholder value and use the actual objectiveId directly
+            $.get('{% url "get_strategies" objective_id="placeholder" %}'.replace('placeholder', objectiveId), function(data) {
                 data.forEach(function(strat) {
                     strategySelect.append(
                         `<option value="${strat.strategy_id}">${strat.strategy_number}: ${strat.strategy_name}</option>`
