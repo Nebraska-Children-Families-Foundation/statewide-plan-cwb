@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Setting Strategy Priority for {{ community_collab_name }}</h1>
+    <p class="text-muted mb-4">Select the strategies that are priorities for your collaborative</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% regroup strategies by related_goal as goal_list %}
+        {% for goal in goal_list %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Goal {{ goal.grouper.goal_number }}: {{ goal.grouper.goal_name }}</h5>
+                </div>
+                
+                {% regroup goal.list by related_objective as objective_list %}
+                {% for objective in objective_list %}
+                    <div class="card-body border-bottom">
+                        <h6 class="text-muted mb-3">Objective {{ objective.grouper.objective_number }}: {{ objective.grouper.objective_name }}</h6>
+                        
+                        <div class="list-group">
+                            {% for strategy in objective.list %}
+                                <div class="list-group-item">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <input type="checkbox" 
+                                                   class="form-check-input"
+                                                   name="priority_strategies" 
+                                                   value="{{ strategy.strategy_id }}"
+                                                   id="strategy_{{ strategy.strategy_id }}"
+                                                   {% if strategy.is_priority %}checked{% endif %}>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <label class="form-check-label w-100" for="strategy_{{ strategy.strategy_id }}">
+                                                <strong class="d-block">{{ strategy.strategy_number }}</strong>
+                                                {{ strategy.strategy_name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="d-grid gap-2 col-6 mx-auto mb-4">
+            <button type="submit" class="btn btn-primary">Save Priority Strategies</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
