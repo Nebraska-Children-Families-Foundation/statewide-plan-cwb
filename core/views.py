@@ -118,38 +118,32 @@ def action_steps_view(request):
 
 @login_required
 def get_action_steps_data(request):
-    """
-    AJAX view to get filtered action steps data
-    """
-    user = request.user
+    """AJAX view to get filtered action steps data"""
     actor_type = request.GET.get('actor_type')
     actor_id = request.GET.get('actor_id')
-    goal_id = request.GET.get('goal_id')
-    objective_id = request.GET.get('objective_id')
-    strategy_id = request.GET.get('strategy_id')
-    status = request.GET.get('status')
-    year = request.GET.get('year')
-    quarter = request.GET.get('quarter')
 
-    # Base query depending on actor type and user permissions
-    if actor_type == 'nc':
-        queryset = NCActionStep.objects.select_related(
-            'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
-        )
-        if user.member_type == AppUser.MemberTypes.NCFF_TEAM:
-            queryset = queryset.filter(ncff_team=user.ncff_team)
-    elif actor_type == 'community':
-        queryset = CommunityActionStep.objects.select_related(
-            'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
-        )
-        if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
-            queryset = queryset.filter(related_collaborative=user.community_collaborative)
-    else:  # system partner
-        queryset = SystemPartnerCommitment.objects.select_related(
-            'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
-        )
-        if user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
-            queryset = queryset.filter(related_systempartner=user.system_partner)
+    # Base queries for each type
+    nc_steps = NCActionStep.objects.select_related(
+        'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
+    )
+    community_steps = CommunityActionStep.objects.select_related(
+        'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
+    )
+    partner_steps = SystemPartnerCommitment.objects.select_related(
+        'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
+    )
+
+    # Filter by actor type and ID if provided
+    if actor_type and actor_id:
+        if actor_type == 'nc':
+            queryset = nc_steps.filter(ncff_team_id=actor_id)
+        elif actor_type == 'community':
+            queryset = community_steps.filter(related_collaborative_id=actor_id)
+        elif actor_type == 'partner':
+            queryset = partner_steps.filter(related_systempartner_id=actor_id)
+    else:
+        # If no specific type selected, combine all
+        queryset = list(nc_steps) + list(community_steps) + list(partner_steps)
 
     # Apply filters
     if actor_id:
