@@ -1,10 +1,5 @@
 from django.urls import path, include
 from . import views
-from rest_framework import routers
-from .views import ActionStepsViewSet
-
-router = routers.DefaultRouter()
-router.register(r'api/action-steps', ActionStepsViewSet, basename='action-steps')
 
 urlpatterns = [
     path('', views.home, name='home'),

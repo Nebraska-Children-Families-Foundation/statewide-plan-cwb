@@ -1,9 +1,7 @@
 from django import forms
-from django.forms import ModelForm
 from .models import (CommunityActionStep, NCActionStep, Goal, Objective, Strategy, SystemPartnerCommitment,
                      SystemPartner, NcffTeam, CommunityCollaborative, SystemPartner, ActivityStatusChoice,
                      Years, Quarters)
-from django.db.models import F
 
 
 class CommunityActivityForm(forms.ModelForm):
