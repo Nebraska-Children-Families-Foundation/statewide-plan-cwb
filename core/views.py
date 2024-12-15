@@ -1,3 +1,10 @@
+from rest_framework import viewsets
+from rest_framework.response import Response
+from django_filters import rest_framework as filters
+from .serializers import (NCActionStepSerializer, CommunityActionStepSerializer,
+                        SystemPartnerCommitmentSerializer)
+from .filters import (NCActionStepFilter, CommunityActionStepFilter,
+                     SystemPartnerCommitmentFilter)
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import models
 from django.urls import reverse
@@ -16,6 +23,89 @@ from users.models import AppUser
 from django.db.models import Count
 
 from .standardization import Years, Quarters, ActivityStatusChoice
+
+
+class ActionStepsViewSet(viewsets.GenericViewSet):
+    filter_backends = (filters.DjangoFilterBackend,)
+
+    def get_queryset(self):
+        actor_type = self.request.query_params.get('actor_type')
+
+        if actor_type == 'nc':
+            return NCActionStep.objects.all().select_related(
+                'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
+            )
+        elif actor_type == 'community':
+            return CommunityActionStep.objects.all().select_related(
+                'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
+            )
+        elif actor_type == 'partner':
+            return SystemPartnerCommitment.objects.all().select_related(
+                'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
+            )
+        else:
+            nc_steps = NCActionStep.objects.all().select_related(
+                'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
+            )
+            community_steps = CommunityActionStep.objects.all().select_related(
+                'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
+            )
+            partner_steps = SystemPartnerCommitment.objects.all().select_related(
+                'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
+            )
+            return list(nc_steps) + list(community_steps) + list(partner_steps)
+
+    def get_serializer_class(self):
+        actor_type = self.request.query_params.get('actor_type')
+
+        if actor_type == 'nc':
+            return NCActionStepSerializer
+        elif actor_type == 'community':
+            return CommunityActionStepSerializer
+        elif actor_type == 'partner':
+            return SystemPartnerCommitmentSerializer
+        return NCActionStepSerializer  # default
+
+    def get_filter_class(self):
+        actor_type = self.request.query_params.get('actor_type')
+
+        if actor_type == 'nc':
+            return NCActionStepFilter
+        elif actor_type == 'community':
+            return CommunityActionStepFilter
+        elif actor_type == 'partner':
+            return SystemPartnerCommitmentFilter
+        return None
+
+    def list(self, request):
+        queryset = self.get_queryset()
+
+        if isinstance(queryset, list):
+            # Handle combined querysets
+            data = []
+            for item in queryset:
+                if isinstance(item, NCActionStep):
+                    serializer = NCActionStepSerializer(item, context={'request': request})
+                elif isinstance(item, CommunityActionStep):
+                    serializer = CommunityActionStepSerializer(item, context={'request': request})
+                else:
+                    serializer = SystemPartnerCommitmentSerializer(item, context={'request': request})
+                data.append(serializer.data)
+        else:
+            # Handle single model queryset
+            filter_class = self.get_filter_class()
+            if filter_class:
+                queryset = filter_class(request.query_params, queryset=queryset).qs
+
+            serializer = self.get_serializer_class()(queryset, many=True, context={'request': request})
+            data = serializer.data
+
+        return Response({
+            'data': data,
+            'recordsTotal': len(data),
+            'recordsFiltered': len(data),
+            'draw': int(request.GET.get('draw', 1))
+        })
 
 
 def home(request):
@@ -141,21 +231,22 @@ def get_action_steps_data(request):
         queryset = NCActionStep.objects.select_related(
             'related_goal', 'related_objective', 'related_strategy', 'ncff_team'
         )
-        if actor_id:
+        # Only filter by team if a specific team is selected
+        if actor_id and actor_id != '':
             queryset = queryset.filter(ncff_team_id=actor_id)
 
     elif actor_type == 'community':
         queryset = CommunityActionStep.objects.select_related(
             'related_goal', 'related_objective', 'related_strategy', 'related_collaborative'
         )
-        if actor_id:
+        if actor_id and actor_id != '':
             queryset = queryset.filter(related_collaborative_id=actor_id)
 
     elif actor_type == 'partner':
         queryset = SystemPartnerCommitment.objects.select_related(
             'related_goal', 'related_objective', 'related_strategy', 'related_systempartner'
         )
-        if actor_id:
+        if actor_id and actor_id != '':
             queryset = queryset.filter(related_systempartner_id=actor_id)
 
     else:
@@ -173,17 +264,17 @@ def get_action_steps_data(request):
 
     # Apply common filters if there's a specific queryset
     if actor_type and isinstance(queryset, models.QuerySet):
-        if goal_id:
+        if goal_id and goal_id != '':
             queryset = queryset.filter(related_goal_id=goal_id)
-        if objective_id:
+        if objective_id and objective_id != '':
             queryset = queryset.filter(related_objective_id=objective_id)
-        if strategy_id:
+        if strategy_id and strategy_id != '':
             queryset = queryset.filter(related_strategy_id=strategy_id)
-        if status:
+        if status and status != '':
             queryset = queryset.filter(activity_status=status)
-        if year:
+        if year and year != '':
             queryset = queryset.filter(completedby_year=year)
-        if quarter:
+        if quarter and quarter != '':
             queryset = queryset.filter(completedby_quarter=quarter)
 
     # Convert queryset to list if it isn't already

@@ -1,5 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework import routers
+from .views import ActionStepsViewSet
+
+router = routers.DefaultRouter()
+router.register(r'api/action-steps', ActionStepsViewSet, basename='action-steps')
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -33,4 +38,5 @@ urlpatterns = [
     path('api/action-steps/data/', views.get_action_steps_data, name='get_action_steps_data'),
     path('api/action-steps/objectives/<uuid:goal_id>/', views.get_objectives, name='get_objectives'),
     path('api/action-steps/strategies/<uuid:objective_id>/', views.get_strategies, name='get_strategies'),
+    path('', include(router.urls)),
 ]
