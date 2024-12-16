@@ -15,7 +15,7 @@ ENVIRONMENT = config('DJANGO_ENV')
 # Development settings
 if ENVIRONMENT == 'development':
     DEBUG = True
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'statewideplan-sandbox.ncffapps.dev']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     CSRF_COOKIE_SECURE = False
 
 # Production settings
@@ -25,6 +25,13 @@ elif ENVIRONMENT == 'production':
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_DOMAIN = '.bringupnebraska.org'
     CSRF_TRUSTED_ORIGINS = ['https://statewideplan.bringupnebraska.org']
+
+elif ENVIRONMENT == 'sandbox':
+    DEBUG = False
+    ALLOWED_HOSTS = ['statewideplan-sandbox.ncffapps.dev']
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_DOMAIN = '.ncffapps.dev'
+    CSRF_TRUSTED_ORIGINS = ['https://statewideplan-sandbox.ncffapps.dev']
 
 # Test server settings
 elif ENVIRONMENT == 'test':
