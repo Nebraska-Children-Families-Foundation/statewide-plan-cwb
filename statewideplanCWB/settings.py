@@ -15,7 +15,7 @@ ENVIRONMENT = config('DJANGO_ENV')
 # Development settings
 if ENVIRONMENT == 'development':
     DEBUG = True
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'statewideplan-sandbox.ncffapps.dev']
     CSRF_COOKIE_SECURE = False
 
 # Production settings
