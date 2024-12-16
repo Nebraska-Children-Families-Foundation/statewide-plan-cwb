@@ -26,6 +26,7 @@ elif ENVIRONMENT == 'production':
     CSRF_COOKIE_DOMAIN = '.bringupnebraska.org'
     CSRF_TRUSTED_ORIGINS = ['https://statewideplan.bringupnebraska.org']
 
+# Sandbox settings
 elif ENVIRONMENT == 'sandbox':
     DEBUG = False
     ALLOWED_HOSTS = ['statewideplan-sandbox.ncffapps.dev']
@@ -113,6 +114,17 @@ elif ENVIRONMENT == 'test':
             'PASSWORD': config('TEST_DATABASE_PASSWORD', default='test_password'),
             'HOST': config('TEST_DATABASE_HOST', default='localhost'),
             'PORT': config('TEST_DATABASE_PORT', default='5432'),
+        }
+    }
+elif ENVIRONMENT == 'sandbox':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('SBX_DATABASE_NAME', default='test_db'),
+            'USER': config('SBX_DATABASE_USER', default='test_user'),
+            'PASSWORD': config('SBX_DATABASE_PASSWORD', default='test_password'),
+            'HOST': config('SBX_DATABASE_HOST', default='localhost'),
+            'PORT': config('SBX_DATABASE_PORT', default='5432'),
         }
     }
 elif ENVIRONMENT == 'development':
