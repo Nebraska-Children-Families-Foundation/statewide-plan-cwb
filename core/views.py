@@ -4,7 +4,8 @@ from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionSte
 from .forms import CommunityActivityForm, PartnerActivityForm, NcffActivityForm
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
-from .permissions import has_edit_permission, has_commitment_edit_permission
+from .permissions import (has_edit_permission, has_commitment_edit_permission,
+                          require_community_action_step_edit_permission, has_community_action_step_edit_permission)
 from .plan_work.models import SystemPartnerCommitment
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -84,8 +85,6 @@ def activities(request):
     return render(request, 'core/activities.html')
 
 
-# views.py
-
 @login_required
 def action_steps_view(request):
     """
@@ -159,6 +158,83 @@ def create_community_activity(request):
         form = CommunityActivityForm()
     return render(request, 'core/create-community-activity.html', {'form': form})
 
+
+@login_required
+@require_community_action_step_edit_permission
+def edit_community_activity(request, action_step):
+    """
+    Edit a community action step. The action_step is passed by the decorator.
+    """
+    if request.method == 'POST':
+        form = CommunityActivityForm(request.POST, instance=action_step)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Community action step updated successfully!')
+            return redirect('activity_details', activity_id=action_step.activity_id)
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = CommunityActivityForm(instance=action_step)
+
+    context = {
+        'form': form,
+        'action_step': action_step,
+        'is_edit': True
+    }
+    return render(request, 'core/edit-community-activity.html', context)
+
+
+@login_required
+def list_my_community_activities(request):
+    """
+    List all community action steps created by the current user or
+    associated with their collaborative
+    """
+    user = request.user
+    activities = []
+
+    if user.member_type == user.MemberTypes.COMMUNITY_COLLABORATIVE:
+        if user.community_collaborative:
+            # Get activities created by user or belonging to their collaborative
+            activities = CommunityActionStep.objects.filter(
+                models.Q(community_creator=user) |
+                models.Q(related_collaborative=user.community_collaborative)
+            ).distinct().order_by('-pk')
+    elif user.is_superuser:
+        activities = CommunityActionStep.objects.all().order_by('-pk')
+
+    # Add edit permission info for each activity
+    for activity in activities:
+        activity.can_edit = has_community_action_step_edit_permission(user, activity)
+
+    context = {
+        'activities': activities,
+        'user_collaborative': user.community_collaborative if hasattr(user, 'community_collaborative') else None
+    }
+    return render(request, 'core/my-community-activities.html', context)
+
+
+@login_required
+def delete_community_activity(request, activity_id):
+    """
+    Delete a community action step (with confirmation)
+    """
+    action_step = get_object_or_404(CommunityActionStep, activity_id=activity_id)
+
+    if not has_community_action_step_edit_permission(request.user, action_step):
+        return HttpResponseForbidden("You don't have permission to delete this action step.")
+
+    if request.method == 'POST':
+        action_step.delete()
+        messages.success(request, 'Community action step deleted successfully!')
+        return redirect('list_my_community_activities')
+
+    context = {
+        'action_step': action_step
+    }
+    return render(request, 'core/confirm-delete-community-activity.html', context)
 
 
 @login_required
