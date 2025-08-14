@@ -78,10 +78,19 @@
                                         <strong>{{ activity.completedby_quarter }} {{ activity.completedby_year }}</strong>
                                     </div>
 
-                                    <div class="mb-0">
+                                    <div class="mb-3">
                                         <label class="small text-muted d-block">Activity ID</label>
                                         <code>{{ activity.activity_number }}</code>
                                     </div>
+                                    
+                                    {% if user.is_authenticated and activity.can_edit %}
+                                        <div class="d-grid gap-2">
+                                            <a href="{% url 'edit_community_activity' activity.activity_id %}" 
+                                               class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-pencil"></i> Edit Action Step
+                                            </a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

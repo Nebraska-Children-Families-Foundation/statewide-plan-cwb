@@ -76,11 +76,12 @@
                         </div>
                     </div>
 
-                    {% if activity.activity_status != 'Completed' %}
+                    {% if activity.can_edit %}
                         <div class="mt-3">
                             <div class="d-grid gap-2">
-{#                                <button class="btn btn-outline-primary btn-sm">Update Status</button>#}
-{#                                <button class="btn btn-outline-secondary btn-sm">Edit Timeline</button>#}
+                                <a href="{% url 'edit_community_activity' activity.activity_id %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil"></i> Edit Action Step
+                                </a>
                             </div>
                         </div>
                     {% endif %}
