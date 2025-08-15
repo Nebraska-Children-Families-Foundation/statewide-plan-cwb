@@ -495,3 +495,193 @@ class ClassName:
 4. **Document as You Go**: Update documentation with changes
 5. **Refactor Incrementally**: Improve code quality during feature work
 6. **Performance When Needed**: Optimize only when issues arise (30 concurrent users max)
+
+## Community Action Step Edit Functionality
+
+### Implementation Status
+The Community Action Step edit functionality is **fully implemented and tested** as of commit `5c92d1d`. This includes:
+
+#### Core Components
+- **Permission System** (`core/permissions.py`): Complete role-based access control
+- **Edit Views** (`core/views.py`): Protected edit functionality with proper redirects
+- **Forms** (`core/forms.py`): Full form with Community Collaborative dropdown
+- **Templates**: Edit interface and UI integration across all relevant pages
+- **Tests** (`core/tests/`): Comprehensive test suite covering all permission scenarios
+
+#### User Interface Integration
+Edit functionality is integrated into:
+- **Individual Dashboard**: Edit buttons in actions column
+- **My Community Activities**: Complete CRUD interface
+- **Activity Details**: Edit button for authorized users
+- **Community Activities List**: Edit buttons with permission checking
+
+#### Permission Matrix
+| User Type | Community Action Steps | NC Action Steps | System Partner Commitments |
+|-----------|------------------------|-----------------|----------------------------|
+| Anonymous | ❌ No Access | ❌ No Access | ❌ No Access |
+| Community Collaborative | ✅ Own Collaborative Only | ❌ View Only | ❌ View Only |
+| NCFF Team | ✅ All Action Steps | ✅ Own Work | ❌ View Only |
+| System Partner | ❌ View Only | ❌ View Only | ✅ Own Commitments |
+| Superuser | ✅ All | ✅ All | ✅ All |
+
+### Known Issues and Solutions
+
+#### Fixed Issues
+1. **NCFF Team Permission Bug** (Fixed in commit `1894fe5`)
+   - Issue: NCFF Team Members couldn't edit Community Action Steps
+   - Solution: Added `user.member_type == user.MemberTypes.NCFF_TEAM` check to permission function
+
+2. **Activity Details 404 Error** (Fixed in commit `df1aa4b`)
+   - Issue: User-type-based routing caused 404s when viewing activity details
+   - Solution: Changed to sequential model lookup instead of user-type-based filtering
+
+3. **Missing Related Collaborative Field** (Fixed in commit `997ae3d`)
+   - Issue: Edit form threw "required field" error for `related_collaborative`
+   - Solution: Added dropdown field with proper widget and placeholder text
+
+#### Current Implementation Details
+- **Edit Flow**: Edit → Save → Activity Details (with success message) → User can verify changes
+- **Navigation**: Back/Cancel buttons return to dashboard for consistent UX
+- **Form Validation**: Comprehensive validation with user-friendly error messages
+- **Security**: All endpoints protected with authentication and authorization decorators
+
+## Testing Implementation
+
+### Test Structure
+Tests are organized in `core/tests/` directory following the guidelines in this document:
+
+#### Test Files
+- **`test_permissions.py`**: Permission function testing with all user scenarios
+- **`test_visibility.py`**: Anonymous vs authenticated user access testing  
+- **`test_views.py`**: View functionality and integration testing
+- **`manual_test_runner.py`**: Environment-independent permission validation
+- **`TEST_REPORT.md`**: Comprehensive compliance documentation
+
+#### Test Coverage
+All Community Action Step permission requirements from the Project Purpose section are tested:
+- ✅ Action Steps visible to logged in users only
+- ✅ Proper creator and collaborative association
+- ✅ Collaborative-based edit permissions
+- ✅ NCFF Team Members can edit all Community Action Steps
+- ✅ Superuser full access
+- ✅ UI permission enforcement
+
+#### Running Tests
+```bash
+# Manual permission validation (works without Django environment)
+python core/tests/manual_test_runner.py
+
+# Full Django test suite (requires environment configuration)
+python manage.py test core.tests
+
+# Specific test files
+python manage.py test core.tests.test_permissions
+python manage.py test core.tests.test_visibility
+python manage.py test core.tests.test_views
+```
+
+### Testing Best Practices Established
+1. **Permission Testing**: Every permission scenario must be explicitly tested
+2. **Manual Validation**: Use environment-independent tests for core logic validation
+3. **Comprehensive Documentation**: Include test reports documenting CLAUDE.md compliance
+4. **Bug Fix Validation**: Test fixes with both manual and automated tests
+
+## Documentation Standards
+
+### Knowledge Base Articles
+Documentation is organized in `kb-articles/` directory:
+
+#### Internal Documentation
+- **`COMMUNITY_ACTION_STEP_WORKFLOW.md`**: Technical workflow documentation
+- **Purpose**: Internal knowledge base for development team and staff
+- **Content**: Complete user role workflows, technical implementation, troubleshooting
+
+#### External Documentation  
+- **`COMMUNITY_COLLABORATIVE_USER_GUIDE.md`**: End-user documentation
+- **Purpose**: External knowledge base for Community Collaborative members
+- **Format**: WikiJS-compatible with H1/H2/H3 structure
+- **Style**: Beginner-friendly, non-technical language
+
+### Documentation Requirements
+1. **Dual Documentation**: Maintain both technical and user-facing documentation
+2. **Screenshot Placeholders**: User guides should indicate where screenshots are needed
+3. **Version Tracking**: Include document version and system version information
+4. **Compliance Mapping**: Document how implementation meets CLAUDE.md requirements
+
+## View and URL Patterns Established
+
+### Community Action Step URLs
+```python
+# Established URL patterns for Community Action Steps
+path('community-activity/edit/<uuid:activity_id>/', views.edit_community_activity, name='edit_community_activity'),
+path('my-community-activities/', views.list_my_community_activities, name='list_my_community_activities'),
+path('activity/<uuid:activity_id>/', views.activity_details, name='activity_details'),
+path('community-activity/delete/<uuid:activity_id>/', views.delete_community_activity, name='delete_community_activity'),
+```
+
+### View Security Pattern
+```python
+# Standard security pattern for Community Action Step views
+@login_required
+@require_community_action_step_edit_permission
+def edit_community_activity(request, action_step):
+    """Edit view receives action_step from permission decorator"""
+    # Implementation follows established pattern
+
+@login_required  
+def view_with_permission_checking(request):
+    """Views add can_edit flags for UI permission display"""
+    for activity in activities:
+        activity.can_edit = has_community_action_step_edit_permission(user, activity)
+```
+
+### Template Integration Pattern
+```html
+<!-- Standard permission checking in templates -->
+{% if activity.can_edit %}
+    <a href="{% url 'edit_community_activity' activity.activity_id %}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-pencil"></i> Edit Action Step
+    </a>
+{% endif %}
+```
+
+## Development Workflow Patterns
+
+### Feature Implementation Process
+Based on Community Action Step implementation, establish this pattern for future features:
+
+1. **Planning Phase**: 
+   - Review CLAUDE.md requirements
+   - Create implementation plan with TodoWrite tool
+   - Identify permission requirements and user roles affected
+
+2. **Implementation Phase**:
+   - Implement core functionality (models, views, forms)
+   - Add permission system integration
+   - Update templates with UI elements
+   - Follow established URL and view patterns
+
+3. **Testing Phase**:
+   - Create comprehensive test suite
+   - Test all permission scenarios
+   - Manual validation of core logic
+   - Document test results and compliance
+
+4. **Documentation Phase**:
+   - Update CLAUDE.md if new patterns established
+   - Create internal technical documentation
+   - Create external user documentation if needed
+   - Include screenshot placeholders for user guides
+
+5. **Commit Strategy**:
+   - Feature implementation commits
+   - Bug fix commits (separate from features)
+   - Test suite and documentation commits
+   - Clear commit messages with 🤖 Claude Code attribution
+
+### Integration Requirements
+When adding new functionality that affects Community Action Steps:
+1. **Maintain Permission Compatibility**: Use established permission functions
+2. **Follow UI Patterns**: Use consistent button styles and permission checking
+3. **Update Tests**: Add test coverage for any new permission scenarios
+4. **Document Changes**: Update both internal and external documentation
