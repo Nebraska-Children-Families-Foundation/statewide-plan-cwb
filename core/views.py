@@ -332,22 +332,66 @@ def individual_dashboard(request):
         'ongoing': 0,
     }
     activities = []
+    community_collaboratives = []
+    selected_collaborative_id = request.GET.get('collaborative')
+    
+    # Only NCFF Team and Superuser can filter by collaborative
+    can_filter_collaboratives = (
+        user.member_type == AppUser.MemberTypes.NCFF_TEAM or 
+        user.is_superuser
+    )
 
     if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
+        # Community Collaborative users only see their own action steps (no filtering)
         activities = CommunityActionStep.objects.filter(community_creator=user)
         # Add edit permission for Community Action Steps
         for activity in activities:
             activity.can_edit = has_community_action_step_edit_permission(user, activity)
+            
     elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
-        activities = NCActionStep.objects.filter(nc_staff_creator=user)
-        # NC Action Steps don't have edit functionality yet
+        # NCFF Team users see all Community Action Steps with filtering capability
+        activities = CommunityActionStep.objects.all()
+        
+        # Apply collaborative filter if specified
+        if selected_collaborative_id:
+            try:
+                collaborative = CommunityCollaborative.objects.get(community_collab_id=selected_collaborative_id)
+                activities = activities.filter(related_collaborative=collaborative)
+            except CommunityCollaborative.DoesNotExist:
+                pass  # Invalid collaborative ID, show all
+        
+        # Get all collaboratives for dropdown
+        community_collaboratives = CommunityCollaborative.objects.all().order_by('community_collab_name')
+        
+        # Add edit permission for Community Action Steps
         for activity in activities:
-            activity.can_edit = False
+            activity.can_edit = has_community_action_step_edit_permission(user, activity)
+            
     elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
+        # System Partner users see their own commitments (no filtering)
         activities = SystemPartnerCommitment.objects.filter(system_partner_creator=user)
         # Add edit permission for System Partner Commitments
         for activity in activities:
             activity.can_edit = has_commitment_edit_permission(user, activity)
+    
+    # Superuser gets filtering capability for Community Action Steps
+    elif user.is_superuser:
+        activities = CommunityActionStep.objects.all()
+        
+        # Apply collaborative filter if specified
+        if selected_collaborative_id:
+            try:
+                collaborative = CommunityCollaborative.objects.get(community_collab_id=selected_collaborative_id)
+                activities = activities.filter(related_collaborative=collaborative)
+            except CommunityCollaborative.DoesNotExist:
+                pass  # Invalid collaborative ID, show all
+        
+        # Get all collaboratives for dropdown
+        community_collaboratives = CommunityCollaborative.objects.all().order_by('community_collab_name')
+        
+        # Add edit permission for Community Action Steps
+        for activity in activities:
+            activity.can_edit = has_community_action_step_edit_permission(user, activity)
 
     activities_count['total'] = activities.count()
     activities_count['not_started'] = activities.filter(activity_status='Not Started').count()
@@ -357,7 +401,10 @@ def individual_dashboard(request):
 
     context = {
         'activities_count': activities_count,
-        'activities': activities
+        'activities': activities,
+        'community_collaboratives': community_collaboratives,
+        'selected_collaborative_id': selected_collaborative_id,
+        'can_filter_collaboratives': can_filter_collaboratives,
     }
     return render(request, 'core/individual-dashboard.html', context)
 
