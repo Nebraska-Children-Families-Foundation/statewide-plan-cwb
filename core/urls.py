@@ -28,4 +28,7 @@ urlpatterns = [
     path('dashboard/', views.individual_dashboard, name='individual_dashboard'),
     path('activity/<uuid:activity_id>/', views.activity_details, name='activity_details'),
     path('set-priorities/', views.set_collaborative_priorities, name='set_collaborative_priorities'),
+    path('community-activity/edit/<uuid:activity_id>/', views.edit_community_activity, name='edit_community_activity'),
+    path('community-activity/delete/<uuid:activity_id>/', views.delete_community_activity, name='delete_community_activity'),
+    path('my-community-activities/', views.list_my_community_activities, name='list_my_community_activities'),
 ]

@@ -4,7 +4,8 @@ from .models import (Goal, Objective, Strategy, CommunityActionStep, NCActionSte
 from .forms import CommunityActivityForm, PartnerActivityForm, NcffActivityForm
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
-from .permissions import has_edit_permission, has_commitment_edit_permission
+from .permissions import (has_edit_permission, has_commitment_edit_permission,
+                          require_community_action_step_edit_permission, has_community_action_step_edit_permission)
 from .plan_work.models import SystemPartnerCommitment
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -46,6 +47,12 @@ def create_strategy(request):
 def community_activities(request, strategy_id):
     activities = CommunityActionStep.objects.filter(related_strategy=strategy_id)
     collaboratives = CommunityCollaborative.objects.all()
+    
+    # Add edit permission info for each activity if user is logged in
+    if request.user.is_authenticated:
+        for activity in activities:
+            activity.can_edit = has_community_action_step_edit_permission(request.user, activity)
+    
     return render(request, 'core/community-activities.html', {'activities': activities,
                                                               'collaboratives': collaboratives})
 
@@ -83,8 +90,6 @@ def strategies(request, objective_id):
 def activities(request):
     return render(request, 'core/activities.html')
 
-
-# views.py
 
 @login_required
 def action_steps_view(request):
@@ -160,6 +165,83 @@ def create_community_activity(request):
     return render(request, 'core/create-community-activity.html', {'form': form})
 
 
+@login_required
+@require_community_action_step_edit_permission
+def edit_community_activity(request, action_step):
+    """
+    Edit a community action step. The action_step is passed by the decorator.
+    """
+    if request.method == 'POST':
+        form = CommunityActivityForm(request.POST, instance=action_step)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Community action step updated successfully!')
+            return redirect('activity_details', activity_id=action_step.activity_id)
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = CommunityActivityForm(instance=action_step)
+
+    context = {
+        'form': form,
+        'action_step': action_step,
+        'is_edit': True
+    }
+    return render(request, 'core/edit-community-activity.html', context)
+
+
+@login_required
+def list_my_community_activities(request):
+    """
+    List all community action steps created by the current user or
+    associated with their collaborative
+    """
+    user = request.user
+    activities = []
+
+    if user.member_type == user.MemberTypes.COMMUNITY_COLLABORATIVE:
+        if user.community_collaborative:
+            # Get activities created by user or belonging to their collaborative
+            activities = CommunityActionStep.objects.filter(
+                models.Q(community_creator=user) |
+                models.Q(related_collaborative=user.community_collaborative)
+            ).distinct().order_by('-pk')
+    elif user.is_superuser:
+        activities = CommunityActionStep.objects.all().order_by('-pk')
+
+    # Add edit permission info for each activity
+    for activity in activities:
+        activity.can_edit = has_community_action_step_edit_permission(user, activity)
+
+    context = {
+        'activities': activities,
+        'user_collaborative': user.community_collaborative if hasattr(user, 'community_collaborative') else None
+    }
+    return render(request, 'core/my-community-activities.html', context)
+
+
+@login_required
+def delete_community_activity(request, activity_id):
+    """
+    Delete a community action step (with confirmation)
+    """
+    action_step = get_object_or_404(CommunityActionStep, activity_id=activity_id)
+
+    if not has_community_action_step_edit_permission(request.user, action_step):
+        return HttpResponseForbidden("You don't have permission to delete this action step.")
+
+    if request.method == 'POST':
+        action_step.delete()
+        messages.success(request, 'Community action step deleted successfully!')
+        return redirect('list_my_community_activities')
+
+    context = {
+        'action_step': action_step
+    }
+    return render(request, 'core/confirm-delete-community-activity.html', context)
+
 
 @login_required
 def create_partner_commitment(request):
@@ -221,21 +303,6 @@ def load_objectives(request):
     return JsonResponse(list(objectives.values('id', 'name')), safe=False)
 
 
-def update_community_activity(request, pk):
-    activity = get_object_or_404(CommunityActionStep, pk=pk)
-    if not has_edit_permission(request.user, activity):
-        return HttpResponseForbidden("You do not have permission to edit this action step.")
-
-    if request.method == 'POST':
-        form = CommunityActivityForm(request.POST, instance=activity)
-        if form.is_valid():
-            form.save()
-            # Redirect to a success page
-            return redirect('some-success-url')
-    else:
-        form = CommunityActivityForm(instance=activity)
-
-    return render(request, 'core/update-community-activity.html', {'form': form})
 
 
 def update_system_partner_commitment(request, pk):
@@ -265,13 +332,66 @@ def individual_dashboard(request):
         'ongoing': 0,
     }
     activities = []
+    community_collaboratives = []
+    selected_collaborative_id = request.GET.get('collaborative')
+    
+    # Only NCFF Team and Superuser can filter by collaborative
+    can_filter_collaboratives = (
+        user.member_type == AppUser.MemberTypes.NCFF_TEAM or 
+        user.is_superuser
+    )
 
     if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
+        # Community Collaborative users only see their own action steps (no filtering)
         activities = CommunityActionStep.objects.filter(community_creator=user)
+        # Add edit permission for Community Action Steps
+        for activity in activities:
+            activity.can_edit = has_community_action_step_edit_permission(user, activity)
+            
     elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
-        activities = NCActionStep.objects.filter(nc_staff_creator=user)
+        # NCFF Team users see all Community Action Steps with filtering capability
+        activities = CommunityActionStep.objects.all()
+        
+        # Apply collaborative filter if specified
+        if selected_collaborative_id:
+            try:
+                collaborative = CommunityCollaborative.objects.get(community_collab_id=selected_collaborative_id)
+                activities = activities.filter(related_collaborative=collaborative)
+            except CommunityCollaborative.DoesNotExist:
+                pass  # Invalid collaborative ID, show all
+        
+        # Get all collaboratives for dropdown
+        community_collaboratives = CommunityCollaborative.objects.all().order_by('community_collab_name')
+        
+        # Add edit permission for Community Action Steps
+        for activity in activities:
+            activity.can_edit = has_community_action_step_edit_permission(user, activity)
+            
     elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
+        # System Partner users see their own commitments (no filtering)
         activities = SystemPartnerCommitment.objects.filter(system_partner_creator=user)
+        # Add edit permission for System Partner Commitments
+        for activity in activities:
+            activity.can_edit = has_commitment_edit_permission(user, activity)
+    
+    # Superuser gets filtering capability for Community Action Steps
+    elif user.is_superuser:
+        activities = CommunityActionStep.objects.all()
+        
+        # Apply collaborative filter if specified
+        if selected_collaborative_id:
+            try:
+                collaborative = CommunityCollaborative.objects.get(community_collab_id=selected_collaborative_id)
+                activities = activities.filter(related_collaborative=collaborative)
+            except CommunityCollaborative.DoesNotExist:
+                pass  # Invalid collaborative ID, show all
+        
+        # Get all collaboratives for dropdown
+        community_collaboratives = CommunityCollaborative.objects.all().order_by('community_collab_name')
+        
+        # Add edit permission for Community Action Steps
+        for activity in activities:
+            activity.can_edit = has_community_action_step_edit_permission(user, activity)
 
     activities_count['total'] = activities.count()
     activities_count['not_started'] = activities.filter(activity_status='Not Started').count()
@@ -281,7 +401,10 @@ def individual_dashboard(request):
 
     context = {
         'activities_count': activities_count,
-        'activities': activities
+        'activities': activities,
+        'community_collaboratives': community_collaboratives,
+        'selected_collaborative_id': selected_collaborative_id,
+        'can_filter_collaboratives': can_filter_collaboratives,
     }
     return render(request, 'core/individual-dashboard.html', context)
 
@@ -289,13 +412,25 @@ def individual_dashboard(request):
 @login_required
 def activity_details(request, activity_id):
     user = request.user
+    activity = None
 
-    if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
-        activity = get_object_or_404(CommunityActionStep, activity_id=activity_id)
-    elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
-        activity = get_object_or_404(NCActionStep, activity_id=activity_id)
-    elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
-        activity = get_object_or_404(SystemPartnerCommitment, commitment_id=activity_id)
+    # Try to find the activity in each model type
+    # This allows any user type to view any activity type they have access to
+    try:
+        activity = CommunityActionStep.objects.get(activity_id=activity_id)
+        activity.can_edit = has_community_action_step_edit_permission(user, activity)
+    except CommunityActionStep.DoesNotExist:
+        try:
+            activity = NCActionStep.objects.get(activity_id=activity_id)
+            activity.can_edit = False  # Add NC Action Step permission logic later if needed
+        except NCActionStep.DoesNotExist:
+            try:
+                activity = SystemPartnerCommitment.objects.get(commitment_id=activity_id)
+                activity.can_edit = has_commitment_edit_permission(user, activity)
+            except SystemPartnerCommitment.DoesNotExist:
+                # If not found in any model, raise 404
+                from django.http import Http404
+                raise Http404("Activity not found")
 
     context = {
         'activity': activity

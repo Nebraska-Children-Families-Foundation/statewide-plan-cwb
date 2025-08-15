@@ -1,0 +1,65 @@
+{% extends "core/base.html" %}
+{% block title %}Delete Community Action Step{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Delete Community Action Step</h2>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>Warning:</strong> This action cannot be undone.
+                    </div>
+                    
+                    <p class="mb-4">Are you sure you want to delete the following action step?</p>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-subtitle mb-3">{{ action_step.activity_number }}: {{ action_step.activity_name }}</h5>
+                            
+                            <div class="mb-2">
+                                <label class="small text-muted d-block">Details</label>
+                                <p>{{ action_step.activity_details|truncatewords:30 }}</p>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="small text-muted d-block">Status</label>
+                                    <span class="badge {% if action_step.activity_status == 'Completed' %}bg-success{% elif action_step.activity_status == 'In Progress' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                        {{ action_step.activity_status }}
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small text-muted d-block">Target Completion</label>
+                                    <strong>{{ action_step.completedby_quarter }} {{ action_step.completedby_year }}</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <label class="small text-muted d-block">Community Collaborative</label>
+                                <strong>{{ action_step.related_collaborative.community_collab_name }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Yes, Delete
+                            </button>
+                            <a href="{% url 'list_my_community_activities' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

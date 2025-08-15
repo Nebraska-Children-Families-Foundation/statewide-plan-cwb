@@ -5,6 +5,24 @@
 
 {% block content %}
     <h1 style="margin-bottom: 15px">Activity Summary</h1>
+    
+    {% if can_filter_collaboratives %}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="collaborative-filter" class="form-label">Filter by Community Collaborative:</label>
+                <select id="collaborative-filter" class="form-select">
+                    <option value="">All Collaboratives</option>
+                    {% for collaborative in community_collaboratives %}
+                        <option value="{{ collaborative.community_collab_id }}" 
+                                {% if selected_collaborative_id == collaborative.community_collab_id|stringformat:'s' %}selected{% endif %}>
+                            {{ collaborative.community_collab_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endif %}
+    
     <h3 style="margin-bottom: 15px">Total Activities: {{ activities_count.total }}</h3>
     <h4 style="margin-bottom: 15px">Activities by Status</h4>
     <div class="row" style="margin-bottom: 25px">
@@ -53,7 +71,7 @@
                 <th>Related Goal</th>
                 <th>Related Objective</th>
                 <th>Related Strategy</th>
-                <th>Details</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -79,7 +97,16 @@
                         </button>
                     </td>
                     <td>
-                        <a href="{% url 'activity_details' activity.activity_id %}" class="btn btn-ghost-grey">View</a>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="{% url 'activity_details' activity.activity_id %}" class="btn btn-outline-secondary" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            {% if activity.can_edit %}
+                                <a href="{% url 'edit_community_activity' activity.activity_id %}" class="btn btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
             {% empty %}
@@ -93,6 +120,21 @@
 <script>
     $(document).ready(function(){
         $('[data-bs-toggle="popover"]').popover();
+        
+        // Handle collaborative filter change
+        $('#collaborative-filter').change(function(){
+            const selectedCollaborative = $(this).val();
+            const currentUrl = new URL(window.location);
+            
+            if (selectedCollaborative) {
+                currentUrl.searchParams.set('collaborative', selectedCollaborative);
+            } else {
+                currentUrl.searchParams.delete('collaborative');
+            }
+            
+            // Reload page with new filter parameter
+            window.location.href = currentUrl.toString();
+        });
     });
 </script>
 {% endblock %}
