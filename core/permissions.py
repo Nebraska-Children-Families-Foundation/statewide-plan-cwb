@@ -9,11 +9,16 @@ def has_community_action_step_edit_permission(user, action_step):
     """
     Check if user can edit a CommunityActionStep
     Returns True if:
-    1. User is the creator of the action step
-    2. User belongs to the same collaborative as the action step
-    3. User is superuser
+    1. User is superuser
+    2. User is NCFF Team Member (can edit all action steps)
+    3. User is the creator of the action step
+    4. User belongs to the same collaborative as the action step
     """
     if user.is_superuser:
+        return True
+
+    # NCFF Team Members can edit all Community Action Steps
+    if user.member_type == user.MemberTypes.NCFF_TEAM:
         return True
 
     # Check if the user is the creator
