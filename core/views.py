@@ -176,7 +176,7 @@ def edit_community_activity(request, action_step):
         if form.is_valid():
             form.save()
             messages.success(request, 'Community action step updated successfully!')
-            return redirect('activity_details', activity_id=action_step.activity_id)
+            return redirect('individual_dashboard')
         else:
             for field, errors in form.errors.items():
                 for error in errors:

@@ -15,6 +15,7 @@ class CommunityActivityForm(forms.ModelForm):
             'activity_status': forms.Select(attrs={'class': 'form-select'}),
             'completedby_year': forms.Select(attrs={'class': 'form-select'}),
             'completedby_quarter': forms.Select(attrs={'class': 'form-select'}),
+            'related_collaborative': forms.Select(attrs={'class': 'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -25,6 +26,8 @@ class CommunityActivityForm(forms.ModelForm):
         self.fields['related_strategy'].label_from_instance = lambda obj: (f"{obj.related_goal.goal_number}, "
                                                                            f"Obj {obj.related_objective.objective_number} | "
                                                                            f"Strategy {obj.strategy_number} - {obj.strategy_name}")
+        self.fields['related_collaborative'].label_from_instance = lambda obj: obj.community_collab_name
+        self.fields['related_collaborative'].empty_label = "-- Select Your Collaborative --"
 
 
 class PartnerActivityForm(forms.ModelForm):
