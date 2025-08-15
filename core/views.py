@@ -365,17 +365,25 @@ def individual_dashboard(request):
 @login_required
 def activity_details(request, activity_id):
     user = request.user
+    activity = None
 
-    if user.member_type == AppUser.MemberTypes.COMMUNITY_COLLABORATIVE:
-        activity = get_object_or_404(CommunityActionStep, activity_id=activity_id)
-        # Add edit permission check for Community Action Steps
+    # Try to find the activity in each model type
+    # This allows any user type to view any activity type they have access to
+    try:
+        activity = CommunityActionStep.objects.get(activity_id=activity_id)
         activity.can_edit = has_community_action_step_edit_permission(user, activity)
-    elif user.member_type == AppUser.MemberTypes.NCFF_TEAM:
-        activity = get_object_or_404(NCActionStep, activity_id=activity_id)
-        activity.can_edit = False  # Add NC Action Step permission logic later if needed
-    elif user.member_type == AppUser.MemberTypes.SYSTEM_PARTNER:
-        activity = get_object_or_404(SystemPartnerCommitment, commitment_id=activity_id)
-        activity.can_edit = has_commitment_edit_permission(user, activity)
+    except CommunityActionStep.DoesNotExist:
+        try:
+            activity = NCActionStep.objects.get(activity_id=activity_id)
+            activity.can_edit = False  # Add NC Action Step permission logic later if needed
+        except NCActionStep.DoesNotExist:
+            try:
+                activity = SystemPartnerCommitment.objects.get(commitment_id=activity_id)
+                activity.can_edit = has_commitment_edit_permission(user, activity)
+            except SystemPartnerCommitment.DoesNotExist:
+                # If not found in any model, raise 404
+                from django.http import Http404
+                raise Http404("Activity not found")
 
     context = {
         'activity': activity
