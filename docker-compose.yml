@@ -15,6 +15,7 @@ services:
       - "traefik.http.routers.swp.entrypoints=websecure" # Specify the entrypoints
       - "traefik.http.routers.swp.tls=true" # Enable TLS for this service
       - "traefik.http.routers.swp.tls.certresolver=production" #Use the defined certificate resolver for HTTPS
+      - "traefik.http.routers.swp.middlewares=ip-allowlist@file"
     networks:
       - traefik_network
     volumes:
