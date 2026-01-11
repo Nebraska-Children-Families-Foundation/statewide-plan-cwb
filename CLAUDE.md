@@ -685,3 +685,331 @@ When adding new functionality that affects Community Action Steps:
 2. **Follow UI Patterns**: Use consistent button styles and permission checking
 3. **Update Tests**: Add test coverage for any new permission scenarios
 4. **Document Changes**: Update both internal and external documentation
+
+## Nuxt 4 Frontend Migration Plan
+
+### Migration Overview
+This plan outlines the complete migration from Django templates with Bootstrap to a Nuxt 4 frontend application. The migration maintains all existing functionality while modernizing the technology stack for improved performance, developer experience, and maintainability.
+
+### Current Architecture Assessment
+- **Templates**: 37+ Django HTML templates using Bootstrap 5.3.3
+- **JavaScript**: jQuery 3.7.1 with django-smart-selects for dynamic forms
+- **Styling**: Custom CSS with Merriweather/Cabin fonts and branded colors (#2E7D97, #E9EBB4)
+- **Authentication**: Role-based system with 4 user types (CC, NT, SP, Superuser)
+- **Permissions**: Complex matrix controlling CRUD operations on Action Steps/Commitments
+
+### Migration Strategy
+**Approach**: Parallel development with API-first design
+- Django backend evolves to API-only (Django REST Framework)
+- New Nuxt 4 frontend consumes APIs
+- Gradual migration with feature parity validation
+- Maintains existing permission system and business logic
+
+## Phase 1: Infrastructure Setup & Planning
+**Duration**: 2-3 weeks
+**Prerequisites**: Node.js 18+, package manager selection
+
+### 1.1 Development Environment Setup
+- [ ] Install Node.js 18+ and chosen package manager (npm/pnpm/yarn)
+- [ ] Initialize Nuxt 4 project with new `app/` directory structure
+- [ ] Configure development tooling (ESLint, Prettier, TypeScript)
+- [ ] Set up Git workflow for parallel development
+- [ ] Configure VS Code/IDE extensions for Vue/Nuxt development
+
+### 1.2 Architecture Planning
+- [ ] **API Strategy**: Design RESTful API structure matching Django models
+- [ ] **Authentication**: Plan JWT/session-based auth integration with Django
+- [ ] **Component Library**: Design reusable component architecture
+- [ ] **State Management**: Choose between Pinia, built-in state, or Vuex
+- [ ] **Styling Strategy**: Decide between Bootstrap Vue Next, Tailwind CSS, or custom CSS modules
+- [ ] **Build Pipeline**: Configure Vite, bundling, and deployment strategies
+
+### 1.3 Technology Stack Decisions
+- [ ] **Styling**: Bootstrap Vue Next (maintains Bootstrap compatibility)
+- [ ] **State Management**: Pinia for complex state, built-in composables for simple state
+- [ ] **HTTP Client**: $fetch (Nuxt built-in) or Axios for API communication
+- [ ] **Form Handling**: VeeValidate or custom composables
+- [ ] **Testing**: Vitest (unit), Playwright (E2E)
+
+## Phase 2: Backend API Development
+**Duration**: 4-6 weeks
+**Focus**: Transform Django views to REST API endpoints
+
+### 2.1 Django REST Framework Integration
+- [ ] Install and configure Django REST Framework
+- [ ] Create serializers for all core models:
+  - [ ] Goal, Objective, Strategy serializers
+  - [ ] CommunityActionStep, NCActionStep, SystemPartnerCommitment serializers
+  - [ ] User, Community Collaborative, NCFF Team, System Partner serializers
+- [ ] Build ViewSets with proper permissions and filtering
+- [ ] Implement pagination for large datasets
+- [ ] Add API documentation with drf-spectacular
+
+### 2.2 Authentication & Authorization API
+- [ ] **Token Authentication**: Implement JWT or DRF Token authentication
+- [ ] **User APIs**: Profile, permissions, role-based data access
+- [ ] **Password Reset**: API endpoints for password reset flow
+- [ ] **Permission Integration**: Ensure API respects existing permission matrix
+- [ ] **CORS Configuration**: Configure for frontend domain access
+
+### 2.3 Business Logic APIs
+- [ ] **Smart Selects Replacement**: API endpoints for Goal→Objective→Strategy chains
+- [ ] **Dashboard Data**: Aggregated data endpoints for user dashboards
+- [ ] **Activity Management**: Full CRUD APIs for Action Steps/Commitments
+- [ ] **Reports**: Data aggregation endpoints for reports page
+- [ ] **File Handling**: APIs for any file uploads/downloads
+
+### 2.4 API Testing & Security
+- [ ] Write comprehensive API tests using Django Test Framework
+- [ ] Implement rate limiting and throttling
+- [ ] Add input validation and sanitization
+- [ ] Security headers and CSRF protection for APIs
+- [ ] Test permission boundaries across all user types
+
+## Phase 3: Nuxt 4 Frontend Foundation
+**Duration**: 3-4 weeks
+**Focus**: Core application structure and utilities
+
+### 3.1 Nuxt 4 Project Structure
+```
+statewide-plan-nuxt/
+├── app/
+│   ├── assets/           # Images, fonts, global styles
+│   ├── components/       # Vue components
+│   │   ├── base/        # Basic UI components
+│   │   ├── forms/       # Form components
+│   │   └── layout/      # Layout components
+│   ├── composables/      # Vue composables
+│   ├── layouts/          # Application layouts
+│   ├── middleware/       # Route middleware
+│   ├── pages/           # File-based routing
+│   ├── plugins/         # Nuxt plugins
+│   ├── utils/           # Utility functions
+│   ├── app.vue          # Root component
+│   ├── app.config.ts    # App configuration
+│   └── error.vue        # Error page
+├── server/              # Server-side code
+├── public/              # Static assets
+└── nuxt.config.ts       # Nuxt configuration
+```
+
+### 3.2 Styling System Setup
+- [ ] **Bootstrap Integration**: Install Bootstrap Vue Next or configure Bootstrap CSS
+- [ ] **Custom Styles**: Port existing CSS (`main.css`) to Nuxt assets
+- [ ] **Font Configuration**: Set up Merriweather and Cabin font loading
+- [ ] **Color Variables**: Define brand colors (#2E7D97, #E9EBB4) in CSS variables
+- [ ] **Responsive Design**: Ensure mobile-first approach matches current design
+
+### 3.3 Core Services & Composables
+- [ ] **API Service**: Create `$fetch` wrapper with authentication headers
+- [ ] **Auth Composable**: `useAuth()` for login, logout, user state
+- [ ] **Permission Composable**: `usePermissions()` replicating Django permission logic
+- [ ] **Form Composable**: `useForm()` for form handling and validation
+- [ ] **Toast/Alert Composable**: `useNotifications()` for user feedback
+
+### 3.4 Configuration & Environment
+- [ ] Environment variables for API URLs and configuration
+- [ ] Build configuration for different environments (dev, test, prod)
+- [ ] Error handling and logging setup
+- [ ] SEO configuration and meta tags
+
+## Phase 4: Component Library Development
+**Duration**: 5-6 weeks
+**Focus**: Reusable UI components matching current design
+
+### 4.1 Base Components
+- [ ] **Layout Components**:
+  - [ ] `AppHeader.vue` (replaces navbar section in base.html)
+  - [ ] `AppFooter.vue` (replaces footer section)
+  - [ ] `AppNavigation.vue` (dropdown menus with role-based items)
+  - [ ] `AppSidebar.vue` (if needed for dashboard layouts)
+
+- [ ] **Form Components**:
+  - [ ] `BaseInput.vue` (text inputs with validation)
+  - [ ] `BaseSelect.vue` (dropdowns)
+  - [ ] `BaseTextarea.vue` (text areas)
+  - [ ] `BaseButton.vue` (consistent button styling)
+  - [ ] `BaseCheckbox.vue` and `BaseRadio.vue`
+
+- [ ] **Display Components**:
+  - [ ] `BaseCard.vue` (content containers)
+  - [ ] `BaseTable.vue` (data tables with sorting/pagination)
+  - [ ] `BaseBadge.vue` (status indicators)
+  - [ ] `BaseModal.vue` (dialogs and confirmations)
+
+### 4.2 Smart Components
+- [ ] **Cascading Selects**: `GoalObjectiveStrategySelect.vue` (replaces django-smart-selects)
+- [ ] **Activity Components**:
+  - [ ] `ActivityCard.vue` (displays action step/commitment summary)
+  - [ ] `ActivityForm.vue` (create/edit forms)
+  - [ ] `ActivityList.vue` (filterable list with pagination)
+  - [ ] `ActivityDetails.vue` (full details view)
+
+- [ ] **Dashboard Components**:
+  - [ ] `DashboardWidget.vue` (statistics widgets)
+  - [ ] `ActivitySummary.vue` (user's activities overview)
+  - [ ] `RecentActivity.vue` (recent changes feed)
+
+### 4.3 Permission-Aware Components
+- [ ] **ConditionalRender.vue**: Component that shows/hides based on permissions
+- [ ] **EditButton.vue**: Edit button that appears only for authorized users
+- [ ] **RoleBasedMenu.vue**: Navigation items based on user role
+- [ ] Permission integration in all CRUD components
+
+## Phase 5: Page Migration & Routing
+**Duration**: 6-8 weeks
+**Focus**: Converting Django templates to Vue pages
+
+### 5.1 Public Pages (No Authentication)
+- [ ] `app/pages/index.vue` (home.html) - Landing page
+- [ ] `app/pages/about.vue` (about.html) - About information
+- [ ] `app/pages/goals/index.vue` (goals.html) - Plan goals listing
+- [ ] `app/pages/goals/[id].vue` - Individual goal details
+- [ ] `app/pages/objectives/index.vue` (strategies-objectives.html)
+- [ ] `app/pages/strategies/index.vue` (strategy-list.html, strategies.html)
+- [ ] `app/pages/privacy.vue` (privacy.html) - Privacy policy
+- [ ] `app/pages/terms.vue` (terms-of-use.html) - Terms of use
+
+### 5.2 Authentication Pages
+- [ ] `app/pages/auth/login.vue` (users/login.html)
+- [ ] `app/pages/auth/password-reset.vue` (password_reset.html)
+- [ ] `app/pages/auth/password-reset-confirm.vue` (password_reset_confirm.html)
+- [ ] `app/pages/auth/password-reset-complete.vue` (password_reset_complete.html)
+- [ ] `app/pages/auth/password-change.vue` (password_change_form.html)
+- [ ] Authentication middleware for protected routes
+
+### 5.3 Dashboard & Management Pages (Authenticated)
+- [ ] `app/pages/dashboard.vue` (individual-dashboard.html)
+- [ ] `app/pages/activities/community/index.vue` (community-activities.html)
+- [ ] `app/pages/activities/community/create.vue` (create-community-activity.html)
+- [ ] `app/pages/activities/community/[id]/edit.vue` (edit-community-activity.html)
+- [ ] `app/pages/activities/community/[id]/index.vue` (activity-details.html)
+- [ ] `app/pages/activities/nc/` - NC Action Step pages
+- [ ] `app/pages/activities/partner/` - System Partner pages
+- [ ] `app/pages/my-activities.vue` (my-community-activities.html)
+- [ ] `app/pages/reports.vue` (reports.html)
+
+### 5.4 Advanced Features
+- [ ] `app/pages/tools/communication-plan.vue` (communication-plan.html)
+- [ ] `app/pages/tools/priorities.vue` (set_collaborative_priorities.html)
+- [ ] File-based routing configuration
+- [ ] Dynamic route generation for content pages
+- [ ] SEO optimization for all pages
+
+## Phase 6: Advanced Features & Integration
+**Duration**: 4-5 weeks
+**Focus**: Enhanced functionality and performance
+
+### 6.1 State Management
+- [ ] Pinia stores for:
+  - [ ] Authentication state and user data
+  - [ ] Activity/Commitment data caching
+  - [ ] Form state management
+  - [ ] UI state (modals, loading states)
+- [ ] Persistent state for user preferences
+- [ ] Real-time updates for collaborative features
+
+### 6.2 Performance Optimization
+- [ ] **Code Splitting**: Route-based and component-based lazy loading
+- [ ] **Image Optimization**: Nuxt Image module for responsive images
+- [ ] **Caching Strategy**: API response caching and invalidation
+- [ ] **Bundle Analysis**: Optimize bundle size and eliminate dead code
+- [ ] **Progressive Web App**: Service worker for offline functionality
+
+### 6.3 User Experience Enhancements
+- [ ] **Loading States**: Skeleton screens and progress indicators
+- [ ] **Error Boundaries**: Graceful error handling and recovery
+- [ ] **Toast Notifications**: Success/error feedback system
+- [ ] **Keyboard Navigation**: Accessibility improvements
+- [ ] **Mobile Optimization**: Touch-friendly interactions
+
+### 6.4 Data Features
+- [ ] **Search Functionality**: Client-side and server-side search
+- [ ] **Filtering System**: Advanced filtering for activities and reports
+- [ ] **Export Features**: Data export to CSV/PDF
+- [ ] **Import Features**: Bulk data import capabilities
+
+## Phase 7: Testing & Quality Assurance
+**Duration**: 3-4 weeks
+**Focus**: Comprehensive testing coverage
+
+### 7.1 Testing Framework Setup
+- [ ] **Unit Testing**: Vitest configuration for components and composables
+- [ ] **Integration Testing**: API integration tests
+- [ ] **E2E Testing**: Playwright for user workflow testing
+- [ ] **Accessibility Testing**: axe-core integration
+- [ ] Test data management and fixtures
+
+### 7.2 Permission Testing
+- [ ] **Role-Based Testing**: Test all user roles across all features
+- [ ] **Data Isolation**: Ensure users only see their allowed data
+- [ ] **UI Permission Testing**: Verify buttons/links show for authorized users only
+- [ ] **API Permission Testing**: Validate API endpoints respect permissions
+- [ ] **Edge Cases**: Test permission boundary conditions
+
+### 7.3 Cross-Platform Testing
+- [ ] **Browser Testing**: Chrome, Firefox, Safari, Edge
+- [ ] **Mobile Testing**: Responsive design on various screen sizes
+- [ ] **Performance Testing**: Page load times and API response times
+- [ ] **Accessibility Testing**: Screen reader compatibility and WCAG compliance
+
+### 7.4 Migration Testing
+- [ ] **Data Integrity**: Verify all data migrates correctly
+- [ ] **Feature Parity**: Ensure all existing functionality works
+- [ ] **User Flow Testing**: Test complete user workflows
+- [ ] **Permission Validation**: Verify permission matrix remains intact
+
+## Phase 8: Deployment & Go-Live
+**Duration**: 2-3 weeks
+**Focus**: Production deployment and migration
+
+### 8.1 Production Infrastructure
+- [ ] **Hosting Setup**: Configure hosting for Nuxt application
+- [ ] **CDN Configuration**: Static asset delivery optimization
+- [ ] **SSL Certificates**: HTTPS configuration
+- [ ] **Environment Variables**: Production configuration management
+- [ ] **Monitoring**: Application performance and error monitoring
+
+### 8.2 Database & API Migration
+- [ ] **API Deployment**: Deploy Django API to production
+- [ ] **Database Migration**: Run any required database changes
+- [ ] **Data Validation**: Verify data integrity in production
+- [ ] **Performance Tuning**: Optimize database queries and API responses
+
+### 8.3 Go-Live Strategy
+- [ ] **Soft Launch**: Limited user group testing
+- [ ] **Feature Flags**: Gradual feature rollout capability
+- [ ] **Rollback Plan**: Quick rollback to Django templates if needed
+- [ ] **User Communication**: Notify users of upcoming changes
+- [ ] **Training Materials**: Update user documentation
+
+### 8.4 Post-Launch Support
+- [ ] **Monitoring Dashboard**: Real-time application health monitoring
+- [ ] **Error Tracking**: Comprehensive error logging and alerting
+- [ ] **Performance Metrics**: Track page load times and user engagement
+- [ ] **User Feedback**: Collect and process user feedback
+- [ ] **Bug Fix Process**: Rapid response to production issues
+
+## Migration Timeline Summary
+**Total Duration**: 28-36 weeks (7-9 months)
+
+### Critical Path Dependencies
+1. **API Development** must complete before frontend data integration
+2. **Component Library** must be stable before page migration
+3. **Authentication System** must work before protected page development
+4. **Testing Framework** should be established early for continuous testing
+
+### Risk Mitigation
+- **Parallel Development**: Frontend and API development can overlap partially
+- **Incremental Migration**: Deploy features incrementally rather than big-bang
+- **Feature Flags**: Use feature toggles for gradual rollout
+- **Rollback Strategy**: Maintain Django templates until Nuxt is stable
+
+### Success Criteria
+- **Feature Parity**: All existing functionality replicated
+- **Performance**: Page load times improved by 30%+
+- **User Experience**: Mobile-responsive, accessible design
+- **Maintainability**: Modern development stack with comprehensive testing
+- **Security**: Maintain existing permission system integrity
+
+This migration plan provides a comprehensive roadmap for transitioning from Django templates to Nuxt 4 while maintaining system stability and user experience throughout the process.

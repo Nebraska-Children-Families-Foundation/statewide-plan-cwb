@@ -9,7 +9,13 @@
       "Bash(grep:*)",
       "Bash(git add:*)",
       "Bash(mkdir:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(git stash:*)",
+      "mcp__Ref__ref_search_documentation",
+      "mcp__Ref__ref_read_url",
+      "mcp__exa__web_search_exa",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": [],

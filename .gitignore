@@ -18,3 +18,5 @@ media
 
 # If you are using macOS
 .DS_Store
+/.claude/
+/nul
