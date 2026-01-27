@@ -14,6 +14,14 @@ from django.db.models import Count
 from .standardization import Years, Quarters, ActivityStatusChoice
 
 
+def redirect_landing(request):
+    """
+    Display the retirement/redirect landing page.
+    All non-admin traffic is routed here.
+    """
+    return render(request, 'core/redirect.html')
+
+
 def home(request):
     goals = Goal.objects.all().prefetch_related('objective_set__strategy_set')
     context = {'goals': goals}

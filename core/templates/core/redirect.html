@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Statewide Plan Portal - Moving to Collective Impact Atlas</title>
+
+    <!-- Fallback redirect for browsers with JavaScript disabled -->
+    <meta http-equiv="refresh" content="15;url=https://atlas.nebraskachildren.org/statewide-plan">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            font-size: 16px;
+            color: #333333;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cabin', sans-serif;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+
+        .heading {
+            font-size: 1.75rem;
+            color: #2E7D97;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .body-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            color: #333333;
+        }
+
+        .body-text a {
+            color: #2E7D97;
+            text-decoration: underline;
+        }
+
+        .body-text a:hover {
+            color: #1d5a6e;
+        }
+
+        .countdown-text {
+            font-size: 1rem;
+            color: #666666;
+            margin-bottom: 1.5rem;
+        }
+
+        .countdown-number {
+            font-weight: bold;
+            color: #2E7D97;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: #2E7D97;
+            color: #ffffff;
+            font-family: 'Cabin', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d5a6e;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .sub-footer {
+            background-color: #2E7D97;
+            color: #ffffff;
+            padding: 1rem 0;
+            text-align: center;
+            font-family: 'Cabin', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .sub-footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .sub-footer a:hover {
+            color: #E9EBB4;
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+
+            .heading {
+                font-size: 1.4rem;
+            }
+
+            .logo {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="card">
+            <img src="/static/images/bringupnebraska_logo.png" alt="Bring Up Nebraska Logo" class="logo">
+
+            <h1 class="heading">The Statewide Plan Portal is now part of Nebraska Children's Collective Impact Atlas</h1>
+
+            <p class="body-text">
+                Please update your bookmark to the new URL:<br>
+                <a href="https://atlas.nebraskachildren.org/statewide-plan">https://atlas.nebraskachildren.org/statewide-plan</a><br>
+                to visit the Statewide Plan for Community Well-Being.
+            </p>
+
+            <p class="countdown-text">
+                You will be redirected in <span id="countdown" class="countdown-number">15</span> seconds.
+            </p>
+
+            <a href="https://atlas.nebraskachildren.org/statewide-plan" class="btn-primary">
+                Visit the New Portal Now
+            </a>
+        </div>
+    </div>
+
+    <footer class="sub-footer">
+        <p>&copy; 2025 Bring Up Nebraska Initiative</p>
+    </footer>
+
+    <script>
+        (function() {
+            var seconds = 15;
+            var countdownElement = document.getElementById('countdown');
+            var redirectUrl = 'https://atlas.nebraskachildren.org/statewide-plan';
+
+            var timer = setInterval(function() {
+                seconds--;
+                if (countdownElement) {
+                    countdownElement.textContent = seconds;
+                }
+
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    window.location.href = redirectUrl;
+                }
+            }, 1000);
+        })();
+    </script>
+</body>
+</html>
